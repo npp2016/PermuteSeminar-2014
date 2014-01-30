@@ -1,7 +1,7 @@
 Borrelli Week 1 Notes
 ========================================================
 
-
+Drawing 1000 samples of 100 randomly drawn values from a normal
 ```{r}
 samples <- matrix(nrow = 1000, ncol = 100)
 for(i in 1:1000){
@@ -9,14 +9,21 @@ for(i in 1:1000){
 }
 
 meansSAMPLE <- rowMeans(samples)
-
+```
+  
+Bootstrapping 
+```{r}
+norm1 <- rnorm(100, 1, 3)
 boot <- matrix(nrow = 1000, ncol = 100)
 for (i in 1:1000){
   boot[i,] <- sample(norm1, 100, replace = T)
 }
 
 meansBOOT <- rowMeans(boot)
+```
 
-hist(meansBOOT)
-hist(meansSAMPLE, add = T)
+Plot the histograms
+```{r fig.width = 7, fig.height = 7}
+hist(meansBOOT, border = "red")
+hist(meansSAMPLE, border = "blue", add = T)
 ```

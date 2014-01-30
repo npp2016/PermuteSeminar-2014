@@ -1,7 +1,7 @@
 Borrelli Week 1 Notes
 ========================================================
 
-
+Drawing 1000 samples of 100 randomly drawn values from a normal
 
 ```r
 samples <- matrix(nrow = 1000, ncol = 100)
@@ -10,33 +10,28 @@ for (i in 1:1000) {
 }
 
 meansSAMPLE <- rowMeans(samples)
+```
 
+  
+Bootstrapping 
+
+```r
+norm1 <- rnorm(100, 1, 3)
 boot <- matrix(nrow = 1000, ncol = 100)
 for (i in 1:1000) {
     boot[i, ] <- sample(norm1, 100, replace = T)
 }
-```
-
-```
-## Error: object 'norm1' not found
-```
-
-```r
 
 meansBOOT <- rowMeans(boot)
-
-hist(meansBOOT)
 ```
 
-```
-## Error: invalid number of 'breaks'
-```
+
+Plot the histograms
 
 ```r
-hist(meansSAMPLE, add = T)
+hist(meansBOOT, border = "red")
+hist(meansSAMPLE, border = "blue", add = T)
 ```
 
-```
-## Error: plot.new has not been called yet
-```
+![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3.png) 
 
