@@ -38,9 +38,9 @@ meansBOOT <- rowMeans(boot)
 Plot the histograms
 
 ```r
-hist(meansBOOT, border = "red")
+hist(meansBOOT, border = "red", main = NA)
 abline(v = mean(meansBOOT), col = "red", lwd = 2)
-hist(meansSAMPLE, border = "blue", add = T)
+hist(meansSAMPLE, border = "blue", add = T, main = NA)
 abline(v = mean(meansSAMPLE), col = "blue", lwd = 2)
 ```
 
@@ -78,7 +78,7 @@ maxBOOT <- apply(boot2, 1, max)
 Plot the histograms
 
 ```r
-hist(maxSAMPLE, border = "blue")
+hist(maxSAMPLE, border = "blue", main = NA)
 hist(maxBOOT, border = "red", add = T)
 ```
 
