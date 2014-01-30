@@ -1,0 +1,180 @@
+Permute Seminar, Week 1
+========================================================
+
+**For Week 2:** read chapters 3-5
+
+**Notes:**
+Bootstrap = Sample with replacement
+
+Boostrapped datasets are generally represented using a "*".
+Estimates are represented using "^".
+
+Sampling with replacement from original data can take the place of redoing an experiment many times.
+
+The standard deviation of the distribution of the bootstrapped estimate is the standard error of the statistic.
+Can pull the confidence intervals from the percentiles of this distribution.
+
+**Examples:**
+Load the libraries that we will need for examples
+```{r}
+library(ggplot2)
+```
+
+Make a dataset with a mean of 1 and sd of 3
+Obtain 1000 bootstrap replicates using random sampling with replacement and take the mean of each
+```{r}
+data = rnorm(1000, 1, 3)
+mean(data)
+
+est=NULL
+for (i in 1:1000){
+  boot = sample(data, 1000, replace=TRUE)
+  mean = mean(boot)
+  est = append(est, mean)
+}
+mean(est)
+sd(est)
+```
+
+Obtain 1000 datasets, and compare the means
+```{r}
+est2=NULL
+for (i in 1:1000){
+  data = rnorm(1000, 1, 3)
+  mean = mean(data)
+  est2 = append(est2, mean)
+}
+mean(est2)
+sd(est2)
+hist(est2)
+```
+
+Compare the histograms directly:
+```{r}
+par(mfrow=c(1,2))
+hist(est)
+hist(est2)
+
+par(mfrow=c(1,1))
+hist(est, col = "cadetblue")
+hist(est2, col="indianred", add=TRUE)
+```
+
+**From the text:**
+Chapter 1
+----------
+
+Aspirin study group data
+```{r}
+aspirin = c(rep(1,119), rep(0,10918))
+placebo = c(rep(1,98), rep(0,10936))
+```
+
+obtain 1000 bootstrap replicates for theta using random sampling with replacement
+```{r}
+est=NULL
+for (i in 1:1000){
+  bootA = sample(aspirin, 11037, replace=TRUE)
+  bootB = sample(placebo, 11034, replace=TRUE)
+  theta = (sum(bootA)/length(bootA))/(sum(bootB)/length(bootB))
+  est = append(est, theta)
+}
+
+hist(est, xlab = "boostrap estimated means")
+```
+
+# plot and summarize the results
+```{r}
+se <- function(x) sqrt(var(x)/length(x))
+
+hist(est)
+mean(est)
+sd(est)
+se(est)
+```
+
+# find the confidence intervals
+```{r}
+quantile(est, 0.95)
+quantile(est, 0.05)
+```
+
+# Chapter 2
+
+#mouse study data, lifespan (days) after surgical treatment
+```{r}
+trmt = c(94, 197, 16, 38, 99, 141, 23)
+control = c(52, 104, 146, 10, 51, 30, 40, 27, 46)
+
+mean(trmt)
+mean(control)
+diff = mean(trmt) - mean(control)
+
+se(trmt)
+se(control)
+sediff = sqrt(se(trmt)^2 + se(control)^2)
+```
+
+Thus, the observed difference is only about 1 stderr greater than 0; Insiginificant.
+```{r}
+diff/sediff
+```
+
+Compare the sample medians
+```{r}
+median(trmt)
+median(control)
+diff2 = median(trmt) - median(control)
+```
+
+Obtain 1000 bootstrap replicates for mean using random sampling with replacement
+```{r}
+meanA=NULL
+meanB=NULL
+medianA=NULL
+medianB=NULL
+for (i in 1:200){
+  bootA = sample(trmt, 7, replace=TRUE)
+  bootB = sample(control, 9, replace=TRUE)
+  meanA = append(meanA, mean(bootA))
+  meanB = append(meanB, mean(bootB))
+  medianA = append(medianA, median(bootA))
+  medianB = append(medianB, median(bootB))
+}
+
+seBootA = sd(meanA)
+seBootB = sd(meanB)
+seBootAm = sd(medianA)
+seBootBm = sd(medianB)
+
+#the observed difference in means is less than 1 sd greater than 0
+sediff = sqrt(seBootA**2 + seBootB**2)
+diff/sediff
+
+# the observed difference in medians is greater than the difference in means, but is still insignificant.
+sediff2 = sqrt(seBootAm**2 + seBootBm**2)
+diff2/sediff2
+
+#problems:
+#2.1 Supoose mouse survival was in weeks instead of days. How would the answers change?
+trmt = trmt/7
+control = control/7
+
+
+
+
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring web pages (click the **Help** toolbar button for more details on using R Markdown).
+
+When you click the **Knit HTML** button a web page will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+summary(cars)
+```
+
+You can also embed plots, for example:
+
+```{r fig.width=7, fig.height=6}
+plot(cars)
+```
+
