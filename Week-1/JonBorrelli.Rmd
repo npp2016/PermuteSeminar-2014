@@ -1,0 +1,22 @@
+Borrelli Week 1 Notes
+========================================================
+
+
+```{r}
+samples <- matrix(nrow = 1000, ncol = 100)
+for(i in 1:1000){
+  samples[i,] <- rnorm(100, 1, 3)
+}
+
+meansSAMPLE <- rowMeans(samples)
+
+boot <- matrix(nrow = 1000, ncol = 100)
+for (i in 1:1000){
+  boot[i,] <- sample(norm1, 100, replace = T)
+}
+
+meansBOOT <- rowMeans(boot)
+
+hist(meansBOOT)
+hist(meansSAMPLE, add = T)
+```
