@@ -1,8 +1,6 @@
 ##Draw 100 numbers from a normal distribution (mean = 1, sd = 3)
 #Get distribution of xbar through drawing from the distribution directly
 #Then get distribution of xbar through bootstrapping
-library(boot)
-library(bootstrap)
 study <- rnorm(100, mean = 1, sd = 3) #original data
 #Get distribution of direct draws
 directxbar <- c() #hold means
@@ -19,3 +17,21 @@ for(i in 1:1000)
 par(mfrow = c(1,2))
 hist(directxbar)
 hist(bsxbar)
+##Second Example: Draw 1000 from a uniform distribution (min = 0, max = 5)
+#Get a distribution of the largest value (Xn)
+#Use the same methodology (compare direct draws and bootstrapped draws)
+unifstudy <- runif(1000, min = 0, max = 5)
+#Distribution of direct draws
+directmax <- c()
+for(i in 1:1000)
+{
+  directmax <- c(directmax, max(runif(1000, min = 0, max = 5)))
+}
+hist(directmax)
+#Distribution of bootstrap
+bsmax <- c()
+for(i in 1:1000)
+{
+  bsmax <- c(bsmax, max(sample(unifstudy, 1000, replace = T)))
+}
+hist(bsmax)
