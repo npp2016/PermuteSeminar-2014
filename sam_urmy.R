@@ -17,5 +17,8 @@ for (i in 1:n) {
 par(mfrow=c(2, 1))
 hist(replicates, 30)
 hist(bootstraps, 30)
+par(mfrow=c(1, 1))
+
 mean(bootstraps) - mean(replicates)
 sd(bootstraps) - sd(replicates)
+# sd(bootstraps) is the SE of the mean
