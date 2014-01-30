@@ -7,7 +7,7 @@ sample_size <- 100
 n <- 1000
 replicates <- rep(0, n)
 bootstraps <- rep(0, n)
-X <- rnorm(sample_size, MU, SD)
+x <- rnorm(sample_size, MU, SD)
 
 for (i in 1:n) {
   replicates[i] <- mean(rnorm(n, MU, SD))
