@@ -11,6 +11,9 @@ Estimates are represented using "^".
 
 Sampling with replacement from original data can take the place of redoing an experiment many times.
 
+The standard deviation of the distribution of the bootstrapped estimate is the standard error of the statistic.
+Can pull the confidence intervals from the percentiles of this distribution.
+
 **Examples:**
 Load the libraries that we will need for examples
 ```{r}
@@ -20,7 +23,7 @@ library(ggplot2)
 Make a dataset with a mean of 1 and sd of 3
 Obtain 1000 bootstrap replicates using random sampling with replacement and take the mean of each
 ```{r}
-data = rnorm(100, 1, 3)
+data = rnorm(1000, 1, 3)
 mean(data)
 
 est=NULL
@@ -37,7 +40,7 @@ Obtain 1000 datasets, and compare the means
 ```{r}
 est2=NULL
 for (i in 1:1000){
-  data = rnorm(100, 1, 3)
+  data = rnorm(1000, 1, 3)
   mean = mean(data)
   est2 = append(est2, mean)
 }
@@ -48,11 +51,13 @@ hist(est2)
 
 Compare the histograms directly:
 ```{r}
-means = data.frame(est, est2)
+par(mfrow=c(1,2))
+hist(est)
+hist(est2)
 
-booted = ggplot(means, aes(est)) + geom_histogram()
-booted + geom_histogram(aes(est2))
-
+par(mfrow=c(1,1))
+hist(est, col = "cadetblue")
+hist(est2, col="indianred", add=TRUE)
 ```
 
 **From the text:**
