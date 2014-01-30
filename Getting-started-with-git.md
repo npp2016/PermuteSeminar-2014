@@ -42,10 +42,10 @@ you would do this through the Terminal. If you you are on Windows, we recommend
 downloading GitBash (http://git-scm.com/downloads).
 
 There are many good resources for how to start using git, depending on the interface you prefer:
-*For RStudio* - http://www.molecularecologist.com/2013/11/using-github-with-r-and-rstudio/
-*For GitHub for Windows* - http://windows.github.com/
-*For GitHub for Mac* - http://mac.github.com/
-*For the command line* - http://www.git-tower.com/blog/git-cheat-sheet-detail/ and https://github.com/swcarpentry/bc/tree/master/git/novice
+* For RStudio* - http://www.molecularecologist.com/2013/11/using-github-with-r-and-rstudio/
+* For GitHub for Windows* - http://windows.github.com/
+* For GitHub for Mac* - http://mac.github.com/
+* For the command line* - http://www.git-tower.com/blog/git-cheat-sheet-detail/ and https://github.com/swcarpentry/bc/tree/master/git/novice
 
 GitHub will allow everyone to work simultaneously on code related to the seminar,
 and to share examples of different ways to arrive at an answer for a given
