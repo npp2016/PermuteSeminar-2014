@@ -38,13 +38,20 @@ meansBOOT <- rowMeans(boot)
 Plot the histograms
 
 ```r
-hist(meansBOOT, border = "red", main = NA)
+hist(meansBOOT, border = "red", main = NA, lwd = 3)
 abline(v = mean(meansBOOT), col = "red", lwd = 2)
 hist(meansSAMPLE, border = "blue", add = T, main = NA)
-abline(v = mean(meansSAMPLE), col = "blue", lwd = 2)
 ```
 
 ![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4.png) 
+
+```r
+abline(v = mean(meansSAMPLE), col = "blue", lwd = 2, lwd = 3)
+```
+
+```
+Error: formal argument "lwd" matched by multiple actual arguments
+```
 
   
 
@@ -78,9 +85,23 @@ maxBOOT <- apply(boot2, 1, max)
 Plot the histograms
 
 ```r
-hist(maxSAMPLE, border = "blue", main = NA)
-hist(maxBOOT, border = "red", add = T)
+hist(maxSAMPLE, border = "blue", main = NA, lwd = 3)
+hist(maxBOOT, border = "red", add = T, lwd = 3)
 ```
 
 ![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-7.png) 
 
+  
+Probability of getting the largest value in original in the bootstrapped sample
+$$
+\LARGE{
+1 - (1 - \frac{1}{n})^n
+}
+$$
+  
+so bootstrap is not very good with __extreme__ values  
+
+  
+Exercise 3 - Cauchy  
+--------------------------------------------------------  
+  
