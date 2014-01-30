@@ -19,3 +19,8 @@ for(i in 1:1000)
 par(mfrow = c(1,2))
 hist(directxbar)
 hist(bsxbar)
+#Checking parameters of the two distributions
+mean(directxbar)
+mean(bsxbar)
+sd(directxbar)
+sd(bsxbar)
