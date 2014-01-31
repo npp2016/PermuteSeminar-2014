@@ -1,7 +1,7 @@
 Borrelli Week 1 Notes
 ========================================================  
 
-```{r}
+```{r echo = F}
 opts_chunk$set(comment = NA)
 ```
 
