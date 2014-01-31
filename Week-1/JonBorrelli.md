@@ -86,6 +86,7 @@ hist(maxBOOT, border = "red", add = T, lwd = 3)
 
   
 Probability of getting the largest value in original in the bootstrapped sample
+
 $$
 \LARGE{
 1 - (1 - \frac{1}{n})^n
@@ -140,3 +141,5 @@ hist(varBOOT, border = "red", lwd = 3, add = T, freq = F)
 
 ![plot of chunk unnamed-chunk-11](figure/unnamed-chunk-11.png) 
 
+  
+bootstrap fails if your stat of interest is an absolute value, because of discontinuity around 0
