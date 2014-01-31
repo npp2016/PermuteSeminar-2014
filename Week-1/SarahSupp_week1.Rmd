@@ -14,6 +14,8 @@ Sampling with replacement from original data can take the place of redoing an ex
 The standard deviation of the distribution of the bootstrapped estimate is the standard error of the statistic.
 Can pull the confidence intervals from the percentiles of this distribution.
 
+iid = independent and identically distributed
+
 **Examples:**
 Load the libraries that we will need for examples
 ```{r}
