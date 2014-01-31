@@ -35,3 +35,18 @@ for(i in 1:1000)
   bsmax <- c(bsmax, max(sample(unifstudy, 1000, replace = T)))
 }
 hist(bsmax)
+##Third Example: Using Cauchy Distribution
+#Test statistic: mean
+cauchystudy <- rcauchy(1000, 1, 2) #location = 1, scale = 2
+directmean <- c()
+for(i in 1:1000)
+{
+  directmean <- c(directmean, mean(rcauchy(1000, 1, 2)))
+}
+hist(directmean)
+bsmean <- c()
+for(i in 1:1000)
+{
+  bsmean <- c(bsmean, mean(sample(cauchystudy, 1000, replace = T)))
+}
+hist(bsmean)
