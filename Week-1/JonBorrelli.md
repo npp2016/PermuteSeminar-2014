@@ -40,18 +40,11 @@ Plot the histograms
 ```r
 hist(meansBOOT, border = "red", main = NA, lwd = 3)
 abline(v = mean(meansBOOT), col = "red", lwd = 2)
-hist(meansSAMPLE, border = "blue", add = T, main = NA)
+hist(meansSAMPLE, border = "blue", add = T, main = NA, lwd = 3)
+abline(v = mean(meansSAMPLE), col = "blue", lwd = 2)
 ```
 
 ![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4.png) 
-
-```r
-abline(v = mean(meansSAMPLE), col = "blue", lwd = 2, lwd = 3)
-```
-
-```
-Error: formal argument "lwd" matched by multiple actual arguments
-```
 
   
 

@@ -33,8 +33,8 @@ Plot the histograms
 ```{r fig.width = 7, fig.height = 7}
 hist(meansBOOT, border = "red", main = NA, lwd = 3)
 abline(v = mean(meansBOOT), col = "red", lwd = 2)
-hist(meansSAMPLE, border = "blue", add = T, main = NA)
-abline(v = mean(meansSAMPLE), col = "blue", lwd = 2, lwd = 3)
+hist(meansSAMPLE, border = "blue", add = T, main = NA, lwd = 3)
+abline(v = mean(meansSAMPLE), col = "blue", lwd = 2)
 ```
   
 
