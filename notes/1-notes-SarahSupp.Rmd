@@ -128,3 +128,12 @@ trmt = trmt/7
 control = control/7
 ```
 
+2.2 Suppose the data represents the number of repetitions (R) of the data actual shown. How would stderr be affected?
+
+2.3 The error of a statistical estimator decreases at a rate of 1/sqrt(n) (where n = sample size) Is this true in case of 2.2?
+
+2.4 Let the vectors be in ascending order. Calculate bootstrap replicates for median value.
+ Show that s(x*) equals one of the original data values.
+  that s(x*) equals that value with probability ... where the Binomial probability...
+
+2.5 Apply the weak law of large numbers to show that 2.3 approaches 2.4 as n goes to infinity.
