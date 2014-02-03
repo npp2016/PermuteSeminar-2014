@@ -1,0 +1,18 @@
+Permute Seminar, Week 1
+========================================================
+
+Load the libraries that we will need for examples
+```{r}
+library(ggplot2)
+```
+
+**For Week 3:**
+
+**Notes:**
+-------------
+
+**From the text:**
+--------------------
+Chapter 3
+----------
+
