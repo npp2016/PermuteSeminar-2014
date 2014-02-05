@@ -1,0 +1,23 @@
+Week #1 Summary
+========================================================
+
+What we did:
+-------------
+1. Installed GitHub and introduced how to use a GitHub repository
+2. Reviewed the non-parametric bootstrap
+3. Worked through several exercises to demonstrate the use of the bootstrap and cases where the bootstrap fails
+
+Basic idea behind the bootstrap:
+
+
+
+```{r}
+summary(cars)
+```
+
+You can also embed plots, for example:
+
+```{r fig.width=7, fig.height=6}
+plot(cars)
+```
+

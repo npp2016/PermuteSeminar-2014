@@ -2,9 +2,6 @@ Borrelli Week 1 Notes
 ========================================================  
 
 
-```r
-opts_chunk$set(comment = NA)
-```
 
 
 Exercise 1 - Normal
