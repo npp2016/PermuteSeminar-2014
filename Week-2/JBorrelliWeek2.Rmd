@@ -43,11 +43,15 @@ head(ClutchSize)
 ```{r message = F}
 require(MASS)
 ```
+  
+Use the `fitdistr` function to determine the best fit parameters for lognormal and gamma distributions  
 
 ```{r}
 fitdistr(ClutchSize$Clutch_size, "lognormal")
 fitdistr(ClutchSize$Clutch_size, "gamma")
 ```
+  
+Plot the histogram and density functions for best fit lognormal and gamma distributions  
 
 ```{r, fig.width = 6, fig.height = 6}
 hist(ClutchSize$Clutch_size, freq = F)
