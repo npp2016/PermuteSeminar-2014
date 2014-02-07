@@ -1,4 +1,4 @@
-Week 2
+Week 2 Borrelli
 ================================================================
 ```{r echo = F}
 opts_chunk$set(comment = NA)
