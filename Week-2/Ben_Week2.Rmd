@@ -1,0 +1,83 @@
+Clutch Size Dataset
+========================================================
+
+```{r}
+setwd("C:/Users/Ben/Documents/PermuteSeminar-2014")
+dat<-read.csv("Week-2/ClutchSize.csv")
+```
+
+Visualize the data
+```{r fig.width=7, fig.height=6}
+head(dat)
+mean(dat$Clutch_size)
+fitdistr(dat$Clutch_size,"gamma")
+```
+
+Visualize the distribution
+```{r}
+require(ggplot2)
+qplot(dat$Clutch_size)
+```
+
+```{r}
+fitdistr(dat$Clutch_size,"gamma")
+ks.test(x=dat$Clutch_size,y="pgamma",shape=4.1,rate=1.19)
+```
+
+True mean
+```{r}
+mean(dat$Clutch_size)
+```
+
+Boostrap all clutches without regard for structure
+```{r}
+withoutspecies<-replicate(1000,mean(sample(size=nrow(dat),dat$Clutch_size,replace=TRUE)))
+qplot(withoutspecies)
+
+#mean estimate
+mean(withoutspecies)
+```
+
+By genus
+```{r,cache=TRUE}
+#How many FAMILY?
+nfamily<-length(table(dat$Family))
+
+#Get list of familes
+fout<-vector()
+for (x in 1:1000){
+  f<-sample(size=107,dat$Family,replace=TRUE)
+  out<-vector()
+  for (i in f){
+    out<-c(out,dat[dat$Family %in% f,"Clutch_size"])
+    }
+  fout<-c(fout,mean(out))
+  }
+
+#Plot
+
+qplot(fout)
+mean(fout)
+sd(fout)
+```
+
+Where we are so far, comparison of true, species and family means
+```{r}
+mean(dat$Clutch_size)
+mean(withoutspecies)
+mean(fout)
+
+#sd(dat$Clutch_size)
+sd(withoutspecies)
+sd(fout)
+
+hist(withoutspecies,col="blue",breaks=seq(3,4,.01))
+hist(fout,col="red",add=TRUE,breaks=seq(3,4,.01))
+abline(v=mean(dat$Clutch_size),lty="dashed")
+```
+
+Red is family
+blue is species
+
+```{r}
+
