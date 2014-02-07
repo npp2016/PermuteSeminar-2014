@@ -9,6 +9,7 @@ hist (log(x$Clutch_size)) ### the distribution closely matches LOG-NORMAL
 
 species <- rep(NA,100)
 for (i in 1:100) {species [i] <- mean (sample(x$Clutch_size,100,replace=T))}
+hist (species, col="grey")
 cat("STEP1: Estimated mean =", mean(species),"and stdev =", sqrt(var(species)),"\n",sep=" ")
 
 
@@ -25,6 +26,7 @@ for (j in 1:100){
   
 }
 
+hist (metagenera, col="grey")
 cat("STEP2: Estimated mean =", mean(metagenera),"and stdev =", sqrt(var(metagenera)),"\n",sep=" ")
 
 
@@ -40,6 +42,7 @@ for (l in 1:100){
   rm(famx, genx)
   
 }
+hist(familyx, col="grey")
 cat("STEP3: Estimated mean =", mean(familyx),"and stdev =", sqrt(var(familyx)),"\n",sep=" ")
 
 
