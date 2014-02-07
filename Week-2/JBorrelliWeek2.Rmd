@@ -1,0 +1,111 @@
+Week 2 Borrelli
+================================================================
+```{r echo = F}
+opts_chunk$set(comment = NA)
+```
+
+
+\mbox{ordinary text within an equation}  
+
+"\left(" gives a big paren around a large equation "\right" closes
+  
+Read in data downloaded from blackboard  
+```{r}
+setwd("~/Dropbox/PermuteSeminar/")
+ClutchSize <- read.csv("ClutchSize.csv")
+```
+
+The LaTeX test:  
+$$
+\LARGE{
+\lim_{\epsilon\rightarrow 0_{+}} \frac{\int_{a_i}^{a_i+\epsilon}\sqrt{1+(x-\mu)^2}dx}{\phi (\epsilon)}
+}
+$$
+
+**Census** - whole population  
+**Sample** - some portion of the larger population, requires statistical inference to describe the whole pop  
+
+**Statistic** - anything calculated from data  
+**Parameter** - some function of the distribution (*F*)  
+
+**Plug in principle** - we want to know some parameter that is a function of some distribution $F$. Your estimate is the same function applied to your data, so you can use your data in lieu of the underlying distribution. It is the best (not necessarily good) unbiased estimator of the parameter.  
+
+*When would you want to use a parametric distribution?*  
+If you know anything about the underlying distribution and the data is sparse  
+
+```{r}
+head(ClutchSize)
+```
+
+
+*What is the best distribution for clutch size?*  
+  
+```{r message = F}
+require(MASS)
+```
+
+```{r}
+fitdistr(ClutchSize$Clutch_size, "lognormal")
+fitdistr(ClutchSize$Clutch_size, "gamma")
+```
+
+```{r, fig.width = 6, fig.height = 6}
+hist(ClutchSize$Clutch_size, freq = F)
+points(dlnorm(1:20, 1.1111, .50205), typ = "l", col = "blue")
+points(dgamma(1:20, 4.106, 1.1908), typ = "l", col = "red")
+```
+
+The log normal seems to fit the best
+
+*Get bootstrap statistic*
+
+1. *Sample with replacement from species*  
+   
+```{r}
+bootMEAN <- c()
+for(i in 1:200){
+  boot <- sample(1:nrow(ClutchSize), nrow(ClutchSize), replace = T)
+  bootSAMPLE<- ClutchSize$Clutch_size[boot]
+  bootMEAN[i] <- mean(bootSAMPLE)
+}
+```
+
+```{r, fig.width = 6, fig.height = 6}
+hist(bootMEAN)
+```
+
+
+2. *Sample with replacement from family*
+  
+```{r}
+bootMEAN <- c()
+for(i in 1:200){
+  boot <- sample(ClutchSize$Family, max(ClutchSize$Family), replace = T)
+  boots <- c()
+  for(i in 1:length(boot)){
+    boots <- c(boots, ClutchSize$Clutch_size[which(ClutchSize$Family == boot[i])])
+  }
+  bootMEAN <- c(bootMEAN, mean(boots))
+}
+```
+
+```{r, fig.width = 6, fig.height = 6}
+hist(bootMEAN)
+```
+  
+3. *Bootstrap at all levels*  
+  
+```{r eval = F}
+bootFAM <- c()
+for(i in 1:10){
+  bootFAM <- sample(ClutchSize$Family, max(ClutchSize$Family), replace = T)
+  bootGENUS <- c()
+  for(j in 1:length(bootFAM)){
+    bootTEST <- sample(ClutchSize$Genus_name[which(ClutchSize$Family == bootFAM[j])], 
+           length(ClutchSize$Genus_name[which(ClutchSize$Family == bootFAM)]), replace = T)
+    bootGENUS <- c(bootGENUS, bootTEST) 
+  }
+}
+```
+
+
