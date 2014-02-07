@@ -1,0 +1,47 @@
+Week 2 Exercises - Rocio
+========================================================
+
+read the file and define variables
+
+```{r}
+data <- read.csv("ClutchSize.csv")
+clutch <- c(data$Clutch_size)
+
+```
+
+Determine distribution
+```{r}
+hist(data$Clutch_size)
+fitdistr(data$Clutch_size, "gamma")
+ks.test (x = data$Clutch_size, ) # finish thish 
+```
+
+By species
+```{r}
+  boot_species <- c()
+  for (i in 1:1000){
+    sample <- sample(clutch, nrow(data), replace = T)
+    boot_species[i] <-mean(sample)
+  }
+
+```
+Vizualization 
+```{r fig.width=7, fig.height=6}
+library("ggplot2")
+qplot(boot_species)
+
+```
+
+By family
+```{r}
+
+boot_family
+for (i in 1:1000) {
+  fsample <- sample(data$Family, 107, replace = T)
+  for (i in 1:1000){
+    
+  }
+  
+}
+
+
