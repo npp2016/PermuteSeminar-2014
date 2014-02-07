@@ -110,18 +110,18 @@ The log normal seems to fit the best
    
 
 ```r
-bootMEAN <- c()
+bootMEAN1 <- c()
 for (i in 1:200) {
     boot <- sample(1:nrow(ClutchSize), nrow(ClutchSize), replace = T)
     bootSAMPLE <- ClutchSize$Clutch_size[boot]
-    bootMEAN[i] <- mean(bootSAMPLE)
+    bootMEAN1[i] <- mean(bootSAMPLE)
 }
 ```
 
 
 
 ```r
-hist(bootMEAN)
+hist(bootMEAN1)
 ```
 
 ![plot of chunk unnamed-chunk-8](figure/unnamed-chunk-8.png) 
@@ -132,7 +132,7 @@ hist(bootMEAN)
   
 
 ```r
-bootMEAN <- c()
+bootMEAN2 <- c()
 for (i in 1:200) {
     boot <- sample(ClutchSize$Family, max(ClutchSize$Family), replace = T)
     boots <- c()
@@ -140,14 +140,14 @@ for (i in 1:200) {
         boots <- c(boots, ClutchSize$Clutch_size[which(ClutchSize$Family == 
             boot[i])])
     }
-    bootMEAN <- c(bootMEAN, mean(boots))
+    bootMEAN2 <- c(bootMEAN2, mean(boots))
 }
 ```
 
 
 
 ```r
-hist(bootMEAN)
+hist(bootMEAN2)
 ```
 
 ![plot of chunk unnamed-chunk-10](figure/unnamed-chunk-10.png) 
@@ -157,18 +157,21 @@ hist(bootMEAN)
   
 
 ```r
-bootFAM <- c()
-for (i in 1:10) {
-    bootFAM <- sample(ClutchSize$Family, max(ClutchSize$Family), replace = T)
-    bootGENUS <- c()
-    for (j in 1:length(bootFAM)) {
-        bootTEST <- sample(ClutchSize$Genus_name[which(ClutchSize$Family == 
-            bootFAM[j])], length(ClutchSize$Genus_name[which(ClutchSize$Family == 
-            bootFAM)]), replace = T)
-        bootGENUS <- c(bootGENUS, bootTEST)
-    }
+bootFAM <- sample(ClutchSize$Family, max(ClutchSize$Family), replace = T)
+for (i in 1:length(bootFAM)) {
+    
 }
 ```
 
+  
+Compare the distributions
+------------------------------------
+
+```r
+hist(bootMEAN2, border = "blue", col = "lightgrey", main = "Comparing Histograms of the Mean")
+hist(bootMEAN1, border = "red", col = "grey40", add = T)
+```
+
+![plot of chunk unnamed-chunk-12](figure/unnamed-chunk-12.png) 
 
 
