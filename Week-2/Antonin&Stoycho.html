@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<!-- saved from url=(0014)about:internet -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+<title></title>
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 12px;
+   margin: 8px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 { 
+   font-size:2.2em; 
+}
+
+h2 { 
+   font-size:1.8em; 
+}
+
+h3 { 
+   font-size:1.4em; 
+}
+
+h4 { 
+   font-size:1.0em; 
+}
+
+h5 { 
+   font-size:0.9em; 
+}
+
+h6 { 
+   font-size:0.8em; 
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre {	
+   margin-top: 0;
+   max-width: 95%;
+   border: 1px solid #ccc;
+   white-space: pre-wrap;
+}
+
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code.r, code.cpp {
+   background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * { 
+      background: transparent !important; 
+      color: black !important; 
+      filter:none !important; 
+      -ms-filter: none !important; 
+   }
+
+   body { 
+      font-size:12pt; 
+      max-width:100%; 
+   }
+       
+   a, a:visited { 
+      text-decoration: underline; 
+   }
+
+   hr { 
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote { 
+      padding-right: 1em; 
+      page-break-inside: avoid; 
+   }
+
+   tr, img { 
+      page-break-inside: avoid; 
+   }
+
+   img { 
+      max-width: 100% !important; 
+   }
+
+   @page :left { 
+      margin: 15mm 20mm 15mm 10mm; 
+   }
+     
+   @page :right { 
+      margin: 15mm 10mm 15mm 20mm; 
+   }
+
+   p, h2, h3 { 
+      orphans: 3; widows: 3; 
+   }
+
+   h2, h3 { 
+      page-break-after: avoid; 
+   }
+}
+
+</style>
+
+
+
+
+
+</head>
+
+<body>
+<p>Antonin &amp; Stoycho</p>
+
+<p>CLUTCH SIZE - HIERARCHICAL SAMPLING</p>
+
+<h1></h1>
+
+<p>STEP1</p>
+
+<p>The distribution closely matches LOG-NORMAL</p>
+
+<pre><code>
+hist (log(x$Clutch_size))
+
+</code></pre>
+
+<p>STEP 1:</p>
+
+<pre><code>
+
+species &lt;- rep(NA,100)
+for (i in 1:100) {species [i] &lt;- mean (sample(x$Clutch_size,100,replace=T))}
+hist (species, col=&quot;grey&quot;)
+cat(&quot;STEP1: Estimated mean =&quot;, mean(species),&quot;and stdev =&quot;, sqrt(var(species)),&quot;\n&quot;,sep=&quot; &quot;)
+
+
+</code></pre>
+
+<p>STEP 2:</p>
+
+<pre><code>
+metagenera &lt;- rep (NA,100)
+for (j in 1:100){
+
+  genus &lt;- sample (x$Genus_name,1)
+
+  genera &lt;- rep (NA, 100)
+
+  for (k in 1:100){genera[k] &lt;- sample (x [x$Genus_name == genus,&quot;Species_name&quot;], 100, replace=TRUE)}
+
+  metagenera[j] &lt;- mean (genera)
+
+}
+
+hist (metagenera, col=&quot;grey&quot;)
+cat(&quot;STEP2: Estimated mean =&quot;, mean(metagenera),&quot;and stdev =&quot;, sqrt(var(metagenera)),&quot;\n&quot;,sep=&quot; &quot;)
+
+</code></pre>
+
+<p>STEP 3:</p>
+
+<pre><code>
+familyx &lt;- rep(NA, 100)
+for (l in 1:100){
+
+  famx &lt;- sample (x$Family,1)
+
+  genx &lt;- sample (x[x$Family == famx, &quot;Genus_name&quot;], 1)
+
+  for (k in 1:100){familyx[k] &lt;- sample (x [x$Genus_name == genx,&quot;Species_name&quot;], 100, replace=TRUE)}
+
+  rm(famx, genx)
+
+}
+hist(familyx, col=&quot;grey&quot;)
+cat(&quot;STEP3: Estimated mean =&quot;, mean(familyx),&quot;and stdev =&quot;, sqrt(var(familyx)),&quot;\n&quot;,sep=&quot; &quot;)
+
+</code></pre>
+
+<p>SUMMARY</p>
+
+<pre><code>cat(&quot;STEP1: Estimated mean =&quot;, mean(species),&quot;and stdev =&quot;, sqrt(var(species)),&quot;\n&quot;,sep=&quot; &quot;)
+cat(&quot;STEP2: Estimated mean =&quot;, mean(metagenera),&quot;and stdev =&quot;, sqrt(var(metagenera)),&quot;\n&quot;,sep=&quot; &quot;)
+cat(&quot;STEP3: Estimated mean =&quot;, mean(familyx),&quot;and stdev =&quot;, sqrt(var(familyx)),&quot;\n&quot;,sep=&quot; &quot;)
+
+</code></pre>
+
+</body>
+
+</html>
+
