@@ -1,0 +1,76 @@
+Week 2 Exercises
+============
+Emily Rollinson and Sarah Supp. 
+
+
+1) Decide on the best distribution for the clutch size data
+
+```{r}
+clutch<-read.csv("ClutchSize.csv")
+head(clutch)
+mean<-mean(clutch$Clutch_size)
+sd<-sd(clutch$Clutch_size)
+mean
+sd
+hist(log(clutch$Clutch_size))
+```
+The distribution appears log-normal.
+
+2) Using the statistic <i>mean clutch size</i>, compare the results of bootstrapping 3 ways:  
+
+
+a) sample with replacement from species regardless of higher taxonomic information; 
+
+```{r}
+
+mean(clutch$Clutch_size)   
+n = nrow(clutch)
+
+est = NULL
+for (i in 1:1000){
+  boot = sample(clutch$Clutch_size, n, replace=TRUE)
+  mean = mean(boot)
+  est = append(est,mean)
+}     
+
+      mean(est)
+```
+
+b) Sample with replacement from the list of families, then sample the species from that list with replacement and bootstrap the species samples.
+
+```{r}
+      f=length(unique(clutch$Family))
+est2 = NULL
+for (i in 1:1000){
+  fam = sample(clutch$Family, f, replace = TRUE)
+  subdat = clutch[which(clutch$Family %in% fam),]
+  boot = sample(subdat$Clutch_size, n, replace=TRUE)
+  mean = mean(boot)
+  est2 = append(est,mean)
+}     
+
+      mean(est2)
+      
+```
+
+
+
+c) Sample families with replacement.  Within that set of samples, sample genera with replacement.  Within this second set of samples, sample species with replacement, and create a bootstrap estimate of clutch size mean from this sampled list of species.  This may not be exactly right.
+
+```{r}
+      f=length(unique(clutch$Family))
+est3 = NULL
+for (i in 1:1000){
+  fam = sample(clutch$Family, f, replace = TRUE)
+  subdat = clutch[which(clutch$Family %in% fam),]
+   g=length(unique(subdat$Genus_name))
+  gen = sample(subdat$Genus_name, g, replace = TRUE)
+  subdat2 = subdat[which(subdat$Genus_name %in% gen),]
+  boot = sample(subdat2$Clutch_size, n, replace=TRUE)
+  mean = mean(boot)
+  est3 = append(est3,mean)
+}     
+
+mean(est3)
+      
+```
