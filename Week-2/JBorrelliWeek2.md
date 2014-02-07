@@ -168,7 +168,8 @@ Compare the distributions
 ------------------------------------
 
 ```r
-hist(bootMEAN2, border = "blue", col = "lightgrey", main = "Comparing Histograms of the Mean")
+hist(bootMEAN2, border = "blue", col = "lightgrey", main = "Comparing Histograms of the Mean", 
+    xlab = "Mean")
 hist(bootMEAN1, border = "red", col = "grey40", add = T)
 ```
 
