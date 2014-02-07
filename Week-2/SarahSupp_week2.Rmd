@@ -1,9 +1,98 @@
 Permute Seminar, Week 2
 ========================================================
+Sarah Supp and Emily Rollinson
 
 **In Class Examples:**
-
+--------------------------
+First, we read in the data on Clutch Size.
 ```{r}
+library(ggplot2)
+library(MASS)
+
+setwd("/Users/sarah/Documents/GitHub/PermuteSeminar-2014/Week-2/")
+clutch = read.csv("ClutchSize.csv")
+
+print (nrow(clutch))
 ```
 
+**1. What is the best distribution for the clutch size data?**
+
+The data are continuous, long right tail
+```{r}
+ggplot(clutch, aes(Clutch_size)) + geom_histogram(col="white") + 
+  theme_classic() + theme(text = element_text(size=20))
+
+fitdistr(clutch$Clutch_size, densfun="lognormal")
+
+avg= mean(clutch$Clutch_size)
+med = median(clutch$Clutch_size)
+stdev = sd(clutch$Clutch_size)
+```
+
+**2. What is the statistic mean? Sample with replacement from:**
+**a) species**
+
+```{r}
+print (avg)
+n = nrow(clutch)
+
+est = NULL
+for (i in 1:1000){
+  boot = sample(clutch$Clutch_size, n, replace=TRUE)
+  mean = mean(boot)
+  est = append(est, mean)
+}
+
+mean(est)
+```
+
+**b) family**
+```{r}
+f = length(unique(clutch$Family))
+
+est2 = NULL
+for (i in 1:1000){
+  fam = sample(clutch$Family, f, replace=TRUE)
+  subdat = clutch[which(clutch$Family %in% fam),]
+  boot = sample(subdat$Clutch_size, n, replace=TRUE)
+  mean = mean(boot)
+  est2 = append(est2, mean)
+}
+
+mean(est2)
+```
+
+**c) bootstrap at all levels - sample with replacement for families, we used the total number of unique families. Within those families, count the number of unique genera, and sample from the genera. Within those genera, sample from the species, such that n = the length of the original dataset**
+```{r}
+f = length(unique(clutch$Family))
+
+est3 = NULL
+for (i in 1:1000){
+  fam = sample(clutch$Family, f, replace=TRUE)
+  subdat = clutch[which(clutch$Family %in% fam),]
+  g = length(unique(subdat$Genus_name)) #this is not exactly what Heather was saying
+  gen = sample(subdat$Genus_name, g, replace=TRUE)
+  subdat2 = subdat[which(subdat$Genus_name %in% gen),]
+  boot = sample(subdat2$Clutch_size, n, replace=TRUE)
+  mean = mean(boot)
+  est3 = append(est3, mean)
+}
+
+mean(est3)
+```
+
+**plot the data as histograms. The first method matches the mean of the original data and has lower variance. The second two methods are similar (in the way that we implemented them) but have wider variance.**
+
+```{r}
+bootdata = data.frame(est, est2, est3)
+
+ggplot(bootdata, aes(est, fill = "species")) + geom_histogram(alpha = 0.5) + theme_classic() + theme(text = element_text(size=20)) + 
+  geom_histogram(aes(est2, fill = "family"), alpha=0.5) + 
+  geom_histogram(aes(est3, fill = "hierarchical"), alpha = 0.5) + 
+  geom_vline(data=clutch, aes(xintercept=mean(Clutch_size)), linetype="longdash")
+```
+
+
+The population mean is `r avg`. 
+The data bootstrapped by species is `r mean(est)`, by family is `r mean(est2)`, and by family hierarchically is `r mean(est3)`.
 
