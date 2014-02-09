@@ -1,0 +1,20 @@
+Permute Seminar, Week 3
+========================================================
+**for week 3** read Chapter 8 in Efron & Tibshirani, and notes on Dependent Bootstrap (on GitHub)
+
+Load the libraries that we will need for examples
+```{r}
+library(ggplot2)
+
+se <- function(x) sqrt(var(x)/length(x))
+```
+
+**notes**
+---------
+
+
+**From the text:**
+--------------------
+Chapter 8
+----------
+
