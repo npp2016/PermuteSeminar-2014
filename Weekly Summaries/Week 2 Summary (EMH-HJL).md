@@ -27,6 +27,7 @@ To write code that will run as embedded within R Markdown:
 
     ```{r }
     summary(cars)
+
     ```
 
 ```
@@ -182,27 +183,25 @@ First, we read in the data on Clutch Size.
 ```r
 library(ggplot2)
 library(MASS)
-
-clutch = read.csv("/Users/emilypetchler/Documents/GitHub/Emily's R stuff for seminar/ClutchSize.csv")
+library(RCurl)
 ```
 
 ```
-## Warning: cannot open file '/Users/emilypetchler/Documents/GitHub/Emily's R
-## stuff for seminar/ClutchSize.csv': No such file or directory
-```
-
-```
-## Error: cannot open the connection
+## Loading required package: bitops
 ```
 
 ```r
-## Change this to be where you store your documents for GitHub...
+
+# This will grab the csv file from GitHub.com using the RCurl library
+rawURL <- getURL("https://raw.github.com/PermuteSeminar/PermuteSeminar-2014/master/Week-2/ClutchSize.csv")
+clutch <- read.csv(text = rawURL)
+
 
 print(nrow(clutch))
 ```
 
 ```
-## Error: object 'clutch' not found
+## [1] 2392
 ```
 
 
@@ -218,8 +217,11 @@ ggplot(clutch, aes(Clutch_size)) + geom_histogram(col = "white") + theme_classic
 ```
 
 ```
-## Error: object 'clutch' not found
+## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust
+## this.
 ```
+
+![plot of chunk unnamed-chunk-6](figure/unnamed-chunk-6.png) 
 
 ```r
 
@@ -227,32 +229,16 @@ fitdistr(clutch$Clutch_size, densfun = "lognormal")
 ```
 
 ```
-## Error: object 'clutch' not found
+##    meanlog     sdlog  
+##   1.111122   0.502051 
+##  (0.010265) (0.007259)
 ```
 
 ```r
 
 avg = mean(clutch$Clutch_size)
-```
-
-```
-## Error: object 'clutch' not found
-```
-
-```r
 med = median(clutch$Clutch_size)
-```
-
-```
-## Error: object 'clutch' not found
-```
-
-```r
 stdev = sd(clutch$Clutch_size)
-```
-
-```
-## Error: object 'clutch' not found
 ```
 
 
@@ -267,18 +253,11 @@ print(avg)
 ```
 
 ```
-## Error: object 'avg' not found
+## [1] 3.448
 ```
 
 ```r
 n = nrow(clutch)
-```
-
-```
-## Error: object 'clutch' not found
-```
-
-```r
 
 est = NULL
 for (i in 1:1000) {
@@ -286,23 +265,12 @@ for (i in 1:1000) {
     mean = mean(boot)
     est = append(est, mean)
 }
-```
-
-```
-## Error: object 'clutch' not found
-```
-
-```r
 
 mean(est)
 ```
 
 ```
-## Warning: argument is not numeric or logical: returning NA
-```
-
-```
-## [1] NA
+## [1] 3.449
 ```
 
 
@@ -312,13 +280,6 @@ mean(est)
 
 ```r
 f = length(unique(clutch$Family))
-```
-
-```
-## Error: object 'clutch' not found
-```
-
-```r
 
 est2 = NULL
 for (i in 1:1000) {
@@ -328,23 +289,12 @@ for (i in 1:1000) {
     mean = mean(boot)
     est2 = append(est2, mean)
 }
-```
-
-```
-## Error: object 'clutch' not found
-```
-
-```r
 
 mean(est2)
 ```
 
 ```
-## Warning: argument is not numeric or logical: returning NA
-```
-
-```
-## [1] NA
+## [1] 3.467
 ```
 
 
@@ -354,13 +304,6 @@ mean(est2)
 
 ```r
 f = length(unique(clutch$Family))
-```
-
-```
-## Error: object 'clutch' not found
-```
-
-```r
 
 est3 = NULL
 for (i in 1:1000) {
@@ -373,23 +316,12 @@ for (i in 1:1000) {
     mean = mean(boot)
     est3 = append(est3, mean)
 }
-```
-
-```
-## Error: object 'clutch' not found
-```
-
-```r
 
 mean(est3)
 ```
 
 ```
-## Warning: argument is not numeric or logical: returning NA
-```
-
-```
-## [1] NA
+## [1] 3.465
 ```
 
 
@@ -409,22 +341,27 @@ ggplot(bootdata, aes(est, fill = "species")) + geom_histogram(alpha = 0.5) +
 ```
 
 ```
-## Error: object 'clutch' not found
+## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust
+## this.
 ```
+
+```
+## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust
+## this.
+```
+
+```
+## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust
+## this.
+```
+
+![plot of chunk unnamed-chunk-10](figure/unnamed-chunk-10.png) 
 
 
 <br/>
 
-The population mean is 
-
-```
-
-Error in eval(expr, envir, enclos) : object 'avg' not found
-
-```
-
-.
-The data bootstrapped by species is NA, by family is NA, and by family hierarchically is NA.
+The population mean is 3.448.
+The data bootstrapped by species is 3.4491, by family is 3.4673, and by family hierarchically is 3.4649.
 
 <br/>
 <br/>

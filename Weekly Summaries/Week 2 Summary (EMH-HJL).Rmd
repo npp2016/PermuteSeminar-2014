@@ -164,9 +164,12 @@ First, we read in the data on Clutch Size.
 ```{r}
 library(ggplot2)
 library(MASS)
+library(RCurl)
 
-clutch = read.csv("/Users/emilypetchler/Documents/GitHub/Emily's R stuff for seminar/ClutchSize.csv")
-## Change this to be where you store your documents for GitHub...
+#This will grab the csv file from GitHub.com using the RCurl library
+rawURL <- getURL("https://raw.github.com/PermuteSeminar/PermuteSeminar-2014/master/Week-2/ClutchSize.csv")
+clutch <- read.csv(text = rawURL)
+
 
 print (nrow(clutch))
 ```
