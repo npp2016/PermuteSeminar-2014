@@ -62,7 +62,13 @@ ggplot(lh, aes(period, c)) + geom_line(col="black") + theme_classic() + labs(tit
 We expect that $RSE(b)$ has expectation $E(RSE(b))$ and is minimized when $b = \beta$.  We can calculate $RSE(b)$ asa function of $b$, and choose the value that minimizes this function to serve as our estimate of $\beta$.  Remember that $\beta$ varies between $-1$ and $1$.
 ```{r}
 Z = data.frame("t1" = c(lh$c[1:47]), "t2" = c(lh$c[2:48]))
-optimize(f = ) #I'm stuck on how to actually calculate the least-squares estimate of beta.
+bvals<- seq(-1,1, by=0.001)
+
+for (i in 1:length(bvals)){
+  
+  
+}
+#I'm stuck on how to actually calculate the least-squares estimate of beta.
 ```
 
 We can use bootstrap to see how accurate our estimate of $\hat{\beta}$ is.  
