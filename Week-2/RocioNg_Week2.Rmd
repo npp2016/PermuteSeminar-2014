@@ -1,47 +1,168 @@
-Week 2 Exercises - Rocio
+Week 2 Exercises 
 ========================================================
+**Rocio Ng**
 
-read the file and define variables
+
+**LateX notes**
+------------------
+We can show equations in R markdown. We use double dollar signs to start a LateX equation.
+
+$$
+\pi=3.14
+$$
+
+This is how we can say $\pi=3.14$ inline text.
+
+Superscripts $x^{3}$ and subscripts $x_{3}$ can be done too.
+
+Here is a fraction: $\frac{13}{100}$
+
+Here is a combination: $\frac{x_{3}}{5}$
+
+Greek letters:
+---------------
+Beta $\beta$
+gamma $\gamma$
+Gamma $\Gamma$
+
+Text
+-------
+$\mbox{standard deviation}$
+
+$\sqrt{25}$
+
+Symbols
+--------
+hat: $\hat{\alpha}$ , $\hat{\theta}$
+
+Lim: $\lim_{n\rightarrow3}$
+
+Integral: $\int_{0}^{10}$
+
+Sum: $\sum$
+
+Sim: $\sim 3$
+
+Approx: $\approx 3$
+
+Complicated expression:
+$$\lim_{\epsilon\rightarrow 0_{+}} \frac{\int_{a_{i}}^{a_{i}+\epsilon}\sqrt{1+(x-\mu)^{2}dx}}{\Phi(\epsilon)}$$
+
+--------------------------------------------------------------
+
+
+**In Class Excercises**
+------------------------
+
+**Using clutch size data**
+
+We were given data on bird clutch size for a variety of species.
+1. What's the best distribution for clutch size?
+2. What's the mean clutch size, using three nonparametric bootstrap techniques:
+
+  A. Sample with replacement from species (irregardless of higher taxonomy)
+  B. Sample with replacement from family, then sample the species from that list with     replacement, bootstrapping the species samples.
+  C. Bootstrap across all levels by sampling with replacement from family, then sampling within this for genera, and then within this for species (hierarchical sampling).
+
+
+
+set working directory:
+
+```{r}
+setwd("C:/Users/rocio_000/Google Drive/Courses_Seminars/Stats_Seminar/PermuteSeminar-2014/Week-2")
+```
+
+
+Read the file and define variables:
 
 ```{r}
 data <- read.csv("ClutchSize.csv")
-clutch <- c(data$Clutch_size)
-
+clutch <- c(data$Clutch_size)  #vector containing all the clutch sizes
 ```
 
-Determine distribution
+load the needed libraries
 ```{r}
-hist(data$Clutch_size)
-fitdistr(data$Clutch_size, "gamma")
-ks.test (x = data$Clutch_size, ) # finish thish 
+library('ggplot2')
+library("MASS")
 ```
 
-By species
+**Determine which distribution may best fit Clutch Size Data**
+
+```{r}
+head(data)
+
+hist(data$Clutch_size)
+qplot(data$Clutch_size)
+```
+
+Use the `fitdistr` function to determine the best fit parameters for lognormal and gamma distributions from MASS package
+
+```{r}
+fitdistr(data$Clutch_size, "lognormal")
+fitdistr(data$Clutch_size, "gamma")
+
+ks.test (x = data$Clutch_size, y = "pgamma", shape=4.1,rate=1.19 ) # finish this
+ks.test (x = data$clutch_size, y = "plnorm", meanlog=1.1, sdlog=0.5)
+```
+
+what is the true clutch size mean:
+
+```{r}
+mean(data$Clutch_size)
+```
+
+
+**Get Bootstrap estimates**
+
+By species:
+
 ```{r}
   boot_species <- c()
   for (i in 1:1000){
-    sample <- sample(clutch, nrow(data), replace = T)
+    sample <- sample(data$Clutch_size, nrow(data), replace = T)
     boot_species[i] <-mean(sample)
   }
-
 ```
-Vizualization 
-```{r fig.width=7, fig.height=6}
-library("ggplot2")
-qplot(boot_species)
 
+Vizualization using `qplot` (quickplot) from ggplot2 package
+```{r fig.width=7, fig.height=6}
+qplot(boot_species)
 ```
 
 By family
 ```{r}
 
-boot_family
-for (i in 1:1000) {
-  fsample <- sample(data$Family, 107, replace = T)
-  for (i in 1:1000){
-    
-  }
-  
-}
+#figure out how many unique families:
+numFam <- length(unique(data$Family))  #There are 108 in this case
 
+boot_family <- c()
+
+for (i in 1:1000) {
+  
+  fsample <- sample(data$Family, numFam, replace = T)  #resamples all the families and randomly picks out 108 
+  
+  #subsets data to include only rows where family is in fsample!
+    data.sub <- subset(data, data$Family %in% fsample)
+  
+    boot_family[i] <- mean(sample(data.sub$Clutch_size, nrow(data.sub), replace =T))
+  
+  #print(paste("this loop has been run", i, "times"))
+}
+```
+
+Display mean and histogram 
+
+```{r}
+mean(boot_family)
+
+qplot(boot_family)
+qplot(boot_species)
+
+```
+
+overlay two distributions (family and species)
+
+```{r}
+hist(boot_family, border = "blue")
+hist (boot_species, add = T)
 

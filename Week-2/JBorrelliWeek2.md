@@ -13,7 +13,23 @@ Read in data downloaded from blackboard
 ```r
 setwd("~/Dropbox/PermuteSeminar/")
 ClutchSize <- read.csv("ClutchSize.csv")
+
+require(RCurl)
 ```
+
+```
+Loading required package: RCurl
+```
+
+```
+Loading required package: bitops
+```
+
+```r
+raw <- getURL("https://raw.github.com/PermuteSeminar/PermuteSeminar-2014/master/Week-2/ClutchSize.csv")
+clutch <- read.csv(text = raw)
+```
+
 
 
 The LaTeX test:  
@@ -168,7 +184,8 @@ Compare the distributions
 ------------------------------------
 
 ```r
-hist(bootMEAN2, border = "blue", col = "lightgrey", main = "Comparing Histograms of the Mean")
+hist(bootMEAN2, border = "blue", col = "lightgrey", main = "Comparing Histograms of the Mean", 
+    xlab = "Mean")
 hist(bootMEAN1, border = "red", col = "grey40", add = T)
 ```
 
