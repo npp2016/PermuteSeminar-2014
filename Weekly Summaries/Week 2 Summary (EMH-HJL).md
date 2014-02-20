@@ -27,7 +27,6 @@ To write code that will run as embedded within R Markdown:
 
     ```{r }
     summary(cars)
-
     ```
 
 ```
@@ -217,8 +216,7 @@ ggplot(clutch, aes(Clutch_size)) + geom_histogram(col = "white") + theme_classic
 ```
 
 ```
-## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust
-## this.
+## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
 ```
 
 ![plot of chunk unnamed-chunk-6](figure/unnamed-chunk-6.png) 
@@ -270,7 +268,7 @@ mean(est)
 ```
 
 ```
-## [1] 3.449
+## [1] 3.448
 ```
 
 
@@ -321,7 +319,7 @@ mean(est3)
 ```
 
 ```
-## [1] 3.465
+## [1] 3.462
 ```
 
 
@@ -341,18 +339,9 @@ ggplot(bootdata, aes(est, fill = "species")) + geom_histogram(alpha = 0.5) +
 ```
 
 ```
-## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust
-## this.
-```
-
-```
-## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust
-## this.
-```
-
-```
-## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust
-## this.
+## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
+## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
+## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
 ```
 
 ![plot of chunk unnamed-chunk-10](figure/unnamed-chunk-10.png) 
@@ -361,7 +350,7 @@ ggplot(bootdata, aes(est, fill = "species")) + geom_histogram(alpha = 0.5) +
 <br/>
 
 The population mean is 3.448.
-The data bootstrapped by species is 3.4491, by family is 3.4673, and by family hierarchically is 3.4649.
+The data bootstrapped by species is 3.4476, by family is 3.4673, and by family hierarchically is 3.4624.
 
 <br/>
 <br/>
