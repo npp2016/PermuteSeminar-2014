@@ -1,0 +1,63 @@
+Permute Seminar, Week 2
+========================================================
+
+**notes**
+---------
+A census is an exact count, a sample is only some of those things in the total population.
+In a census, the information that you have is a description.
+In a sample, need statistical inference to use your sample to make inferences about the whole population.
+
+Parameter describes the distribution of the population, statistic can be used to estimate a parameter. A statistic is any metric that you can calculate from your data.
+Paramter is a function of F
+statistic is a function of x (which is drawn from f)
+
+Plug-in principle says that you can estimate a parameter from the sample, and use it to describe the population.
+The empirical distribution {F hat} is your sampled data. Since we aren't assuming a partiular distribution (*nonparametric*), this is the best we can do. If the data are really sparse (e.g. n = 5) it would be much better if you knew the distribution, and could draw from that (*parametric*), versus taking a bootstrap approach (because you don't have enough information).
+
+Goal of bootstrapping is to try to recreate the process that generated the data. The method of bootstrapping used should reflect this, and take into consideration the hypothesis that is being tested.
+
+** LateX notes**
+--------------------
+We can show equations in R markdown. We use double dollar signs to start a LateX equation.
+$$
+\pi=3.14
+$$
+
+This is how we can say $\pi=3.14$ inline text.
+
+Superscripts $x^{3}$ and subscripts $x_{3}$ can be done too.
+
+Here is a fraction: $\frac{13}{100}$
+
+Here is a combination: $\frac{x_{3}}{5}$
+
+Greek letters:
+---------------
+Beta $\beta$
+gamma $\gamma$
+Gamma $\Gamma$
+
+Text
+-------
+$\mbox{standard deviation}$
+
+$\sqrt{25}$
+
+Symbols
+--------
+hat: $\hat{\alpha}$ , $\hat{\theta}$
+
+Lim: $\lim_{n\rightarrow3}$
+
+Integral: $\int_{0}^{10}$
+
+Sum: $\sum$
+
+Sim: $\sim 3$
+
+Approx: $\approx 3$
+
+Complicated expression:
+$$\lim_{\epsilon\rightarrow 0_{+}} \frac{\int_{a_{i}}^{a_{i}+\epsilon}\sqrt{1+(x-\mu)^{2}dx}}{\Phi(\epsilon)}$$
+
+
