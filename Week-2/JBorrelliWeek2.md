@@ -13,7 +13,23 @@ Read in data downloaded from blackboard
 ```r
 setwd("~/Dropbox/PermuteSeminar/")
 ClutchSize <- read.csv("ClutchSize.csv")
+
+require(RCurl)
 ```
+
+```
+Loading required package: RCurl
+```
+
+```
+Loading required package: bitops
+```
+
+```r
+raw <- getURL("https://raw.github.com/PermuteSeminar/PermuteSeminar-2014/master/Week-2/ClutchSize.csv")
+clutch <- read.csv(text = raw)
+```
+
 
 
 The LaTeX test:  
