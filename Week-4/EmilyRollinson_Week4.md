@@ -5,7 +5,19 @@ For this week, we read Chapter 8 in Efron and Tibshirani, and notes on bootstrap
 In-class discussion:
 ---------------------
 
+The goal of the bootstrap algorithm is to estimate the probability distribution that underlies our data.  We can use our empirical distribution in lieu of the full distribution to understand the distribution of statisics of interest.
 
+Bootstraps are often used to estimate standard errors.  We select $B$ independent bootstrap samples, calculate our test statistic using the bootstrap samples, and use the standard deviation of the $B$ replications as an estimate of the standard error of the unknown distribution $F$ that underlies our empirical data.  This works for both a single unknown distribution (see Figure 8.1 in E&T) or a more complicated underlying process or a whole set of unknown distributions (see Figure 8.3 in E&T). We could easily imagine some biological measure influenced by many processes (i.e., many underlying and unknown statistical distributions). 
+
+*Goals for the Lutenizing Hormone example*
+Today's examples will focus on data of lutenizing hormone over time.  We will model this as an autoregressive model of period 1.
+$$
+AR(1): z_{t} = \beta z+{t-1} + \epsilon_{t}
+$$
+1) Look at a histogram of the level values (ignoring the time data).
+2) Find the value of $\hat{b}$ as described in E&T equation 8.20 using two methods:
+2a) Sample with replacement from the random deviations $\epsilon
+2b) Using the moving blocks method
 
 
 Examples from Efron and Tibshirani:
@@ -63,7 +75,7 @@ se
 ```
 
 ```
-## [1] 26.8
+## [1] 27.41
 ```
 
 
@@ -75,7 +87,7 @@ mean(thetabs)/se
 ```
 
 ```
-## [1] 1.169
+## [1] 1.073
 ```
 
 
@@ -105,15 +117,28 @@ ggplot(seplot, aes(SE)) + geom_histogram(fill = "black", binwidth = 10) + theme_
 
 This data set shows the levels of a lutenizing hormone for 48 consecutive 10-minute intervals in one woman.  These data are not a random sample from a distribution; they instead are an example of a time series (see the figure below). 
 
+Let's look at a histogram of the data first just for fun:
 
 ```r
 lh <- read.csv("hormone_data.csv", header = TRUE)
+hist(lh$level)
+```
+
+![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-7.png) 
+
+
+Looks pretty normal!  Which is rad, but unhelpful, because the data aren't IID - it's a time series.
+
+
+
+```r
+
 require(ggplot2)
 ggplot(lh, aes(period, level)) + geom_line(col = "black") + theme_classic() + 
     labs(title = "Lutenizing Hormone Data")
 ```
 
-![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-7.png) 
+![plot of chunk unnamed-chunk-8](figure/unnamed-chunk-8.png) 
 
 
 We will assume that these data follow a first order autoregressive scheme.  First, we will define the centered measurements $z_{t}=y_{t}-\mu$, where all $z_{t}$ have expectation $0$.
@@ -134,7 +159,7 @@ lh$c = lhc  #defining the new z(t) as y(t) - mean(y) and adding it to the existi
 ggplot(lh, aes(period, c)) + geom_line(col = "black") + theme_classic() + labs(title = "Centered Data")  #plot z
 ```
 
-![plot of chunk unnamed-chunk-8](figure/unnamed-chunk-8.png) 
+![plot of chunk unnamed-chunk-9](figure/unnamed-chunk-9.png) 
 
 
 We expect that $RSE(b)$ has expectation $E(RSE(b))$ and is minimized when $b = \beta$.  We can calculate $RSE(b)$ asa function of $b$, and choose the value that minimizes this function to serve as our estimate of $\beta$.  Remember that $\beta$ varies between $-1$ and $1$.
@@ -163,3 +188,44 @@ e = (Z$t2) - beta * (Z$t1)  #create the estimated value of espilon for each t
 **(8.6) The moving blocks bootstrap**
 
 This is a different approach to bootstrapping time series data that is closer to the approach used in one-sample problems than what is used above.  To generate a bootstrapped version of an observed time series, we choose a particular block length and consider all possible contiguous blocks of this length in the observed data.  We sample these blocks with replacement, instead of sampling single values with replacement.  This preserves some of the autocorrelation in the bootstrapped dataset.  The sampled blocks are pasted together to form a bootstrap time series, so we only want to sample as many blocks as we need to recreate a series approximately the same length as the observed series.  (So if the block length is $l$, we sample $k$ blocks where $n \approx k \cdot l$. 
+
+
+
+```r
+size = 3
+
+data = NULL
+for (i in 1:length(lh$level)) {
+    block = lh$level[i:(i + (size - 1))]
+    s = sample(block, 1)
+    data = append(data, s)
+}
+
+par(mfrow = c(1, 1))
+plot(lh$period, lh$level, type = "l")
+points(lh$period, data, type = "l", col = "steelblue")
+```
+
+![plot of chunk unnamed-chunk-12](figure/unnamed-chunk-12.png) 
+
+
+If we make the block size larger, we lose the pattern in the original time series:
+
+
+```r
+size2 = 10
+
+data2 = NULL
+for (i in 1:length(lh$level)) {
+    block2 = lh$level[i:(i + (size2 - 1))]
+    s2 = sample(block2, 1)
+    data2 = append(data2, s2)
+}
+
+par(mfrow = c(1, 1))
+plot(lh$period, lh$level, type = "l")
+points(lh$period, data2, type = "l", col = "steelblue")
+```
+
+![plot of chunk unnamed-chunk-13](figure/unnamed-chunk-13.png) 
+
