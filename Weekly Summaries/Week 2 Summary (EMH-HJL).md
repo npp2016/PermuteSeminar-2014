@@ -231,10 +231,14 @@ ggplot(clutch, aes(Clutch_size)) + geom_histogram(col = "white") + theme_classic
 
 ```
 <<<<<<< HEAD
+<<<<<<< HEAD
 ## Error: object 'clutch' not found
 =======
 ## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
 >>>>>>> c2150e685e756ad088f4676b951ec1cb002ba1c4
+=======
+## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
+>>>>>>> fac17bcafcf5203220017ba1395863b2947e6670
 ```
 
 ```r
@@ -315,6 +319,7 @@ mean(est)
 
 ```
 <<<<<<< HEAD
+<<<<<<< HEAD
 ## Warning: argument is not numeric or logical: returning NA
 ```
 
@@ -323,6 +328,9 @@ mean(est)
 =======
 ## [1] 3.448
 >>>>>>> c2150e685e756ad088f4676b951ec1cb002ba1c4
+=======
+## [1] 3.448
+>>>>>>> fac17bcafcf5203220017ba1395863b2947e6670
 ```
 
 
@@ -406,6 +414,7 @@ mean(est3)
 
 ```
 <<<<<<< HEAD
+<<<<<<< HEAD
 ## Warning: argument is not numeric or logical: returning NA
 ```
 
@@ -414,6 +423,9 @@ mean(est3)
 =======
 ## [1] 3.462
 >>>>>>> c2150e685e756ad088f4676b951ec1cb002ba1c4
+=======
+## [1] 3.462
+>>>>>>> fac17bcafcf5203220017ba1395863b2947e6670
 ```
 
 
@@ -434,17 +446,23 @@ ggplot(bootdata, aes(est, fill = "species")) + geom_histogram(alpha = 0.5) +
 
 ```
 <<<<<<< HEAD
+<<<<<<< HEAD
 ## Error: object 'clutch' not found
 ```
 
 
 <br/>
 =======
+=======
+>>>>>>> fac17bcafcf5203220017ba1395863b2947e6670
 ## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
 ## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
 ## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
 ```
+<<<<<<< HEAD
 >>>>>>> c2150e685e756ad088f4676b951ec1cb002ba1c4
+=======
+>>>>>>> fac17bcafcf5203220017ba1395863b2947e6670
 
 The population mean is 
 
@@ -460,7 +478,10 @@ The data bootstrapped by species is NA, by family is NA, and by family hierarchi
 =======
 The population mean is 3.448.
 The data bootstrapped by species is 3.4476, by family is 3.4673, and by family hierarchically is 3.4624.
+<<<<<<< HEAD
 >>>>>>> c2150e685e756ad088f4676b951ec1cb002ba1c4
+=======
+>>>>>>> fac17bcafcf5203220017ba1395863b2947e6670
 
 <br/>
 <br/>
