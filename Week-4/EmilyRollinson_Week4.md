@@ -23,6 +23,7 @@ $$
 Examples from Efron and Tibshirani:
 ---------------------
 
+<<<<<<< HEAD
 **(8.3) The two-sample problem**
 
 Sixteen mice were randomly assigned to a treatment group (n=7) or a control group (n=9), and their survival times following a surgery were recorded.  Let $z$ indicate the treatment observations, and $y$ indicate the control observations.
@@ -95,6 +96,28 @@ standard errors above zero.
 
 
 ```r
+=======
+**(8.5 Lutenizing hormone)**
+
+This data set shows the levels of a lutenizing hormone for 48 consecutive 10-minute intervals in one woman.  These data are not a random sample from a distribution; they instead are an example of a time series (see the figure below). 
+
+Let's look at a histogram of the data first just for fun:
+
+```r
+lh <- read.csv("hormone_data.csv", header = TRUE)
+hist(lh$level)
+```
+
+![plot of chunk unnamed-chunk-1](figure/unnamed-chunk-1.png) 
+
+
+Looks pretty normal!  Which is rad, but unhelpful, because the data aren't IID - it's a time series.
+
+
+
+```r
+
+>>>>>>> fac17bcafcf5203220017ba1395863b2947e6670
 require(ggplot2)
 ```
 
@@ -103,6 +126,7 @@ require(ggplot2)
 ```
 
 ```r
+<<<<<<< HEAD
 seplot <- data.frame(thetabs)
 names(seplot) = "SE"
 mean = mean(seplot$SE)
@@ -134,11 +158,17 @@ Looks pretty normal!  Which is rad, but unhelpful, because the data aren't IID -
 ```r
 
 require(ggplot2)
+=======
+>>>>>>> fac17bcafcf5203220017ba1395863b2947e6670
 ggplot(lh, aes(period, level)) + geom_line(col = "black") + theme_classic() + 
     labs(title = "Lutenizing Hormone Data")
 ```
 
+<<<<<<< HEAD
 ![plot of chunk unnamed-chunk-8](figure/unnamed-chunk-8.png) 
+=======
+![plot of chunk unnamed-chunk-2](figure/unnamed-chunk-2.png) 
+>>>>>>> fac17bcafcf5203220017ba1395863b2947e6670
 
 
 We will assume that these data follow a first order autoregressive scheme.  First, we will define the centered measurements $z_{t}=y_{t}-\mu$, where all $z_{t}$ have expectation $0$.
@@ -159,7 +189,11 @@ lh$c = lhc  #defining the new z(t) as y(t) - mean(y) and adding it to the existi
 ggplot(lh, aes(period, c)) + geom_line(col = "black") + theme_classic() + labs(title = "Centered Data")  #plot z
 ```
 
+<<<<<<< HEAD
 ![plot of chunk unnamed-chunk-9](figure/unnamed-chunk-9.png) 
+=======
+![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3.png) 
+>>>>>>> fac17bcafcf5203220017ba1395863b2947e6670
 
 
 We expect that $RSE(b)$ has expectation $E(RSE(b))$ and is minimized when $b = \beta$.  We can calculate $RSE(b)$ asa function of $b$, and choose the value that minimizes this function to serve as our estimate of $\beta$.  Remember that $\beta$ varies between $-1$ and $1$.
@@ -206,7 +240,11 @@ plot(lh$period, lh$level, type = "l")
 points(lh$period, data, type = "l", col = "steelblue")
 ```
 
+<<<<<<< HEAD
 ![plot of chunk unnamed-chunk-12](figure/unnamed-chunk-12.png) 
+=======
+![plot of chunk unnamed-chunk-6](figure/unnamed-chunk-6.png) 
+>>>>>>> fac17bcafcf5203220017ba1395863b2947e6670
 
 
 If we make the block size larger, we lose the pattern in the original time series:
@@ -227,5 +265,92 @@ plot(lh$period, lh$level, type = "l")
 points(lh$period, data2, type = "l", col = "steelblue")
 ```
 
+<<<<<<< HEAD
+=======
+![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-7.png) 
+
+
+
+**(8.3) The two-sample problem**
+
+Sixteen mice were randomly assigned to a treatment group (n=7) or a control group (n=9), and their survival times following a surgery were recorded.  Let $z$ indicate the treatment observations, and $y$ indicate the control observations.
+
+
+```r
+z <- c(94, 197, 16, 38, 99, 141, 23)
+y <- c(52, 104, 146, 10, 51, 30, 40, 27, 46)
+```
+
+
+Together, we will consider the observed data as a vector $x=(z,y).$ and a probability model $P=(F,G)$ where $F$ represents the unknown probability distrbution underlying observed treatment data $z$, and $G$ indicates the unknown probability model from which observed control data $y$ were drawn.  We wish to estimate $P$.  The estimate of P is $\hat{P}=(\hat{F}, \hat{G})$.  A bootstrap sample $x^{*}$ is taken as $\hat{P} \rightarrow x$.  
+
+
+```r
+theta = mean(z) - mean(y)
+theta
+```
+
+```
+## [1] 30.63
+```
+
+
+The difference of the treatment and control means $\hat{\theta}= 30.63$.  
+
+We can also take a bootstrap estimate, and use that to estimate standard error:
+
+
+```r
+meanz <- NULL
+meany <- NULL
+thetabs <- NULL
+for (i in 1:1400) {
+    bootz = sample(z, 7, replace = TRUE)
+    booty = sample(y, 9, replace = TRUE)
+    meanz = append(meanz, mean(bootz))
+    meany = append(meany, mean(booty))
+    thetabs = append(thetabs, mean(bootz) - mean(booty))
+}
+
+se <- sqrt(sum((thetabs - theta)^2)/1399)
+```
+
+
+The bootstrap estimate of standard error for $\hat{\theta}$ is
+
+```r
+se
+```
+
+```
+## [1] 27.27
+```
+
+
+so $\hat{\theta}$ is only
+
+
+```r
+mean(thetabs)/se
+```
+
+```
+## [1] 1.143
+```
+
+
+standard errors above zero.  
+
+
+```r
+require(ggplot2)
+seplot <- data.frame(thetabs)
+names(seplot) = "SE"
+mean = mean(seplot$SE)
+ggplot(seplot, aes(SE)) + geom_histogram(fill = "black", binwidth = 10) + theme_classic() + 
+    geom_vline(xintercept = mean, col = "steelblue")
+```
+
+>>>>>>> fac17bcafcf5203220017ba1395863b2947e6670
 ![plot of chunk unnamed-chunk-13](figure/unnamed-chunk-13.png) 
 

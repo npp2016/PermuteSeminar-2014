@@ -12,6 +12,13 @@ se <- function(x) sqrt(var(x)/length(x))
 
 **notes**
 ---------
+Next week Chapter 15 in Efron and Tibshirani, and read a paper that someone will put on GitHub 
+We will transition to Permutation methods and more primary lit.
+
+Classic example is using bootstrap to estimate standard errors. 1) select N independent bootstraps, 2) calculate x statistic, 3) estimated the standard error of the sample statistic x, look at the full distribution of the test statistic from the bootstrapped data.
+
+Usually bootstrap to same number of data points as the original dataset, to perserve a similar amount of variation in the data.
+
 
 
 **From the text:**
@@ -86,7 +93,8 @@ period = c(1:48)
 level = c(2.4, 2.4, 2.4, 2.2, 2.1, 1.5, 2.3, 2.3, 2.5, 2.0, 1.9, 1.7, 2.2, 1.8, 3.2, 3.2, 2.7, 2.2, 2.2, 1.9, 1.9, 1.8, 2.7, 3.0, 2.3, 2.0, 2.0, 2.9, 2.9, 2.7, 2.7, 2.3, 2.6, 2.4, 1.8, 1.7, 1.4, 1.4, 2.1, 3.3, 3.5, 3.5, 3.1, 2.6, 2.1, 3.4, 3.0, 2.9)
 lut = data.frame(period, level)
 
-ggplot(lut, aes(period, level)) + geom_line() + theme_classic()
+ggplot(lut, aes(period, level)) + geom_line() + theme_classic() + 
+  geom_hline(yintercept = mean(level), col="cadetblue")
 ```
 
 For time-series, we might use a *first order auto-regressive scheme*. 
