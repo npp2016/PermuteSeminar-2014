@@ -14,16 +14,17 @@ Today's examples will focus on data of lutenizing hormone over time.  We will mo
 $$
 AR(1): z_{t} = \beta z+{t-1} + \epsilon_{t}
 $$
-1) Look at a histogram of the level values (ignoring the time data).
-2) Find the value of $\hat{b}$ as described in E&T equation 8.20 using two methods:
-2a) Sample with replacement from the random deviations $\epsilon
-2b) Using the moving blocks method
+
+-Look at a histogram of the level values (ignoring the time data).
+-Find the value of $\hat{b}$ as described in E&T equation 8.20
+-Create new bootstrapped time series using the $\hat{b}$ that we found.
+-An alternative: Using the moving blocks method
 
 
 Examples from Efron and Tibshirani:
 ---------------------
 
-**(8.5 Lutenizing hormone)**
+**(8.5) Lutenizing hormone**
 
 This data set shows the levels of a lutenizing hormone for 48 consecutive 10-minute intervals in one woman.  These data are not a random sample from a distribution; they instead are an example of a time series (see the figure below). 
 
@@ -38,7 +39,6 @@ hist(lh$level)
 
 
 Looks pretty normal!  Which is rad, but unhelpful, because the data aren't IID - it's a time series.
-
 
 
 ```r
@@ -83,11 +83,8 @@ We expect that $RSE(b)$ has expectation $E(RSE(b))$ and is minimized when $b = \
 
 ```r
 Z = data.frame(t1 = c(lh$c[1:47]), t2 = c(lh$c[2:48]))
-optimize(f = )  #I'm stuck on how to actually calculate the least-squares estimate of beta.
-```
-
-```
-## Error: 'interval' is missing
+bvals <- seq(-1, 1, by = 0.001)
+# not sure where to go from here
 ```
 
 
@@ -112,7 +109,7 @@ This is a different approach to bootstrapping time series data that is closer to
 size = 3
 
 data = NULL
-for (i in 1:length(lh$level)) {
+for (i in 1:length(lh$level/size)) {
     block = lh$level[i:(i + (size - 1))]
     s = sample(block, 1)
     data = append(data, s)
@@ -200,7 +197,7 @@ se
 ```
 
 ```
-## [1] 27.27
+## [1] 26.77
 ```
 
 
@@ -212,7 +209,7 @@ mean(thetabs)/se
 ```
 
 ```
-## [1] 1.143
+## [1] 1.148
 ```
 
 
