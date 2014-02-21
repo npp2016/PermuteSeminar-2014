@@ -28,21 +28,21 @@ Examples from Efron and Tibshirani:
 
 This data set shows the levels of a lutenizing hormone for 48 consecutive 10-minute intervals in one woman.  These data are not a random sample from a distribution; they instead are an example of a time series (see the figure below). 
 
-Let's look at a histogram of the data first just for fun:
+A histogram of the data:
+
 ```{r}
 lh <- read.csv("hormone_data.csv", header = TRUE)
 hist(lh$level)
 ```
 
-Looks pretty normal!  Which is rad, but unhelpful, because the data aren't IID - it's a time series.
+The time series:
 
 ```{r}
-
 require(ggplot2)
 ggplot(lh, aes(period, level)) + geom_line(col="black") + theme_classic() + labs(title = "Lutenizing Hormone Data")
 ```
 
-We will assume that these data follow a first order autoregressive scheme.  First, we will define the centered measurements $z_{t}=y_{t}-\mu$, where all $z_{t}$ have expectation $0$.
+We will assume that these data follow a first order autoregressive scheme.  First, we define the centered measurements $z_{t}=y_{t}-\mu$, where all $z_{t}$ have expectation $0$.
 
 Each $z_{t}$ is a linear combination of the previous value $z_{t-1}$ and an independent disturbance term $\epsilon_{t}$, where the $\epsilon_{t}$ is assumed to be a random sample from an unknown distribution $F$ with expectation $0$.
 
@@ -54,15 +54,17 @@ The dates $U$ and $V$ are the beginning and end of the time period; $U=2$; $V=48
 We can estimate the value of $\beta$ using a least squares approach.  First, we estimate the expectation $\mu$ to be the observed average $\bar{y}$, so that $z_{t} = y_{t} - \bar{y}$.
 
 ```{r}
-lhc <- lh$level - mean(lh$level) 
-lh$c = lhc #defining the new z(t) as y(t) - mean(y) and adding it to the existing data frame
-ggplot(lh, aes(period, c)) + geom_line(col="black") + theme_classic() + labs(title = "Centered Data") #plot z
+lhz <- lh$level - mean(lh$level)
+z.t <- as.data.frame(lh$level - mean(lh$level))
+lh$z = lhz #defining the new z(t) as y(t) - mean(y) and adding it to the existing data frame
+ggplot(lh, aes(period, z)) + geom_line(col="black") + theme_classic() #plot z
 ```
 
-We expect that $RSE(b)$ has expectation $E(RSE(b))$ and is minimized when $b = \beta$.  We can calculate $RSE(b)$ asa function of $b$, and choose the value that minimizes this function to serve as our estimate of $\beta$.  Remember that $\beta$ varies between $-1$ and $1$.
+We expect that $RSE(b)$ has expectation $E(RSE(b))$ and is minimized when $b = \beta$.  We can calculate $RSE(b)$ as a function of $b$, and choose the value that minimizes this function to serve as our estimate of $\beta$.  Remember that $\beta$ varies between $-1$ and $1$.
+
 ```{r}
-Z = data.frame("t1" = c(lh$c[1:47]), "t2" = c(lh$c[2:48]))
-bvals<- seq(-1,1, by=0.001)
+b <- seq(-1,1, by=0.001)
+
 #not sure where to go from here
 
 ```
@@ -100,6 +102,7 @@ points(lh$period, data, type="l", col="steelblue")
 
 
 **(8.3) The two-sample problem**
+*This is from the book, not from class examples*
 
 Sixteen mice were randomly assigned to a treatment group (n=7) or a control group (n=9), and their survival times following a surgery were recorded.  Let $z$ indicate the treatment observations, and $y$ indicate the control observations.
 
