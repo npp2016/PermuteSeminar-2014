@@ -98,23 +98,6 @@ plot(lh$period, lh$level, type="l")
 points(lh$period, data, type="l", col="steelblue")
 ```
 
-If we make the block size larger, we lose the pattern in the original time series:
-
-```{r}
-size2 = 10
-
-data2=NULL
-for (i in 1:length(lh$level)){
-  block2 = lh$level[i:(i+(size2-1))]
-  s2 = sample(block2,1)
-  data2 = append(data2,s2)
-}
-
-par(mfrow=c(1,1))
-plot(lh$period, lh$level, type="l")
-points(lh$period, data2, type="l", col="steelblue")
-```
-
 
 **(8.3) The two-sample problem**
 
