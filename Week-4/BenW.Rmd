@@ -38,6 +38,7 @@ foo<-function(b,x){
 (dat$z[x] - b * dat$z[x-1])^2
 }
 
+
 bvals<-sapply(pB,function(f){
   
 #Get the estimates for the entire time series
@@ -54,11 +55,72 @@ rowS<-data.frame(B=pB,RSE=apply(bvals,2,sum))
 hist(rowS$RSE)
 
 #which beta value minimizes the value
-rowS[which.min(rowS$RSE),]
+B<-rowS[which.min(rowS$RSE),]$B
 ```
 
-
+Given the betahat, find the episilon 
 ```{r fig.width=7, fig.height=6}
-plot(cars)
+epi<-function(x){
+  dat$level[x] - (B * dat$level[x-1])
+}
+
+#append 0 to the front.
+epiVals<-c(0,sapply(2:nrow(dat),epi))
+
+```
+
+Recalculate the values from resampled data
+
+```{r}
+#sample from that time series
+resampledE<-sample(epiVals,replace=TRUE)
+```
+
+Find new Z values
+```{r}
+
+out<-vector()
+
+#set the code
+out[1]<-0
+
+for (x in 2:nrow(dat)){
+  out[x]<-dat$z[x] - B*dat$z[x-1] + epiVals[x] + out[x-1]
+  }
+
+```
+
+Find beta
+
+```{r}
+
+foo<-function(b,x){
+(dat$z[x] - b * dat$z[x-1])^2
+}
+
+findBeta<-function(newZ){
+bvals<-sapply(pB,function(f){
+  
+#Get the estimates for the entire time series
+vals<-sapply(2:max(dat$period),function(x,b){
+  newZ[x] - b * dat$z[x-1])^2
+  )}
+
+#append first value to the vector
+final<-c(dat$z[1],vals)})
+
+colnames(bvals)<-pB
+
+#Sum the matrix rows
+rowS<-data.frame(B=pB,RSE=apply(bvals,2,sum))
+
+hist(rowS$RSE)
+
+#which beta value minimizes the value
+return(rowS[which.min(rowS$RSE),]$B)}
+
+
+
+hist(epiVals)
 ```
 
