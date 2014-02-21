@@ -27,7 +27,6 @@ To write code that will run as embedded within R Markdown:
 
     ```{r }
     summary(cars)
-
     ```
 
 ```
@@ -187,21 +186,35 @@ library(RCurl)
 ```
 
 ```
-## Loading required package: bitops
+## Error: there is no package called 'RCurl'
 ```
 
 ```r
 
 # This will grab the csv file from GitHub.com using the RCurl library
 rawURL <- getURL("https://raw.github.com/PermuteSeminar/PermuteSeminar-2014/master/Week-2/ClutchSize.csv")
+```
+
+```
+## Error: could not find function "getURL"
+```
+
+```r
 clutch <- read.csv(text = rawURL)
+```
+
+```
+## Error: object 'rawURL' not found
+```
+
+```r
 
 
 print(nrow(clutch))
 ```
 
 ```
-## [1] 2392
+## Error: object 'clutch' not found
 ```
 
 
@@ -217,11 +230,12 @@ ggplot(clutch, aes(Clutch_size)) + geom_histogram(col = "white") + theme_classic
 ```
 
 ```
-## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust
-## this.
+<<<<<<< HEAD
+## Error: object 'clutch' not found
+=======
+## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
+>>>>>>> c2150e685e756ad088f4676b951ec1cb002ba1c4
 ```
-
-![plot of chunk unnamed-chunk-6](figure/unnamed-chunk-6.png) 
 
 ```r
 
@@ -229,16 +243,32 @@ fitdistr(clutch$Clutch_size, densfun = "lognormal")
 ```
 
 ```
-##    meanlog     sdlog  
-##   1.111122   0.502051 
-##  (0.010265) (0.007259)
+## Error: object 'clutch' not found
 ```
 
 ```r
 
 avg = mean(clutch$Clutch_size)
+```
+
+```
+## Error: object 'clutch' not found
+```
+
+```r
 med = median(clutch$Clutch_size)
+```
+
+```
+## Error: object 'clutch' not found
+```
+
+```r
 stdev = sd(clutch$Clutch_size)
+```
+
+```
+## Error: object 'clutch' not found
 ```
 
 
@@ -253,11 +283,18 @@ print(avg)
 ```
 
 ```
-## [1] 3.448
+## Error: object 'avg' not found
 ```
 
 ```r
 n = nrow(clutch)
+```
+
+```
+## Error: object 'clutch' not found
+```
+
+```r
 
 est = NULL
 for (i in 1:1000) {
@@ -265,12 +302,27 @@ for (i in 1:1000) {
     mean = mean(boot)
     est = append(est, mean)
 }
+```
+
+```
+## Error: object 'clutch' not found
+```
+
+```r
 
 mean(est)
 ```
 
 ```
-## [1] 3.449
+<<<<<<< HEAD
+## Warning: argument is not numeric or logical: returning NA
+```
+
+```
+## [1] NA
+=======
+## [1] 3.448
+>>>>>>> c2150e685e756ad088f4676b951ec1cb002ba1c4
 ```
 
 
@@ -280,6 +332,13 @@ mean(est)
 
 ```r
 f = length(unique(clutch$Family))
+```
+
+```
+## Error: object 'clutch' not found
+```
+
+```r
 
 est2 = NULL
 for (i in 1:1000) {
@@ -289,12 +348,23 @@ for (i in 1:1000) {
     mean = mean(boot)
     est2 = append(est2, mean)
 }
+```
+
+```
+## Error: object 'clutch' not found
+```
+
+```r
 
 mean(est2)
 ```
 
 ```
-## [1] 3.467
+## Warning: argument is not numeric or logical: returning NA
+```
+
+```
+## [1] NA
 ```
 
 
@@ -304,6 +374,13 @@ mean(est2)
 
 ```r
 f = length(unique(clutch$Family))
+```
+
+```
+## Error: object 'clutch' not found
+```
+
+```r
 
 est3 = NULL
 for (i in 1:1000) {
@@ -316,12 +393,27 @@ for (i in 1:1000) {
     mean = mean(boot)
     est3 = append(est3, mean)
 }
+```
+
+```
+## Error: object 'clutch' not found
+```
+
+```r
 
 mean(est3)
 ```
 
 ```
-## [1] 3.465
+<<<<<<< HEAD
+## Warning: argument is not numeric or logical: returning NA
+```
+
+```
+## [1] NA
+=======
+## [1] 3.462
+>>>>>>> c2150e685e756ad088f4676b951ec1cb002ba1c4
 ```
 
 
@@ -341,27 +433,34 @@ ggplot(bootdata, aes(est, fill = "species")) + geom_histogram(alpha = 0.5) +
 ```
 
 ```
-## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust
-## this.
+<<<<<<< HEAD
+## Error: object 'clutch' not found
 ```
-
-```
-## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust
-## this.
-```
-
-```
-## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust
-## this.
-```
-
-![plot of chunk unnamed-chunk-10](figure/unnamed-chunk-10.png) 
 
 
 <br/>
+=======
+## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
+## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
+## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
+```
+>>>>>>> c2150e685e756ad088f4676b951ec1cb002ba1c4
 
+The population mean is 
+
+```
+
+Error in eval(expr, envir, enclos) : object 'avg' not found
+
+```
+
+<<<<<<< HEAD
+.
+The data bootstrapped by species is NA, by family is NA, and by family hierarchically is NA.
+=======
 The population mean is 3.448.
-The data bootstrapped by species is 3.4491, by family is 3.4673, and by family hierarchically is 3.4649.
+The data bootstrapped by species is 3.4476, by family is 3.4673, and by family hierarchically is 3.4624.
+>>>>>>> c2150e685e756ad088f4676b951ec1cb002ba1c4
 
 <br/>
 <br/>
