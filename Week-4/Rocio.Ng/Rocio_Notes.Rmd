@@ -1,57 +1,284 @@
-Week 4 Notes
+Week #4 Summary 
 ========================================================
 
-fixing the problem of reading files(such as .csv) to Rmarkdown on Github
+**Solution to reading files (such as .csv) on Rmarkdown documents:**
+
 Install the RCurl package
+> Use getUrL() function:
 
-```{r}
-library (RCurl)
-```
-getUrL()  #use raw file
-
-Read in data downloaded from blackboard  
 ```{r}
 require(RCurl)
 raw <- getURL("https://raw.github.com/PermuteSeminar/PermuteSeminar-2014/master/Week-2/ClutchSize.csv")
-clutch <- read.csv(text = raw)
+clutch <- read.csv(text = raw)  #make sure to upload RAW data file
 
 ```
 
 
-Lecture Notes
+Lecture Notes 
 ==============
-Bootstrapping Time Series
--------------------------
+_adapted from Emily Rollinsion_
+-------------------------------
 
-use data without knowing the underlying proability distircution
-use emperical distribution to understand distribution of statistic(mean, variance, etc)
-sample with replacement from original * indicate resampled item.  
-resampled population should equal number of samples
+> For this week, we read Chapter 8 in Efron and Tibshirani, and notes on bootstrapping dependent data (Steigerwald; posted to GitHub and on Blackboard).  This chapter provides an overview of bootstrapping procedues for more complicated data structures than the one-sample model, such as time-dependent data or otherwise non-IID data.
 
-use standard deviation of replications to estimate standard error
+In-class discussion:
+---------------------
 
-emperical distribution  to recreate distribution
+The goal of the bootstrap algorithm is to estimate the probability distribution that underlies our data.  We can use our empirical distribution in lieu of the full distribution to understand the distribution of statisics of interest (mean, variance, etc.).
 
-figure 8.1 and 8.3
-Probability models may  be a whole process that involve multiple distributions 
+Bootstraps are often used to estimate standard errors.  We select $B$ independent bootstrap samples, calculate our test statistic using the bootstrap samples, and use the standard deviation of the $B$ replications as an estimate of the standard error of the unknown distribution $F$ that underlies our empirical data.  Resampled populations should equal the number of orginal samples. *'s are used to indicate resampled items.
+
+This works for both a single unknown distribution (see Figure 8.1 in E&T) or a more complicated underlying process or a whole set of unknown distributions (see Figure 8.3 in E&T). We could easily imagine some biological measure influenced by many processes (i.e., many underlying and unknown statistical distributions). 
+
 
 Today's example:
-------------------
-Leutenizing hormone
-time series with some temporal stucture
-the whole distirbution may be normal
-AR1 process  (type in equation here with Latex**)
+-------------------
 
-Excercies
-Use dataset from book :
+We used the data from Leutenizing hormone example in Efron and Tibshirani (Ch. 8).  This formed a time series with some temporal stucture.
+the whole distirbution may be normal.
 
-1. Find beta (hat) best value that minimizes error
-2. Sample with replacement from random deviations or do a moving blocks bootstrap (with replacement chunks of the data)
-
+We will model this using an autoregressive model of period 1.
+$$
+AR(1): z_{t} = \beta_{z_{t-1}} + \epsilon_{t}
+$$
+> where $z_{t}$ has an expectation 0 and $\beta$ is an unknown parameter, a number between -1 and 1.  
 
 
+In class Excercises
+=====================
 
-Get in touch with Heather about working with your own datasets*
+**Use dataset from book:**
 
-Read Ch 15 and handouts, and paper for next week!
+> **1. Estimate $\hat{\beta}$ **
 
+
+
+Solution: Adapted from Jon Borrelli
+---------------------------------------
+
+Load Required Packages
+```{r}
+require(RCurl)
+require(ggplot2)
+```
+
+Load Dataset:
+```{r}
+rawURL <- getURL("https://raw.github.com/PermuteSeminar/PermuteSeminar-2014/master/Week-4/hormone_data.csv")
+
+setwd("C:/Users/admin/Google Drive/Courses_Seminars/Stats_Seminar/PermuteSeminar-2014/Week-4")
+hormone <- read.csv("hormone_data.csv")
+#hormone <- read.csv(text = rawURL)
+
+```
+
+
+Calculate $z_t$ for each data point: $z_t = y_t-\mu$
+
+```{r}
+z.t <- hormone$level - mean(hormone$level)
+```
+Calculate residual squared errors for each value of $z_t$ and all possible values of $b$.
+$$
+RSE(b) = \sum_{t-U}^{V}(z_t - bz_{t-1})^2
+$$
+
+Generate a function that does this calculation over these values and picks out the best value for $b$ that minimizes RSE.
+```{r}
+rse <- function(zt, b){
+  est.b <- c()
+  for(i in 1:length(b)){
+    res <- c()
+    for(j in 2:length(zt)){
+      res[j-1] <- (zt[j] - b[i]*zt[j-1])^2  #RSE equation
+    }
+    est.b[i] <- sum(res)
+  }
+  bhat <- b[which.min(est.b)]
+  return(bhat)
+}
+```
+
+Run the function and get $\hat{\beta}$
+```{r}
+b <- seq(-1, 1, .001) #generates a sequence of possible values for b
+bhat <- rse(z.t, b)  #runs the function 
+```
+
+**So our estimate of $\hat{\beta}$ is `r bhat`**
+
+> 2a. See how good our estimate of $\hat{\beta}$ is by figuring out confidence intervals (Standard error) of $\Beta$ by bootstrapping methods
+
+We need to estimate $P = (\beta,F)$ from the data.
+
+Since we have $\hat{\beta}$ we can use it to estimate $F$ distribution of the distubances and calculate $\epsilon_{t} = z_{t} - \beta_z_{t-1}$ for every $t$  
+
+```{r}
+eps <- c()  #collects all the calculate values of epsilon
+
+for(i in 1:length(z.t)){
+  eps[i] <- z.t[i] - bhat * z.t[i-1]
+}
+```
+
+A histrogram of the approximate disturbances. It is not a normal distribution.   The Mean = `r mean(eps[2:48])`
+```{r}
+hist(eps)
+```
+
+
+Resample $F$ Distribtuion of values of $\epsilon$ with replacement:
+```{r}
+boot.eps <- matrix(nrow = 200, ncol = 47)
+for(rep in 1:200){
+  boot.eps[rep, ] <- sample(eps[2:48], 47, replace = T)
+}
+```
+
+Generate bootstrap values for time series $z_{t}*$: 
+```{r}
+z.tmat <- matrix(nrow = 200, ncol = 48)
+z.tmat[,1] <- z.t[1]
+for(rep in 1:200){
+  for(cols in 1:47){
+    z.tmat[rep, cols+1] <- bhat *z.tmat[rep, cols] + boot.eps[rep, cols]
+  }
+}
+```
+
+Generate bootsrap replications of $\hat{\beta}$ 
+```{r}
+b.test <- seq(-1,1,.001)
+bhatboot <- apply(z.tmat, 1, rse, b = b.test) #Uses RSE function created above
+```
+
+Histogram of the generated $\hat{\beta}$ values. The mean = `rmean(bhatboot)`  
+```{r}
+hist(bhatboot, freq = F)
+```
+
+> 2b. Use a moving blocks bootstrap
+
+
+```{r}
+head(hormone)
+block <- matrix(nrow = 3, ncol = 46)
+for(i in 1:46){
+  block[1,i] <- z.t[i]
+  block[2,i] <- z.t[i + 1]
+  block[3,i] <- z.t[i + 2]               
+}
+
+boot.block <- matrix(nrow = 500, ncol = 48)
+for(i in 1:500){
+  bcol <- sample(1:46, 16, replace = T)
+  boot.block[i,] <- as.vector(block[,bcol])
+}
+
+
+b.test <- seq(0,1,.001)
+
+bhatboot2 <- apply(boot.block, 1, rse, b = b.test)
+hist(bhatboot2)
+mean(bhatboot2)
+
+```
+
+
+Solutions from Jesse Wolfhagen:
+--------------------------------
+
+Step 1: Find beta-hat using Equation (8.20)
+
+```{r}
+# data <- read.csv("hormone_data.csv")
+
+raw <- getURL("https://raw.github.com/PermuteSeminar/PermuteSeminar-2014/master/Week-4/hormone_data.csv")
+data <- read.csv(text = raw)
+
+
+brange <- seq(0.1, 1.0, by = 0.001)
+RSEresults <- c()
+resids <- data$level - mean(data$level)
+for(j in 1:length(brange))
+{
+  b <- brange[j]
+  formula <- c()
+  for(i in 1:(length(data$level) - 1))
+  {
+    formula <- c(formula, (resids[i+1] - b*resids[i])^2)
+  }
+  RSEresults <- c(RSEresults, sum(formula))
+}
+beta.hat <- brange[which.min(RSEresults)]
+plot(x = brange, y = RSEresults)
+```
+We just have beta-hat, we don't have any confidence intervals or standard error. To get those, sample with replacement from those error terms. First, we need to calculate all our epsilons from our data, using our beta-hat.
+
+```{r}
+epsilons <- c() #these are the empirical epsilons
+for(k in 2:length(resids))
+{
+  epsilons <- c(epsilons, resids[k] - beta.hat*resids[k-1])
+}
+beta.star <- c() #boot-strapped collection of beta estimates
+for(l in 1:500)
+{
+  epsilon.star <- sample(epsilons, length(epsilons), replace = T)
+  resid.star <- rep(0, times = length(resids))
+  for(m in 2:length(resids))
+  {
+    resid.star[m] <- beta.hat*resid.star[m-1] + epsilon.star[m-1]
+  }
+  #Now use the bootstrap-created residuals to re-estimate beta-hat (bootstrap)
+  RSEstar <- c()
+  for(n in 1:length(brange))
+  {
+    b <- brange[n]
+    formula <- c()
+    for(o in 1:length(resid.star) - 1)
+    {
+      formula <- c(formula, (resid.star[o + 1] - b*resid.star[o])^2)
+    }
+  RSEstar <- c(RSEstar, sum(formula))
+  }
+  beta.star <- c(beta.star, brange[which.min(RSEstar)])
+}
+hist(beta.star)
+sd(beta.star)
+```
+This distribution and value for the standard error of beta-hat, 0.115, is similar to that found by Efron and Tibshirani for 200 replications (0.116, see page 97). I think it may be slightly different because of the range I gave for possible-beta values or that I have more bootstrap replications (and standard deviation would be related to the number of replications).
+
+Another way to use bootstrap methods to estimate our confidence in beta-hat for these data is a moving-block bootstrap. Sample-with-replacement from chunks of time to create new times series, then use the new residuals to re-calculate beta-hat.
+
+```{r}
+beta.star.window <- c()
+for(p in 1:200) #bootstrapping
+{
+  #Resample beginnings of chunks (chunk length of three, can't select last two datapoints)
+  indices <- sample(1:(length(data$level) - 2), length(data$level)/3, replace = T)
+  #Create the new time series
+  level.star <- c()
+  for(q in 1:length(indices))
+  {
+    level.star <- c(level.star, data$level[indices[q]:(indices[q]+2)])
+  }
+  resids.star <- level.star - mean(level.star)
+  #Recalculate beta using new residuals
+  RSE.star <- c()
+  for(r in 1:length(brange))
+  {
+    b <- brange[r]
+    formula <- c()
+    for(s in 1:length(resids.star) - 1)
+    {
+      formula <- c(formula, (resids.star[s+1] - b*resids.star[s])^2)
+    }
+    RSE.star <- c(RSE.star, sum(formula))
+  }
+  beta.star.window <- c(beta.star.window, brange[which.min(RSE.star)])
+}
+hist(beta.star.window)
+sd(beta.star.window)
+```
+One run of this gave a value of 0.119 from 200 bootstrap replicates, which is close to Efron and Tibshirani's value of 0.120 for the moving-block bootstrap with a block-length of 3.
