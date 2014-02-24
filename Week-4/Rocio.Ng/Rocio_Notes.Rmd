@@ -16,7 +16,7 @@ clutch <- read.csv(text = raw)  #make sure to upload RAW data file
 
 Lecture Notes 
 ==============
-_adapted from Emily Rollinsion_
+adapted from Emily Rollinsion
 -------------------------------
 
 > For this week, we read Chapter 8 in Efron and Tibshirani, and notes on bootstrapping dependent data (Steigerwald; posted to GitHub and on Blackboard).  This chapter provides an overview of bootstrapping procedues for more complicated data structures than the one-sample model, such as time-dependent data or otherwise non-IID data.
