@@ -148,7 +148,7 @@ for(rep in 1:200){
 
 Generate bootsrap replications of $\hat{\beta}$ 
 ```{r}
-b.test <- seq(-1,1,.001)
+b.test <- seq(0,1,.001)
 bhatboot <- apply(z.tmat, 1, rse, b = b.test) #Uses RSE function created above
 ```
 
