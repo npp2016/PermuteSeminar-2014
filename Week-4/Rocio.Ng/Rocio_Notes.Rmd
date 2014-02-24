@@ -1,0 +1,57 @@
+Week 4 Notes
+========================================================
+
+fixing the problem of reading files(such as .csv) to Rmarkdown on Github
+Install the RCurl package
+
+```{r}
+library (RCurl)
+```
+getUrL()  #use raw file
+
+Read in data downloaded from blackboard  
+```{r}
+require(RCurl)
+raw <- getURL("https://raw.github.com/PermuteSeminar/PermuteSeminar-2014/master/Week-2/ClutchSize.csv")
+clutch <- read.csv(text = raw)
+
+```
+
+
+Lecture Notes
+==============
+Bootstrapping Time Series
+-------------------------
+
+use data without knowing the underlying proability distircution
+use emperical distribution to understand distribution of statistic(mean, variance, etc)
+sample with replacement from original * indicate resampled item.  
+resampled population should equal number of samples
+
+use standard deviation of replications to estimate standard error
+
+emperical distribution  to recreate distribution
+
+figure 8.1 and 8.3
+Probability models may  be a whole process that involve multiple distributions 
+
+Today's example:
+------------------
+Leutenizing hormone
+time series with some temporal stucture
+the whole distirbution may be normal
+AR1 process  (type in equation here with Latex**)
+
+Excercies
+Use dataset from book :
+
+1. Find beta (hat) best value that minimizes error
+2. Sample with replacement from random deviations or do a moving blocks bootstrap (with replacement chunks of the data)
+
+
+
+
+Get in touch with Heather about working with your own datasets*
+
+Read Ch 15 and handouts, and paper for next week!
+
