@@ -30,7 +30,7 @@ residuals = function(beta, data){
 }
 
 # Gives beta (par) and residual squared error (value)
-fitted = optim(par = 0.5, fn = fit)
+fitted = optim(par = 0.5, fn = fit,data=data)
 beta = fitted$par
 resids = residuals(fitted$par, data)
 ```
@@ -55,7 +55,7 @@ boot_obs[1,] = rep(data[1], boots)
 for (i in 1:boots){
   boot_res[,i] = sample(resids, 47, replace = TRUE)
   for (j in 2:48){
-    boot_obs[j,i] = beta * boot_res[j-1, i] + boot_res[j-1,i]
+    boot_obs[j,i] = beta * boot_obs[j-1, i] + boot_res[j-1,i]
   }
   stat[i] = optim(par = 0.5, fn = fit, data = boot_obs[,i])$par
 }
