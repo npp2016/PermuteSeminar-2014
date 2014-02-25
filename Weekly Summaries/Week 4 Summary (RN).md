@@ -6,17 +6,26 @@ Week #4 Summary
 Install the RCurl package
 > Use getUrL() function:
 
-```{r}
+
+```r
 require(RCurl)
 ```
 
+```
+## Loading required package: RCurl
+## Loading required package: bitops
+```
+
+
 I was experiencing a certificate error with getURL().  The following code seems to fix the problem in case you experience the same:
-```{r}
+
+```r
 options(RCurlOptions = list(cainfo = system.file("CurlSSL", "cacert.pem", package = "RCurl")))
-      
+
 raw <- getURL("https://raw.github.com/PermuteSeminar/PermuteSeminar-2014/master/Week-2/ClutchSize.csv")
 clutch <- read.csv(text = raw)  #make sure to upload RAW data file
 ```
+
 
 Lecture Notes 
 ==============
@@ -62,51 +71,65 @@ Solution: Adapted from Jon Borrelli
 ---------------------------------------
 
 Load Required Packages
-```{r}
+
+```r
 require(RCurl)
 require(ggplot2)
 ```
 
+```
+## Loading required package: ggplot2
+```
+
+
 Load Dataset:
-```{r}
+
+```r
 rawURL <- getURL("https://raw.github.com/PermuteSeminar/PermuteSeminar-2014/master/Week-4/hormone_data.csv")
 hormone <- read.csv(text = rawURL)
 ```
 
 
+
 Calculate $z_t$ for each data point: $z_t = y_t-\mu$
 
-```{r}
+
+```r
 z.t <- hormone$level - mean(hormone$level)
 ```
+
 Calculate residual squared errors for each value of $z_t$ and all possible values of $b$.
 $$
 RSE(b) = \sum_{t-U}^{V}(z_t - bz_{t-1})^2
 $$
 
 Generate a function that does this calculation over these values and picks out the best value for $b$ that minimizes RSE.
-```{r}
-rse <- function(zt, b){
-  est.b <- c()
-  for(i in 1:length(b)){
-    res <- c()
-    for(j in 2:length(zt)){
-      res[j-1] <- (zt[j] - b[i]*zt[j-1])^2  #RSE equation
+
+```r
+rse <- function(zt, b) {
+    est.b <- c()
+    for (i in 1:length(b)) {
+        res <- c()
+        for (j in 2:length(zt)) {
+            res[j - 1] <- (zt[j] - b[i] * zt[j - 1])^2  #RSE equation
+        }
+        est.b[i] <- sum(res)
     }
-    est.b[i] <- sum(res)
-  }
-  bhat <- b[which.min(est.b)]
-  return(bhat)
+    bhat <- b[which.min(est.b)]
+    return(bhat)
 }
 ```
 
+
 Run the function and get $\hat{\beta}$
-```{r}
-b <- seq(-1, 1, .001) #generates a sequence of possible values for b
+
+```r
+b <- seq(-1, 1, 0.001)  #generates a sequence of possible values for b
 bhat <- rse(z.t, b)  #runs the function 
 ```
 
-**So our estimate of $\hat{\beta}$ is `r bhat`**
+
+**So our estimate of $\hat{\beta}$ is 0.586**
 
  2a. See how good our estimate of $\hat{\beta}$ is by figuring out confidence intervals (Standard error) of $\beta$ by bootstrapping methods
 ------------------------------------------------------------------------------------------------------------------------------------------------
@@ -115,77 +138,112 @@ We need to estimate $P = (\beta,F)$ from the data.
 
 Since we have $\hat{\beta}$ we can use it to estimate $F$ distribution of the distubances and calculate $\epsilon_{t} = z_{t} - \beta z_{t-1}$ for every $t$  
 
-```{r}
+
+```r
 eps <- c()  #collects all the calculate values of epsilon
 
-for(i in 1:length(z.t)){
-  eps[i] <- z.t[i] - bhat * z.t[i-1]
+for (i in 1:length(z.t)) {
+    eps[i] <- z.t[i] - bhat * z.t[i - 1]
 }
 ```
 
-A histrogram of the approximate disturbances. It is not a normal distribution.   The Mean = `r mean(eps[2:48])`
-```{r}
+
+A histrogram of the approximate disturbances. It is not a normal distribution.   The Mean = 0.0062
+
+```r
 hist(eps)
 ```
 
+![plot of chunk unnamed-chunk-9](figure/unnamed-chunk-9.png) 
+
+
 
 Resample $F$ Distribtuion of values of $\epsilon$ with replacement:
-```{r}
+
+```r
 boot.eps <- matrix(nrow = 200, ncol = 47)
-for(rep in 1:200){
-  boot.eps[rep, ] <- sample(eps[2:48], 47, replace = T)
+for (rep in 1:200) {
+    boot.eps[rep, ] <- sample(eps[2:48], 47, replace = T)
 }
 ```
+
 
 Generate bootstrap values for time series $z_{t}*$: 
-```{r}
+
+```r
 z.tmat <- matrix(nrow = 200, ncol = 48)
-z.tmat[,1] <- z.t[1]
-for(rep in 1:200){
-  for(cols in 1:47){
-    z.tmat[rep, cols+1] <- bhat *z.tmat[rep, cols] + boot.eps[rep, cols]
-  }
+z.tmat[, 1] <- z.t[1]
+for (rep in 1:200) {
+    for (cols in 1:47) {
+        z.tmat[rep, cols + 1] <- bhat * z.tmat[rep, cols] + boot.eps[rep, cols]
+    }
 }
 ```
 
+
 Generate bootsrap replications of $\hat{\beta}$ 
-```{r}
-b.test <- seq(0,1,.001)
-bhatboot <- apply(z.tmat, 1, rse, b = b.test) #Uses RSE function created above
+
+```r
+b.test <- seq(0, 1, 0.001)
+bhatboot <- apply(z.tmat, 1, rse, b = b.test)  #Uses RSE function created above
 ```
 
-Histogram of the generated $\hat{\beta}$ values. The mean = `r mean(bhatboot)`  
-```{r}
+
+Histogram of the generated $\hat{\beta}$ values. The mean = 0.5793  
+
+```r
 hist(bhatboot, freq = F)
 ```
+
+![plot of chunk unnamed-chunk-13](figure/unnamed-chunk-13.png) 
+
 
 2b. Use a moving blocks bootstrap
 --------------------------------------
 
-```{r}
+
+```r
 head(hormone)
+```
+
+```
+##   period level
+## 1      1   2.4
+## 2      2   2.4
+## 3      3   2.4
+## 4      4   2.2
+## 5      5   2.1
+## 6      6   1.5
+```
+
+```r
 block <- matrix(nrow = 3, ncol = 46)
-for(i in 1:46){
-  block[1,i] <- z.t[i]
-  block[2,i] <- z.t[i + 1]
-  block[3,i] <- z.t[i + 2]               
+for (i in 1:46) {
+    block[1, i] <- z.t[i]
+    block[2, i] <- z.t[i + 1]
+    block[3, i] <- z.t[i + 2]
 }
 
 boot.block <- matrix(nrow = 500, ncol = 48)
-for(i in 1:500){
-  bcol <- sample(1:46, 16, replace = T)
-  boot.block[i,] <- as.vector(block[,bcol])
+for (i in 1:500) {
+    bcol <- sample(1:46, 16, replace = T)
+    boot.block[i, ] <- as.vector(block[, bcol])
 }
 
 
-b.test <- seq(0,1,.001)
+b.test <- seq(0, 1, 0.001)
 
 bhatboot2 <- apply(boot.block, 1, rse, b = b.test)
 ```
-Histogram of estimates generatated from the Moving Blocks BootStrap with mean of `r  mean(bhatboot2)`
 
-```{r}
+Histogram of estimates generatated from the Moving Blocks BootStrap with mean of 0.3925
+
+
+```r
 hist(bhatboot2)
 ```
+
+![plot of chunk unnamed-chunk-15](figure/unnamed-chunk-15.png) 
+
 
 
