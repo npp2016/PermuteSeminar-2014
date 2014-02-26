@@ -40,3 +40,4 @@ for(i in 1:n) {
   z_new <- sample(zt,size=n,replace=T)
 }
 
+## Have to finish this
