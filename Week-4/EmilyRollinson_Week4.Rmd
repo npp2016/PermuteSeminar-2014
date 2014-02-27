@@ -14,35 +14,35 @@ Today's examples will focus on data of lutenizing hormone over time.  We will mo
 $$
 AR(1): z_{t} = \beta z+{t-1} + \epsilon_{t}
 $$
-1) Look at a histogram of the level values (ignoring the time data).
-2) Find the value of $\hat{b}$ as described in E&T equation 8.20 using two methods:
-2a) Sample with replacement from the random deviations $\epsilon
-2b) Using the moving blocks method
+
+-Look at a histogram of the level values (ignoring the time data).
+-Find the value of $\hat{b}$ as described in E&T equation 8.20
+-Create new bootstrapped time series using the $\hat{b}$ that we found.
+-An alternative: Using the moving blocks method
 
 
 Examples from Efron and Tibshirani:
 ---------------------
 
-**(8.5 Lutenizing hormone)**
+**(8.5) Lutenizing hormone**
 
 This data set shows the levels of a lutenizing hormone for 48 consecutive 10-minute intervals in one woman.  These data are not a random sample from a distribution; they instead are an example of a time series (see the figure below). 
 
-Let's look at a histogram of the data first just for fun:
+A histogram of the data:
+
 ```{r}
 lh <- read.csv("hormone_data.csv", header = TRUE)
 hist(lh$level)
 ```
 
-Looks pretty normal!  Which is rad, but unhelpful, because the data aren't IID - it's a time series.
-
+The time series:
 
 ```{r}
-
 require(ggplot2)
 ggplot(lh, aes(period, level)) + geom_line(col="black") + theme_classic() + labs(title = "Lutenizing Hormone Data")
 ```
 
-We will assume that these data follow a first order autoregressive scheme.  First, we will define the centered measurements $z_{t}=y_{t}-\mu$, where all $z_{t}$ have expectation $0$.
+We will assume that these data follow a first order autoregressive scheme.  First, we define the centered measurements $z_{t}=y_{t}-\mu$, where all $z_{t}$ have expectation $0$.
 
 Each $z_{t}$ is a linear combination of the previous value $z_{t-1}$ and an independent disturbance term $\epsilon_{t}$, where the $\epsilon_{t}$ is assumed to be a random sample from an unknown distribution $F$ with expectation $0$.
 
@@ -54,54 +54,19 @@ The dates $U$ and $V$ are the beginning and end of the time period; $U=2$; $V=48
 We can estimate the value of $\beta$ using a least squares approach.  First, we estimate the expectation $\mu$ to be the observed average $\bar{y}$, so that $z_{t} = y_{t} - \bar{y}$.
 
 ```{r}
-lhc <- lh$level - mean(lh$level) 
-lh$c = lhc #defining the new z(t) as y(t) - mean(y) and adding it to the existing data frame
-ggplot(lh, aes(period, c)) + geom_line(col="black") + theme_classic() + labs(title = "Centered Data") #plot z
+lhz <- lh$level - mean(lh$level)
+z.t <- as.data.frame(lh$level - mean(lh$level))
+lh$z = lhz #defining the new z(t) as y(t) - mean(y) and adding it to the existing data frame
+ggplot(lh, aes(period, z)) + geom_line(col="black") + theme_classic() #plot z
 ```
 
-We expect that $RSE(b)$ has expectation $E(RSE(b))$ and is minimized when $b = \beta$.  We can calculate $RSE(b)$ asa function of $b$, and choose the value that minimizes this function to serve as our estimate of $\beta$.  Remember that $\beta$ varies between $-1$ and $1$.
+We expect that $RSE(b)$ has expectation $E(RSE(b))$ and is minimized when $b = \beta$.  We can calculate $RSE(b)$ as a function of $b$, and choose the value that minimizes this function to serve as our estimate of $\beta$.  Remember that $\beta$ varies between $-1$ and $1$.
+
 ```{r}
-Z = data.frame("t1" = c(lh$c[1:47]), "t2" = c(lh$c[2:48]))
-<<<<<<< HEAD
-optimize(f = ) #I'm stuck on how to actually calculate the least-squares estimate of beta.
-=======
-bvals<- seq(-1,1, by=0.001)
-RME <- function(b,x){
-  (Z$t2 - bvals * Z$t1)^2
-}
+b <- seq(-1,1, by=0.001)
 
-for (i in 1:length(bvals)){
-  for ()
-  
+#not sure where to go from here
 
-    
-    
-    
-}
-
-foo<-function(b,x){
-(dat$z[x] - b * dat$z[x-1])^2
-}
-
-bvals<-sapply(pB,function(f){
-  
-#Get the estimates for the entire time series
-vals<-sapply(2:max(dat$period),foo,b=f)
-
-#append first value to the vector
-final<-c(dat$z[1],vals)})
-
-colnames(bvals)<-pB
-
-#Sum the matrix rows
-rowS<-data.frame(B=pB,RSE=apply(bvals,2,sum))
-
-hist(rowS$RSE)
-
-#which beta value minimizes the value
-rowS[which.min(rowS$RSE),]
-
->>>>>>> fac17bcafcf5203220017ba1395863b2947e6670
 ```
 
 We can use bootstrap to see how accurate our estimate of $\hat{\beta}$ is.  
@@ -122,9 +87,11 @@ This is a different approach to bootstrapping time series data that is closer to
 size = 3
 
 data=NULL
-for (i in 1:length(lh$level)){
+blocks=NULL
+for (i in 1:length(lh$level/size)){
   block = lh$level[i:(i+(size-1))]
-  s = sample(block,1)
+  blocks = append(blocks,block)
+  s = sample(blocks, 1)
   data = append(data,s)
 }
 
@@ -133,25 +100,9 @@ plot(lh$period, lh$level, type="l")
 points(lh$period, data, type="l", col="steelblue")
 ```
 
-If we make the block size larger, we lose the pattern in the original time series:
-
-```{r}
-size2 = 10
-
-data2=NULL
-for (i in 1:length(lh$level)){
-  block2 = lh$level[i:(i+(size2-1))]
-  s2 = sample(block2,1)
-  data2 = append(data2,s2)
-}
-
-par(mfrow=c(1,1))
-plot(lh$period, lh$level, type="l")
-points(lh$period, data2, type="l", col="steelblue")
-```
-
 
 **(8.3) The two-sample problem**
+*This is from the book, not from class examples*
 
 Sixteen mice were randomly assigned to a treatment group (n=7) or a control group (n=9), and their survival times following a surgery were recorded.  Let $z$ indicate the treatment observations, and $y$ indicate the control observations.
 
