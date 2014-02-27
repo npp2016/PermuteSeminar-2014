@@ -1,0 +1,257 @@
+Week #2 Summary
+========================================================
+
+What we did:
+-------------
+1. We discussed uses for **R Markdown**. This is a general-purpose package which will generate .Rmd, .md and .html files. R Markdown is useful because it can write files which may variously contain and run .r script within the document, and will generate any associated figures, etc.    
+>>(**NOTE:** If you have not yet, please install the knitr package (which will also install the markdown package)  
+
+2. We discussed **LaTeX**, which is a typsetting program especially powerful for writing mathematical formulas. Several LaTeX texts were posted on Blackboard, and are useful for both general introduction to the program and as a reference for LaTeX coding.  
+
+3. We discussed a few key points from the reading (Ch. 3-8 in Efron and Tibshirani).  
+
+4. We worked on a bootstrapping problem in pairs during class. Each group then posted their R Markdown files containing their answers to the problem on GitHub. Lastly, we discussed which of the 3 approaches we tried for bootstrapping is the best method.  
+
+<br/>
+<br/>
+
+A few R Markdown Basics  
+----------------
++ To write code that will run as embedded within R Markdown:  
+>>Type: ```{r} 
+summary(cars)
+```  
+The output would actually look like this:
+```{r}
+summary(cars)
+```
+<br/>
+If you wanted to have the code show, but not run, leave off the '{r}'.
+```
+summary(cars)
+```
+<br/>
++ You can also embed plots, for example:
+
+```{r fig.width=7, fig.height=6}
+plot(cars)
+```
+
+(Here I have borrowed some of the default text that comes with a new R Markdown project)  
+
+
+<br/>
+<br/>
+<br/>
+
+A few LaTeX formulas  
+----------------
++ LaTex's strongest point is its ability to write mathematical formulas clearly.  
++ LaTex code will generally contain a backslash to indicate what needs to use LaTex.   
+
+> + A double dollar sign surrounding LaTex code instructs R to write the formula on a separate line.  
+
+> + A single surrounding LaTex code instructs R to write the formula within a line of text.  
+
+<br/>
+
+Examples of LaTex writing:  
+As a separate line of code, write as follows (although don't separate dollar signs with a space):  
+$ $  
+\pi=3.14  
+$ $    **... will output:**       
+      $$
+         \pi=3.14
+      $$  
+
+Within a single line of code, separate with a single dollar sign (again, leave out spaces between the dollar signs and within the LaTex code):    
+> blah blah $ \ pi=3.14 $ blah blah ...**will output**... blah blah $\pi=3.14$ blah blah.
+
+<br/>
+
+Here are a few examples of LaTex coding for other equations. Again, leave out spaces to have the code compile.    
++ Superscript: $X^{3}$ is written as $ X^{3} $  
++ Subscript: $X_{3}$ is written as $ X_{3} $  
++ Fractions: $\frac{2}{7}$ is written as $ \ frac{2}{7} $    
++ Greek letters: $\Omega$ and $\omega$ are written as $ \Omega $ and $ \omega $  
++ Square roots: $\sqrt{5}$ is written as $ \sqrt{5} $  
++ Hats: $\hat{alpha}$ is written as $ \hat{alpha} $  
++ Limits: $\lim_{n\rightarrow5}$ is written as $ \lim_{n\rightarrow5} $  
++ Integrals: $\int_{0}^{10}$ is written as $ \int_{0}^{10} $; note that LaTex is smart enough that the order you enter the numbers for your limits doesn't matter.  
++ Sum: $\sum{(x:y)}$ is written $ \sum{(x:y)} $  
++ Approx.: $\sim3$ is $ \sim3 $; $\approx3$ is $ \approx3 $  
+<br/>  
+
+Putting it all together to write a complex expression example:    
+$$
+\lim_{\epsilon\rightarrow0_{+}}
+\frac{\int_{\alpha_{i}}^{\alpha_{i+\epsilon}} 
+      \sqrt{1+(x-\mu)^2}dx}
+     {\phi(\epsilon)}
+$$  
+**... is written as:**   
+$ $  
+\lim_ {\epsilon\rightarrow0_{+}}  
+\frac{\int_ {\alpha_ {i}} ^ {\alpha_ {i+\epsilon}}  
+      \sqrt { 1 + (x- \ mu) ^2 } dx}  
+     { \phi (\epsilon) }  dx
+$ $  
+
+<br/>
+<br/>
+<br/>
+
+Discussing a few key points from Ch. 3-8 in E+T
+---------------------
+What's the difference between a **census** and a **sample**?  
+
+>>A census observes the entire population, whereas a sample looks at only a representative part of
+the entire population. With a census, you can just run mathematical calculations to say something descriptive about the population (ie., mean, mode, etc.). In contrast, a sample must use statistics with the data, because the information you have represents part of the larger population whole, which you can use to infer larger, population-descriptive relationships.  
+
+<br/>
+
+What's the difference between a **parameter** and a **statistic**?  
+>> A parameter belongs to the distribution of a population- it is a function of the distribution *F*. A statistic is any metric calculated from your data, and is a function of *x* as drawn from *F*. Statistics are used to estimate parameters of interest for the population.  
+
+<br/>
+
+What is the **plug-in principle**?  
+>>This is the core of E+T's book, and of bootstrapping. The plug-in principle says that although you would like to know a whole-population parameter $\Theta\$ = t(*F*), you probably can't sample the whole population. Therefore, take a random sample of that population to estimate $\hat{\Theta}$, which will be applied to your data/the emperical distribution (= t($\hat{F}$)).  
+
+>> Note that your unbiased estimate for $\hat{\Theta}$ is the best estimate that you can get for $\Theta$, as you are assuming that your data (the emperical distribution) is a good representitive of the unknown distribution for the entire population.  
+
+>> This doesn't mean that your estimate for $\Theta$ is *good*, it's just the best you can do given your data!  
+
+<br/>
+Note that E+T mostly focus on non-parametric bootstraps. A parametric distribution/bootstrap should be used if your data is so sparse that you would get more options for fitting a $\hat{\Theta}$ if you assumed a distribution from which to draw. Additionally, if you have *a priori* knowledge of the population from which you draw your sample and know it fits a particular distribution, a parameteric bootstrap can be used.  
+
+The ultimate goal of bootstrapping is to try to recreate the process that generated the data. The method used for bootstrapping should reflect this, and take into consideration the hypothesis that is being tested.  
+
+<br/>
+<br/>
+<br/>
+
+In-class problem
+---------------
+We were given data on bird clutch size for a variety of species.  
+1. What's the best distribution for clutch size?  
+2. What's the mean clutch size, using three nonparametric bootstrap techniques:  
+>A. Sample with replacement from **species** (irregardless of higher taxonomy)  
+>B. Sample with replacement from **family**, then sample the species from that list with replacement, bootstrapping the species samples.  
+>C. Bootstrap **across all levels** by sampling with replacement from family, then sampling within this for genera, and then within this for species (hierarchical sampling).  
+
+<br/>
+
+### Here is the code, as run by Sarah Supp and Emily Rollinson.  
+
+First, we read in the data on Clutch Size.
+```{r}
+library(ggplot2)
+library(MASS)
+
+clutch = read.csv("/Users/emilypetchler/Documents/GitHub/Emily's R stuff for seminar/ClutchSize.csv")
+## Change this to be where you store your documents for GitHub...
+
+print (nrow(clutch))
+```
+
+<br/>
+
+**1. What is the best distribution for the clutch size data?**
+
+The data are continuous, long right tail
+```{r}
+ggplot(clutch, aes(Clutch_size)) + geom_histogram(col="white") +
+  theme_classic() + theme(text = element_text(size=20))
+
+fitdistr(clutch$Clutch_size, densfun="lognormal")
+
+avg= mean(clutch$Clutch_size)
+med = median(clutch$Clutch_size)
+stdev = sd(clutch$Clutch_size)
+```
+
+<br/>
+
+**2. What is the statistic mean? Sample with replacement from:**  
+**a) species**
+
+```{r}
+print (avg)
+n = nrow(clutch)
+
+est = NULL
+for (i in 1:1000){
+  boot = sample(clutch$Clutch_size, n, replace=TRUE)
+  mean = mean(boot)
+  est = append(est, mean)
+}
+
+mean(est)
+```
+
+<br/>
+
+**b) family**  
+```{r}
+f = length(unique(clutch$Family))
+
+est2 = NULL
+for (i in 1:1000){
+  fam = sample(clutch$Family, f, replace=TRUE)
+  subdat = clutch[which(clutch$Family %in% fam),]
+  boot = sample(subdat$Clutch_size, n, replace=TRUE)
+  mean = mean(boot)
+  est2 = append(est2, mean)
+}
+
+mean(est2)
+```
+
+<br/>
+
+**c) bootstrap at all levels - sample with replacement for families, we used the total number of unique families. Within those families, count the number of unique genera, and sample from the genera. Within those genera, sample from the species, such that n = the length of the original dataset**
+```{r}
+f = length(unique(clutch$Family))
+
+est3 = NULL
+for (i in 1:1000){
+  fam = sample(clutch$Family, f, replace=TRUE)
+  subdat = clutch[which(clutch$Family %in% fam),]
+  g = length(unique(subdat$Genus_name)) #this is not exactly what Heather was saying
+  gen = sample(subdat$Genus_name, g, replace=TRUE)
+  subdat2 = subdat[which(subdat$Genus_name %in% gen),]
+  boot = sample(subdat2$Clutch_size, n, replace=TRUE)
+  mean = mean(boot)
+  est3 = append(est3, mean)
+}
+
+mean(est3)
+```
+
+<br/>
+
+**Plot the data as histograms. The first method matches the mean of the original data and has lower variance. The second two methods are similar (in the way that we implemented them) but have wider variance.**
+
+```{r}
+bootdata = data.frame(est, est2, est3)
+
+ggplot(bootdata, aes(est, fill = "species")) + geom_histogram(alpha = 0.5) + theme_classic() + theme(text = element_text(size=20)) +
+  geom_histogram(aes(est2, fill = "family"), alpha=0.5) +
+  geom_histogram(aes(est3, fill = "hierarchical"), alpha = 0.5) +
+  geom_vline(data=clutch, aes(xintercept=mean(Clutch_size)), linetype="longdash")
+```
+
+<br/>
+
+The population mean is `r avg`.
+The data bootstrapped by species is `r mean(est)`, by family is `r mean(est2)`, and by family hierarchically is `r mean(est3)`.
+
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+
+
+

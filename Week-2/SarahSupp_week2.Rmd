@@ -22,11 +22,16 @@ The data are continuous, long right tail
 ggplot(clutch, aes(Clutch_size)) + geom_histogram(col="white") + 
   theme_classic() + theme(text = element_text(size=20))
 
-fitdistr(clutch$Clutch_size, densfun="lognormal")
+lnorm = fitdistr(clutch$Clutch_size, densfun="lognormal")
+gamma = fitdistr(clutch$Clutch_size, densfun="gamma")
 
 avg= mean(clutch$Clutch_size)
 med = median(clutch$Clutch_size)
 stdev = sd(clutch$Clutch_size)
+
+hist(clutch$Clutch_size, freq = F, ylim=c(0,0.3))
+points(dlnorm(1:20, lnorm[[1]][[1]], lnorm[[1]][[2]]), typ = "l", col = "indianred", lwd = 4)
+points(dgamma(1:20, gamma[[1]][[1]], gamma[[1]][[2]]), typ = "l", col = "cadetblue", lwd = 4)
 ```
 
 **2. What is the statistic mean? Sample with replacement from:**

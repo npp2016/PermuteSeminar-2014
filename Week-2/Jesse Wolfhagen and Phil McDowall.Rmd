@@ -1,0 +1,67 @@
+Title
+========================================================
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring web pages (click the **MD** toolbar button for help on Markdown).
+
+When you click the **Knit HTML** button a web page will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+##Bringing in the dataset
+clutch <- read.csv("C:/Users/Jesse Wolfhagen/Desktop/GitHub/PermuteSeminar-2014/Week-2/clutchsize.csv")
+head(clutch)
+```
+The first question is figuring out what distribution would make sense for the mean clutch size of a bunch of species.
+To test this, we first visualized the data
+```{r}
+hist(clutch$Clutch_size)
+```
+Our thoughts were either gamma distributed (because the values were continuous) or a poisson-distribution of rounded values. To see which distribution fit better, we used fitdistr() to get maximum-likelihood estimates of parameter values and then used a Kolmogorov-Smirnov test between the candidate distribution and our data. We chose the distribution with the lower D statistic.
+```{r}
+##Using fitdistr() to get MLE parameter values
+library(MASS)
+gammafit <- fitdistr(x = clutch$Clutch_size, dgamma, start = list(shape = 1, rate = 1))
+poissonfit <- fitdistr(x = round(clutch$Clutch_size), dpois, start = list(lambda = round(mean(clutch$Clutch_size))))
+hist(clutch$Clutch_size, freq = F, ylim = c(0, 0.5), main = "Mean Clutch Size per Species with Gamma-Distribution (Red) and Poisson-Distribution (Blue) Estimated Fit Lines")
+lines(x = dgamma(seq(0,15,by = 1), shape = gammafit$estimate[1], rate = gammafit$estimate[2]), col = "red")
+lines(x = dpois(seq(0, 15, by = 1), lambda = poissonfit$estimate[1]), col = "blue")
+ks.test(x = clutch$Clutch_size, y = rgamma(length(clutch$Clutch_size), shape = gammafit$estimate[1], rate = gammafit$estimate[2]))$statistic ##D value for the Kolmogorov-Smirnov test between Gamma distribution and Clutch Sizes
+ks.test(x = clutch$Clutch_size, y = rpois(length(clutch$Clutch_size), lambda = poissonfit$estimate[1]))$statistic ##D value for the Kolmogorov-Smirnov test between the Poisson distribution and Clutch Sizes
+
+```
+We chose the gamma distribution as the better-fitting distribution because it had a lower D statistic using a two-sample Kolmogorov-Smirnov test.
+Question 2:
+```{r}
+##Problem 2, using this statistic of mean clutch size
+#Bootstrap species
+mean(clutch$Clutch_size)
+species_rep <- sample(clutch$Clutch_size, length(clutch$Clutch_size), replace = T)
+mean(species_rep)
+#Bootstrap families
+family_list <- sample(unique(clutch$Family), size = length(unique(clutch$Family)), replace = T)
+family_bs <- c()
+for(i in 1:length(family_list))
+{
+  family_bs <- c(family_bs, clutch$Clutch_size[which(clutch$Family == family_list[i])])
+}
+mean(family_bs)
+#Bootstrap hierarchically
+families <- sample(unique(clutch$Family), size = length(unique(clutch$Family)), replace = T) #Sampling families with replacement
+genera <- c()
+for(i in 1:length(family_list)) #Collecting the genera from the sampled families
+{
+  genera <- c(genera, clutch$Genus_name[which(clutch$Family == family_list[i])])
+}
+samplegenera <- sample(genera, length(genera), replace = T) #Sampling genera with replacement
+species <- c()
+for(i in 1:length(samplegenera)) #Collecting the species from the sampled genera
+{
+  species <- c(species, clutch$Species_name[which(clutch$Genus_name == levels(clutch$Genus_name)[samplegenera[i]])])
+}
+samplespecies <- sample(species, length(species), replace = T) #Sampling species with replacement
+clutchvalues <- c()
+for(i in 1:length(samplespecies)) #Collecting the clutch sizes from the sampled species
+{
+  clutchvalues <- c(clutchvalues, clutch$Clutch_size[which(clutch$Species_name == levels(clutch$Species_name)[samplespecies[i]])])
+}
+mean(clutchvalues)
+```
