@@ -8,53 +8,56 @@ Manly (1995)
 
 In-class discussion
 --------------------------------------------------------
+To read later
+"serial method" in Manly (1995)
 
 In-class exercises
 --------------------------------------------------------
+Data are from Bejder et al. (1998)
+
+Calculate HWI for the dolphin data
+Write code for pairwise swapping
+Examine the difference between generating null distributions by long chains vs. short chains; look for burn-in effect
 
 ```{r} 
 #code for directly importing data from github
 require(RCurl)
 options(RCurlOptions = list(cainfo = system.file("CurlSSL", "cacert.pem", package = "RCurl")))
-raw <- getURL("insertURLhere") #insert the  raw URL for the data file on github here
-data <- read.csv(text = raw) #read in the github file
+raw <- getURL("https://raw.github.com/PermuteSeminar/PermuteSeminar-2014/master/Week-5/Dolphin+data.csv") #insert the  raw URL for the data file on github here
+dolphindata <- read.csv(text = raw) #read in the github file
 ```
 
-Notes and practice from the readings
---------------------------------------------------------
-**From the Manly (2006) handout - the randomization test of golden jackals data**
 
-Mandible lengths (mm) for male and female golden jackals.  Sample size of 10 for each sex.
+HWI = x/ (x+y{ab}+ 0.5(y{a}+y{b}))
+x = number of encounters including both dolphins A and B in the same group
+ya = number of encounters including A but not B
+yb = vice versa
+yab = number of encounters including dolphins A and B, but in different groups (always 0 in this data set because different groups were not scored simultaneously)
+
+Calculate HWI for each dyad from the observed data, then calculate a summary statistic for testing the randomness of co-occurrences
+
+Calculating HWI
 ```{r}
-m <- c(120, 107, 110, 116, 114, 111, 113, 117, 114, 112) #male mandible lengths
-f <- c(110, 111, 107, 108, 110, 105, 107, 106, 111, 111) #female mandible lengths
-c <- c(m,f) #combined vector of male and female mandible lengths
-obd <- mean(m) - mean(f) #observed difference between males and females
 
-n = 10
-perm = NULL
-mtest = NULL
-for (i in 1:9999){ #randomly generating 1000 new male and female data sets from the pooled original data and generating 1000 test statistics - the difference in means between the two groups)
-  mper = sample(c, n, replace=FALSE)
-  fper = sample(c, n, replace = FALSE)  #this is wrong, I need to include some dependence on the line above
-  diff = (mean(mper)-mean(fper))
-  perm = append(perm, diff)
+x=matrix(nrow=18,ncol=18)
+for(i in 1:18){
+  for(j in 1:18)
+    x
 }
 
-hist(perm)
-sig <- (sum((perm > obd)/9999))
-sig
+
+
 ```
 
-**Extraneous handy bits of code**
+
+
+Permuting the original data
 ```{r}
-#combining two vectors
-v1 <- c(1,2,3)
-v2 <- c(4,5,6)
-v3 <- c(v1,v2)
-#make it a data frame
-V3 <- as.data.frame(v3)
-#add a column
-z <- c("a", "a", "a", "b", "b", "b")
-V3$z = z
+mat1=matrix(nrow=2, data=c(0,1,1,0))
+mat2=matrix(nrow=2, data=c(1,0,0,1))
+```
+
 ```{r}
+
+S <- sum(sum())
+```
