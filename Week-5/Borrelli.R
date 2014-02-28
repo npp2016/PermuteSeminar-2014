@@ -9,13 +9,13 @@ colSums(dolphins)
 
 
 get_hwi <- function(mat){
-  hwi <- matrix(nrow = nrow(mat), ncol = nrow(mat))
-  for(i in 1:nrow(mat)){
-    for(j in 1:nrow(mat)){
-      x <- sum(mat[i,] == mat[j,])
-      ya <- sum(mat[i,] == 1 & mat[j,] == 0)
-      yb <- sum(mat[i,] == 0 & mat[j,] == 1)
-      hwi[i,j] <- x / (x + 0.5 * (ya + yb)) 
+  hwi <- matrix(nrow = ncol(mat), ncol = ncol(mat))
+  for(i in 1:ncol(mat)){
+    for(j in 1:ncol(mat)){
+      x <- sum(mat[,i] == mat[j,])
+      ya <- sum(mat[,i] == 1 & mat[,j] == 0)
+      yb <- sum(mat[,i] == 0 & mat[,j] == 1)
+      hwi[j,i] <- x / (x + 0.5 * (ya + yb)) 
     }
   }
   return(hwi)
@@ -30,7 +30,7 @@ permutes <- function(mat, iter = 100){
   mat.list <- list()
   hwi.list <- list()
   
-  while(count <= iter){
+  while(count < iter){
     srow <- sample(1:nrow(mat), 2)
     scol <- sample(1:ncol(mat), 2)
     
@@ -54,10 +54,24 @@ permutes <- function(mat, iter = 100){
 }
 
 system.time(
-  letstryit <- permutes(dolphins, iter = 10)
+  letstryit <- permutes(dolphins, iter = 100)
 )
 
+mat.ij <- t(sapply(letstryit$hwi, FUN = function(x){x[which(lower.tri(x))]}))
+e.ij <- colMeans(mat.ij)
 
-letstryit$permuted.matrices[[1]]
-letstryit$hwi[[1]]
+S <- c()
+for(i in 1:ncol(mat.ij)){
+  top <- (mat.ij[,i] - e.ij[i])^2
+  bottom <- ncol(dolphins)^2
+  S[i] <- sum(top/bottom)
+}
 
+hist(S)
+
+true <- get_hwi(dolphins)
+oij <- true[which(lower.tri(true))] 
+test.stat <- sum((oij - e.ij)^2/18^2)
+abline(v = test.stat)
+
+sum(S[which(S > test.stat)])
