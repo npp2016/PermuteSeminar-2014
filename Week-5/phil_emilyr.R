@@ -64,7 +64,7 @@ return(data)
 
 
 
-
+samps=500
 results=array(dim=c(18,18,samps))
 
 
