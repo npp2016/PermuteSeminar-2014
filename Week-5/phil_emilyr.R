@@ -1,10 +1,10 @@
 data<- read.csv("~/R/PermuteSeminar/PermuteSeminar-2014/Week-5/Dolphin+data.csv", header=F)
 data<-data[,2:19]
 datainit=data
+samps=500
 calculateHWI<-function(data){
 X=matrix(nrow=18,ncol=18)
 
-diag(together)<-0
 for(i in 1:18){
   for(j in 1:18){
     X[i,j]=sum(data[,i]*data[,j])
@@ -13,7 +13,6 @@ for(i in 1:18){
 
 Ya=matrix(nrow=18,ncol=18)
 
-diag(together)<-0
 for(i in 1:18){
   for(j in 1:18){
     Ya[i,j]=sum(data[,i]*(data[,j]!=1))
@@ -22,7 +21,7 @@ for(i in 1:18){
 
 Yb=matrix(nrow=18,ncol=18)
 
-diag(together)<-0
+
 for(i in 1:18){
   for(j in 1:18){
     Yb[i,j]=sum(data[,j]*(data[,i]!=1))
@@ -63,8 +62,6 @@ return(data)
 }
 
 
-
-samps=500
 results=array(dim=c(18,18,samps))
 
 
@@ -82,7 +79,7 @@ for(i in 1:18){
   }
 }
 
-s=vector()
+S=vector()
 for(i in 1:samps){
   S[i]=sum((results[,,i]-meanHWI)^2/18)
 }
