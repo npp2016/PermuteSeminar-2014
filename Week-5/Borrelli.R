@@ -54,7 +54,7 @@ permutes <- function(mat, iter = 100){
 }
 
 system.time(
-  letstryit <- permutes(dolphins, iter = 100)
+  letstryit <- permutes(dolphins, iter = 1000)
 )
 
 mat.ij <- t(sapply(letstryit$hwi, FUN = function(x){x[which(lower.tri(x))]}))
