@@ -1,0 +1,90 @@
+Week 5: Randomization, simple and less simple
+========================================================
+
+Randomization is a method for formulating and testing a null hypothesis of "randomness" given a particular set of data.  In this conception, our alternative hypothesis (i.e., that there *is* some effect, difference, correlation, etc.) corresponds to a certain level of organization or structure in our data.  If this is the case, then shuffling the order of our measurements (randomizing) will destroy that structure and change the value of our test statistic.  If, on the other hand, the null hypothesis is true, and ther is *not* any structure, then reshuffling the data won't produce much change in the chosen test statistic.
+
+A randomization test simply reshuffles the data and calculates the test statistic many times, counting what proportion of test statistics are at least as extreme as the one calculated from the original data.  The shuffling may be a simple reordering, or it may attempt to preserve certain features of the original data or the process that generated it.  One example mentioned in class was phylogenetic trees: if you just shuffle the order of species, OF COURSE you're going to get a significant result, since the process that created the species (evolution) is branching and autocorrelated.  To get meaningful significance levels, you would need to come up with a randomization scheme that preserves some of these characteristics.
+
+Design of a randomization scheme for taxonomic relationships under the assumption of Intelligent Design is left as an exercise for the reader.
+
+
+Jackal jaws
+-------------
+To show the idea of randomization in action, I re-created the example of the jackal jaws from the reading.
+
+```r
+jackals <- data.frame(mandible = c(120, 107, 110, 116, 114, 111, 113, 117, 114, 
+    112, 110, 111, 107, 108, 110, 105, 107, 106, 111, 111), sex = rep(c("Male", 
+    "Female"), each = 10))
+boxplot(mandible ~ sex, jackals, xlab = "Sex", ylab = "Mandible length (mm)")
+```
+
+![plot of chunk unnamed-chunk-1](figure/unnamed-chunk-1.png) 
+
+So it definitely appears like males have larger mandibles.  But how sure are we?  For a standard statistical test of the difference in means, we can just use R's `lm()` function (this is equivalent to doing a two-sample T-test, and gives us the same p-value).
+
+```r
+mod <- lm(mandible ~ sex, jackals)
+summary(mod)
+```
+
+```
+## 
+## Call:
+## lm(formula = mandible ~ sex, data = jackals)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+##   -6.4   -1.8    0.1    2.4    6.6 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)  108.600      0.974  111.49   <2e-16 ***
+## sexMale        4.800      1.378    3.48   0.0026 ** 
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 3.08 on 18 degrees of freedom
+## Multiple R-squared:  0.403,	Adjusted R-squared:  0.37 
+## F-statistic: 12.1 on 1 and 18 DF,  p-value: 0.00265
+```
+
+```r
+difference.observed <- mod$coefficients[["sexMale"]]
+```
+
+Looking at the results from this model, we can see that the male mandibles are
+an average of 4.8 mm longer than the females,' and that we can be pretty confident this difference is real, given the small p-value (0.0026).
+
+Now, to do the same thing using randomization.  I started by defining a function to do the randomization: it takes a vector of data values from two groups (`x`) and an integer `k`, which says how many of the items in `x` belong to group 1 (in our case, this will always be 10, the number of males).  The fuction shuffles the vector and assigns the first `k` values to group 1, then returns the difference beween the mean of the randomized "group 1" and "group 2."
+
+This is a pretty simple randomization, so the advantage of writing a separate function to do it is debatable.  However, for more complicated randomizations, which may have more than one step, keeping distinct tasks separated in defined functions tends to make code cleaner and easier to debug and modify.
+
+```r
+randomized.difference <- function(x, k) {
+    n <- length(x)
+    x.random <- sample(x, n, replace = FALSE)
+    return(mean(x.random[1:k]) - mean(x.random[(k + 1):n]))
+}
+```
+
+
+We repeat this randomizing and difference-finding procedure a large number of times.  Because Ben doesn't like when people do 999 shuffles to get a "nice" total sample of 1000, I decided to do 4029 shuffles to land on a [weird number](http://en.wikipedia.org/wiki/Weird_number) instead.
+
+```r
+set.seed(70)
+n.shuffles <- 4029
+n.males <- sum(jackals$sex == "Male")
+differences <- rep(0, n.shuffles)
+for (i in 1:n.shuffles) {
+    differences[i] <- randomized.difference(jackals$mandible, n.males)
+}
+
+p.rand <- (sum(differences >= difference.observed) + 1)/(n.shuffles + 1)
+```
+
+The p-value given by the randomization procedure (0.002) is, as we would hope, pretty close to the one from our parametric model (0.0026).
+
+Dolphin Association Data
+------------------------
+

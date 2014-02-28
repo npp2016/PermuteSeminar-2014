@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<!-- saved from url=(0014)about:internet -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=9" >
+
+<title>Week 5: Randomization, simple and less simple</title>
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 12px;
+   margin: 8px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 { 
+   font-size:2.2em; 
+}
+
+h2 { 
+   font-size:1.8em; 
+}
+
+h3 { 
+   font-size:1.4em; 
+}
+
+h4 { 
+   font-size:1.0em; 
+}
+
+h5 { 
+   font-size:0.9em; 
+}
+
+h6 { 
+   font-size:0.8em; 
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre {	
+   margin-top: 0;
+   max-width: 95%;
+   border: 1px solid #ccc;
+   white-space: pre-wrap;
+}
+
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code.r, code.cpp {
+   background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * { 
+      background: transparent !important; 
+      color: black !important; 
+      filter:none !important; 
+      -ms-filter: none !important; 
+   }
+
+   body { 
+      font-size:12pt; 
+      max-width:100%; 
+   }
+       
+   a, a:visited { 
+      text-decoration: underline; 
+   }
+
+   hr { 
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote { 
+      padding-right: 1em; 
+      page-break-inside: avoid; 
+   }
+
+   tr, img { 
+      page-break-inside: avoid; 
+   }
+
+   img { 
+      max-width: 100% !important; 
+   }
+
+   @page :left { 
+      margin: 15mm 20mm 15mm 10mm; 
+   }
+     
+   @page :right { 
+      margin: 15mm 10mm 15mm 20mm; 
+   }
+
+   p, h2, h3 { 
+      orphans: 3; widows: 3; 
+   }
+
+   h2, h3 { 
+      page-break-after: avoid; 
+   }
+}
+
+</style>
+
+<!-- Styles for R syntax highlighter -->
+<style type="text/css">
+   pre .operator,
+   pre .paren {
+     color: rgb(104, 118, 135)
+   }
+
+   pre .literal {
+     color: rgb(88, 72, 246)
+   }
+
+   pre .number {
+     color: rgb(0, 0, 205);
+   }
+
+   pre .comment {
+     color: rgb(76, 136, 107);
+   }
+
+   pre .keyword {
+     color: rgb(0, 0, 255);
+   }
+
+   pre .identifier {
+     color: rgb(0, 0, 0);
+   }
+
+   pre .string {
+     color: rgb(3, 106, 7);
+   }
+</style>
+
+<!-- R syntax highlighter -->
+<script type="text/javascript">
+var hljs=new function(){function m(p){return p.replace(/&/gm,"&amp;").replace(/</gm,"&lt;")}function f(r,q,p){return RegExp(q,"m"+(r.cI?"i":"")+(p?"g":""))}function b(r){for(var p=0;p<r.childNodes.length;p++){var q=r.childNodes[p];if(q.nodeName=="CODE"){return q}if(!(q.nodeType==3&&q.nodeValue.match(/\s+/))){break}}}function h(t,s){var p="";for(var r=0;r<t.childNodes.length;r++){if(t.childNodes[r].nodeType==3){var q=t.childNodes[r].nodeValue;if(s){q=q.replace(/\n/g,"")}p+=q}else{if(t.childNodes[r].nodeName=="BR"){p+="\n"}else{p+=h(t.childNodes[r])}}}if(/MSIE [678]/.test(navigator.userAgent)){p=p.replace(/\r/g,"\n")}return p}function a(s){var r=s.className.split(/\s+/);r=r.concat(s.parentNode.className.split(/\s+/));for(var q=0;q<r.length;q++){var p=r[q].replace(/^language-/,"");if(e[p]){return p}}}function c(q){var p=[];(function(s,t){for(var r=0;r<s.childNodes.length;r++){if(s.childNodes[r].nodeType==3){t+=s.childNodes[r].nodeValue.length}else{if(s.childNodes[r].nodeName=="BR"){t+=1}else{if(s.childNodes[r].nodeType==1){p.push({event:"start",offset:t,node:s.childNodes[r]});t=arguments.callee(s.childNodes[r],t);p.push({event:"stop",offset:t,node:s.childNodes[r]})}}}}return t})(q,0);return p}function k(y,w,x){var q=0;var z="";var s=[];function u(){if(y.length&&w.length){if(y[0].offset!=w[0].offset){return(y[0].offset<w[0].offset)?y:w}else{return w[0].event=="start"?y:w}}else{return y.length?y:w}}function t(D){var A="<"+D.nodeName.toLowerCase();for(var B=0;B<D.attributes.length;B++){var C=D.attributes[B];A+=" "+C.nodeName.toLowerCase();if(C.value!==undefined&&C.value!==false&&C.value!==null){A+='="'+m(C.value)+'"'}}return A+">"}while(y.length||w.length){var v=u().splice(0,1)[0];z+=m(x.substr(q,v.offset-q));q=v.offset;if(v.event=="start"){z+=t(v.node);s.push(v.node)}else{if(v.event=="stop"){var p,r=s.length;do{r--;p=s[r];z+=("</"+p.nodeName.toLowerCase()+">")}while(p!=v.node);s.splice(r,1);while(r<s.length){z+=t(s[r]);r++}}}}return z+m(x.substr(q))}function j(){function q(x,y,v){if(x.compiled){return}var u;var s=[];if(x.k){x.lR=f(y,x.l||hljs.IR,true);for(var w in x.k){if(!x.k.hasOwnProperty(w)){continue}if(x.k[w] instanceof Object){u=x.k[w]}else{u=x.k;w="keyword"}for(var r in u){if(!u.hasOwnProperty(r)){continue}x.k[r]=[w,u[r]];s.push(r)}}}if(!v){if(x.bWK){x.b="\\b("+s.join("|")+")\\s"}x.bR=f(y,x.b?x.b:"\\B|\\b");if(!x.e&&!x.eW){x.e="\\B|\\b"}if(x.e){x.eR=f(y,x.e)}}if(x.i){x.iR=f(y,x.i)}if(x.r===undefined){x.r=1}if(!x.c){x.c=[]}x.compiled=true;for(var t=0;t<x.c.length;t++){if(x.c[t]=="self"){x.c[t]=x}q(x.c[t],y,false)}if(x.starts){q(x.starts,y,false)}}for(var p in e){if(!e.hasOwnProperty(p)){continue}q(e[p].dM,e[p],true)}}function d(B,C){if(!j.called){j();j.called=true}function q(r,M){for(var L=0;L<M.c.length;L++){if((M.c[L].bR.exec(r)||[null])[0]==r){return M.c[L]}}}function v(L,r){if(D[L].e&&D[L].eR.test(r)){return 1}if(D[L].eW){var M=v(L-1,r);return M?M+1:0}return 0}function w(r,L){return L.i&&L.iR.test(r)}function K(N,O){var M=[];for(var L=0;L<N.c.length;L++){M.push(N.c[L].b)}var r=D.length-1;do{if(D[r].e){M.push(D[r].e)}r--}while(D[r+1].eW);if(N.i){M.push(N.i)}return f(O,M.join("|"),true)}function p(M,L){var N=D[D.length-1];if(!N.t){N.t=K(N,E)}N.t.lastIndex=L;var r=N.t.exec(M);return r?[M.substr(L,r.index-L),r[0],false]:[M.substr(L),"",true]}function z(N,r){var L=E.cI?r[0].toLowerCase():r[0];var M=N.k[L];if(M&&M instanceof Array){return M}return false}function F(L,P){L=m(L);if(!P.k){return L}var r="";var O=0;P.lR.lastIndex=0;var M=P.lR.exec(L);while(M){r+=L.substr(O,M.index-O);var N=z(P,M);if(N){x+=N[1];r+='<span class="'+N[0]+'">'+M[0]+"</span>"}else{r+=M[0]}O=P.lR.lastIndex;M=P.lR.exec(L)}return r+L.substr(O,L.length-O)}function J(L,M){if(M.sL&&e[M.sL]){var r=d(M.sL,L);x+=r.keyword_count;return r.value}else{return F(L,M)}}function I(M,r){var L=M.cN?'<span class="'+M.cN+'">':"";if(M.rB){y+=L;M.buffer=""}else{if(M.eB){y+=m(r)+L;M.buffer=""}else{y+=L;M.buffer=r}}D.push(M);A+=M.r}function G(N,M,Q){var R=D[D.length-1];if(Q){y+=J(R.buffer+N,R);return false}var P=q(M,R);if(P){y+=J(R.buffer+N,R);I(P,M);return P.rB}var L=v(D.length-1,M);if(L){var O=R.cN?"</span>":"";if(R.rE){y+=J(R.buffer+N,R)+O}else{if(R.eE){y+=J(R.buffer+N,R)+O+m(M)}else{y+=J(R.buffer+N+M,R)+O}}while(L>1){O=D[D.length-2].cN?"</span>":"";y+=O;L--;D.length--}var r=D[D.length-1];D.length--;D[D.length-1].buffer="";if(r.starts){I(r.starts,"")}return R.rE}if(w(M,R)){throw"Illegal"}}var E=e[B];var D=[E.dM];var A=0;var x=0;var y="";try{var s,u=0;E.dM.buffer="";do{s=p(C,u);var t=G(s[0],s[1],s[2]);u+=s[0].length;if(!t){u+=s[1].length}}while(!s[2]);if(D.length>1){throw"Illegal"}return{r:A,keyword_count:x,value:y}}catch(H){if(H=="Illegal"){return{r:0,keyword_count:0,value:m(C)}}else{throw H}}}function g(t){var p={keyword_count:0,r:0,value:m(t)};var r=p;for(var q in e){if(!e.hasOwnProperty(q)){continue}var s=d(q,t);s.language=q;if(s.keyword_count+s.r>r.keyword_count+r.r){r=s}if(s.keyword_count+s.r>p.keyword_count+p.r){r=p;p=s}}if(r.language){p.second_best=r}return p}function i(r,q,p){if(q){r=r.replace(/^((<[^>]+>|\t)+)/gm,function(t,w,v,u){return w.replace(/\t/g,q)})}if(p){r=r.replace(/\n/g,"<br>")}return r}function n(t,w,r){var x=h(t,r);var v=a(t);var y,s;if(v){y=d(v,x)}else{return}var q=c(t);if(q.length){s=document.createElement("pre");s.innerHTML=y.value;y.value=k(q,c(s),x)}y.value=i(y.value,w,r);var u=t.className;if(!u.match("(\\s|^)(language-)?"+v+"(\\s|$)")){u=u?(u+" "+v):v}if(/MSIE [678]/.test(navigator.userAgent)&&t.tagName=="CODE"&&t.parentNode.tagName=="PRE"){s=t.parentNode;var p=document.createElement("div");p.innerHTML="<pre><code>"+y.value+"</code></pre>";t=p.firstChild.firstChild;p.firstChild.cN=s.cN;s.parentNode.replaceChild(p.firstChild,s)}else{t.innerHTML=y.value}t.className=u;t.result={language:v,kw:y.keyword_count,re:y.r};if(y.second_best){t.second_best={language:y.second_best.language,kw:y.second_best.keyword_count,re:y.second_best.r}}}function o(){if(o.called){return}o.called=true;var r=document.getElementsByTagName("pre");for(var p=0;p<r.length;p++){var q=b(r[p]);if(q){n(q,hljs.tabReplace)}}}function l(){if(window.addEventListener){window.addEventListener("DOMContentLoaded",o,false);window.addEventListener("load",o,false)}else{if(window.attachEvent){window.attachEvent("onload",o)}else{window.onload=o}}}var e={};this.LANGUAGES=e;this.highlight=d;this.highlightAuto=g;this.fixMarkup=i;this.highlightBlock=n;this.initHighlighting=o;this.initHighlightingOnLoad=l;this.IR="[a-zA-Z][a-zA-Z0-9_]*";this.UIR="[a-zA-Z_][a-zA-Z0-9_]*";this.NR="\\b\\d+(\\.\\d+)?";this.CNR="\\b(0[xX][a-fA-F0-9]+|(\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)";this.BNR="\\b(0b[01]+)";this.RSR="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|\\.|-|-=|/|/=|:|;|<|<<|<<=|<=|=|==|===|>|>=|>>|>>=|>>>|>>>=|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~";this.ER="(?![\\s\\S])";this.BE={b:"\\\\.",r:0};this.ASM={cN:"string",b:"'",e:"'",i:"\\n",c:[this.BE],r:0};this.QSM={cN:"string",b:'"',e:'"',i:"\\n",c:[this.BE],r:0};this.CLCM={cN:"comment",b:"//",e:"$"};this.CBLCLM={cN:"comment",b:"/\\*",e:"\\*/"};this.HCM={cN:"comment",b:"#",e:"$"};this.NM={cN:"number",b:this.NR,r:0};this.CNM={cN:"number",b:this.CNR,r:0};this.BNM={cN:"number",b:this.BNR,r:0};this.inherit=function(r,s){var p={};for(var q in r){p[q]=r[q]}if(s){for(var q in s){p[q]=s[q]}}return p}}();hljs.LANGUAGES.cpp=function(){var a={keyword:{"false":1,"int":1,"float":1,"while":1,"private":1,"char":1,"catch":1,"export":1,virtual:1,operator:2,sizeof:2,dynamic_cast:2,typedef:2,const_cast:2,"const":1,struct:1,"for":1,static_cast:2,union:1,namespace:1,unsigned:1,"long":1,"throw":1,"volatile":2,"static":1,"protected":1,bool:1,template:1,mutable:1,"if":1,"public":1,friend:2,"do":1,"return":1,"goto":1,auto:1,"void":2,"enum":1,"else":1,"break":1,"new":1,extern:1,using:1,"true":1,"class":1,asm:1,"case":1,typeid:1,"short":1,reinterpret_cast:2,"default":1,"double":1,register:1,explicit:1,signed:1,typename:1,"try":1,"this":1,"switch":1,"continue":1,wchar_t:1,inline:1,"delete":1,alignof:1,char16_t:1,char32_t:1,constexpr:1,decltype:1,noexcept:1,nullptr:1,static_assert:1,thread_local:1,restrict:1,_Bool:1,complex:1},built_in:{std:1,string:1,cin:1,cout:1,cerr:1,clog:1,stringstream:1,istringstream:1,ostringstream:1,auto_ptr:1,deque:1,list:1,queue:1,stack:1,vector:1,map:1,set:1,bitset:1,multiset:1,multimap:1,unordered_set:1,unordered_map:1,unordered_multiset:1,unordered_multimap:1,array:1,shared_ptr:1}};return{dM:{k:a,i:"</",c:[hljs.CLCM,hljs.CBLCLM,hljs.QSM,{cN:"string",b:"'\\\\?.",e:"'",i:"."},{cN:"number",b:"\\b(\\d+(\\.\\d*)?|\\.\\d+)(u|U|l|L|ul|UL|f|F)"},hljs.CNM,{cN:"preprocessor",b:"#",e:"$"},{cN:"stl_container",b:"\\b(deque|list|queue|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array)\\s*<",e:">",k:a,r:10,c:["self"]}]}}}();hljs.LANGUAGES.r={dM:{c:[hljs.HCM,{cN:"number",b:"\\b0[xX][0-9a-fA-F]+[Li]?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+(?:[eE][+\\-]?\\d*)?L\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+\\.(?!\\d)(?:i\\b)?",e:hljs.IMMEDIATE_RE,r:1},{cN:"number",b:"\\b\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\.\\d+(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"keyword",b:"(?:tryCatch|library|setGeneric|setGroupGeneric)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\.",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\d+(?![\\w.])",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\b(?:function)",e:hljs.IMMEDIATE_RE,r:2},{cN:"keyword",b:"(?:if|in|break|next|repeat|else|for|return|switch|while|try|stop|warning|require|attach|detach|source|setMethod|setClass)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"literal",b:"(?:NA|NA_integer_|NA_real_|NA_character_|NA_complex_)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"literal",b:"(?:NULL|TRUE|FALSE|T|F|Inf|NaN)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"identifier",b:"[a-zA-Z.][a-zA-Z0-9._]*\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"<\\-(?!\\s*\\d)",e:hljs.IMMEDIATE_RE,r:2},{cN:"operator",b:"\\->|<\\-",e:hljs.IMMEDIATE_RE,r:1},{cN:"operator",b:"%%|~",e:hljs.IMMEDIATE_RE},{cN:"operator",b:">=|<=|==|!=|\\|\\||&&|=|\\+|\\-|\\*|/|\\^|>|<|!|&|\\||\\$|:",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"%",e:"%",i:"\\n",r:1},{cN:"identifier",b:"`",e:"`",r:0},{cN:"string",b:'"',e:'"',c:[hljs.BE],r:0},{cN:"string",b:"'",e:"'",c:[hljs.BE],r:0},{cN:"paren",b:"[[({\\])}]",e:hljs.IMMEDIATE_RE,r:0}]}};
+hljs.initHighlightingOnLoad();
+</script>
+
+
+
+
+</head>
+
+<body>
+<h1>Week 5: Randomization, simple and less simple</h1>
+
+<p>Randomization is a method for formulating and testing a null hypothesis of &ldquo;randomness&rdquo; given a particular set of data.  In this conception, our alternative hypothesis (i.e., that there <em>is</em> some effect, difference, correlation, etc.) corresponds to a certain level of organization or structure in our data.  If this is the case, then shuffling the order of our measurements (randomizing) will destroy that structure and change the value of our test statistic.  If, on the other hand, the null hypothesis is true, and ther is <em>not</em> any structure, then reshuffling the data won&#39;t produce much change in the chosen test statistic.</p>
+
+<p>A randomization test simply reshuffles the data and calculates the test statistic many times, counting what proportion of test statistics are at least as extreme as the one calculated from the original data.  The shuffling may be a simple reordering, or it may attempt to preserve certain features of the original data or the process that generated it.  One example mentioned in class was phylogenetic trees: if you just shuffle the order of species, OF COURSE you&#39;re going to get a significant result, since the process that created the species (evolution) is branching and autocorrelated.  To get meaningful significance levels, you would need to come up with a randomization scheme that preserves some of these characteristics.</p>
+
+<p>Design of a randomization scheme for taxonomic relationships under the assumption of Intelligent Design is left as an exercise for the reader.</p>
+
+<h2>Jackal jaws</h2>
+
+<p>To show the idea of randomization in action, I re-created the example of the jackal jaws from the reading.</p>
+
+<pre><code class="r">jackals &lt;- data.frame(mandible = c(120, 107, 110, 116, 114, 111, 113, 117, 114, 
+    112, 110, 111, 107, 108, 110, 105, 107, 106, 111, 111), sex = rep(c(&quot;Male&quot;, 
+    &quot;Female&quot;), each = 10))
+boxplot(mandible ~ sex, jackals, xlab = &quot;Sex&quot;, ylab = &quot;Mandible length (mm)&quot;)
+</code></pre>
+
+<p><img src="data:image/png;base64,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" alt="plot of chunk unnamed-chunk-1"/> </p>
+
+<p>So it definitely appears like males have larger mandibles.  But how sure are we?  For a standard statistical test of the difference in means, we can just use R&#39;s <code>lm()</code> function (this is equivalent to doing a two-sample T-test, and gives us the same p-value).</p>
+
+<pre><code class="r">mod &lt;- lm(mandible ~ sex, jackals)
+summary(mod)
+</code></pre>
+
+<pre><code>## 
+## Call:
+## lm(formula = mandible ~ sex, data = jackals)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+##   -6.4   -1.8    0.1    2.4    6.6 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  108.600      0.974  111.49   &lt;2e-16 ***
+## sexMale        4.800      1.378    3.48   0.0026 ** 
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 3.08 on 18 degrees of freedom
+## Multiple R-squared:  0.403,  Adjusted R-squared:  0.37 
+## F-statistic: 12.1 on 1 and 18 DF,  p-value: 0.00265
+</code></pre>
+
+<pre><code class="r">difference.observed &lt;- mod$coefficients[[&quot;sexMale&quot;]]
+</code></pre>
+
+<p>Looking at the results from this model, we can see that the male mandibles are
+an average of 4.8 mm longer than the females,&#39; and that we can be pretty confident this difference is real, given the small p-value (0.0026).</p>
+
+<p>Now, to do the same thing using randomization.  I started by defining a function to do the randomization: it takes a vector of data values from two groups (<code>x</code>) and an integer <code>k</code>, which says how many of the items in <code>x</code> belong to group 1 (in our case, this will always be 10, the number of males).  The fuction shuffles the vector and assigns the first <code>k</code> values to group 1, then returns the difference beween the mean of the randomized &ldquo;group 1&rdquo; and &ldquo;group 2.&rdquo;</p>
+
+<p>This is a pretty simple randomization, so the advantage of writing a separate function to do it is debatable.  However, for more complicated randomizations, which may have more than one step, keeping distinct tasks separated in defined functions tends to make code cleaner and easier to debug and modify.</p>
+
+<pre><code class="r">randomized.difference &lt;- function(x, k) {
+    n &lt;- length(x)
+    x.random &lt;- sample(x, n, replace = FALSE)
+    return(mean(x.random[1:k]) - mean(x.random[(k + 1):n]))
+}
+</code></pre>
+
+<p>We repeat this randomizing and difference-finding procedure a large number of times.  Because Ben doesn&#39;t like when people do 999 shuffles to get a &ldquo;nice&rdquo; total sample of 1000, I decided to do 4029 shuffles to land on a <a href="http://en.wikipedia.org/wiki/Weird_number">weird number</a> instead.</p>
+
+<pre><code class="r">set.seed(70)
+n.shuffles &lt;- 4029
+n.males &lt;- sum(jackals$sex == &quot;Male&quot;)
+differences &lt;- rep(0, n.shuffles)
+for (i in 1:n.shuffles) {
+    differences[i] &lt;- randomized.difference(jackals$mandible, n.males)
+}
+
+p.rand &lt;- (sum(differences &gt;= difference.observed) + 1)/(n.shuffles + 1)
+</code></pre>
+
+<p>The p-value given by the randomization procedure (0.002) is, as we would hope, pretty close to the one from our parametric model (0.0026).</p>
+
+<h2>Dolphin Association Data</h2>
+
+</body>
+
+</html>
+
