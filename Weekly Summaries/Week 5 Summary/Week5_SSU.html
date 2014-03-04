@@ -174,6 +174,10 @@ hljs.initHighlightingOnLoad();
 </script>
 
 
+<!-- MathJax scripts -->
+<script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
 
 
 </head>
@@ -258,6 +262,80 @@ p.rand &lt;- (sum(differences &gt;= difference.observed) + 1)/(n.shuffles + 1)
 <p>The p-value given by the randomization procedure (0.002) is, as we would hope, pretty close to the one from our parametric model (0.0026).</p>
 
 <h2>Dolphin Association Data</h2>
+
+<p>A more complicated randomization problem comes up when we try to test whether the dolphins in Porpoise Bay associate with each other in non-random groups.  Bejder et al. record their dolphin observations in a table, where each row represents an &ldquo;encounter&rdquo; with a group of dolphins, and each column represents one animal.  Ones or zeros indicate whether a particular group included a particular dolphin.</p>
+
+<pre><code class="r">dolphins &lt;- read.csv(&quot;Dolphin_data.csv&quot;)
+dolphins &lt;- as.matrix(dolphins[, 2:ncol(dolphins)])
+</code></pre>
+
+<h3>Measuring pairwise association</h3>
+
+<p>We want to know whether some dolphins are found together more freqently than we would expect based on random chance.  The first step is to come up with some statistic that tells us how often a given pair of dolphins are found together.  Bejder et al. use Cairns and Schwager&#39;s (1987) &ldquo;half-weight index,&rdquo; or HWI:</p>
+
+<p>\[ 
+HWI = \frac{x}{x + y_{ab} + 0.5 (y_a + y_b)}
+ \]
+where \( x \) is the number of encounters including both dolphins a and b, \( y_a \) and \( y_b \) are the number of encounters with <em>only</em> dolphin a or b.  I didn&#39;t really understand what \( y_{ab} \) meant, but Bejder et al. say it&#39;s always 0 for our purposes, so we don&#39;t have to worry about it.</p>
+
+<p>I coded the HWI as a function:</p>
+
+<pre><code class="r">hwi &lt;- function(a, b, m) {
+  # m : co-occurrence matrix (individuals in columns, groups in rows)
+  # a, b : column numbers for a pair of individuals
+  both.present &lt;- rowSums(m[ , c(a, b)]) == 2
+  y.a  &lt;- sum(m[! both.present , a]) # encounters with only a
+  y.b  &lt;- sum(m[! both.present , b]) # encounters with only b
+  x &lt;- sum(both.present)             # number of encounters with both a and b
+  r
+  eturn(x / (x + 0.5 * (y.a + y.b)))
+}
+</code></pre>
+
+<p>This is a little terse, so the line-by line explanation is as follows:</p>
+
+<pre><code class="r">both.present &lt;- rowSums(m[, c(a, b)]) == 2
+</code></pre>
+
+<p>Going from the innermost parentheses outwards, this line selects two comlumns from the co-occurrence matrix corresponding two the two dolphins (<code>m[ , c(a, b)]</code>), and sums them by row (<code>rowSums</code>).  This returns a vector with 0, 1, or 2 in each cell.  The cells with &ldquo;2&rdquo; in them correspond to encounters with both dolphins a and b, so I use the logical operator <code>==</code> to make a boolean vector that can be used to subset the encounters in the next three lines.</p>
+
+<pre><code class="r">y.a &lt;- sum(m[!both.present, a])
+y.b &lt;- sum(m[!both.present, b])
+</code></pre>
+
+<p>These lines both do the same thing: use the indexing vector <code>! both.present</code> to select the rows in column <code>a</code> or <code>b</code> where <em>only</em> that dolphin is present, then adding up the number of ones in that subset to get \( y_a \) and \( y_b \).</p>
+
+<pre><code class="r">x &lt;- sum(both.present)
+</code></pre>
+
+<p>This line just adds up the <code>TRUE</code>&#39;s in <code>both.present</code> to get the number of shared encounters.</p>
+
+<pre><code class="r">return(x/(x + 0.5 * (y.a + y.b)))
+</code></pre>
+
+<p>This line calculates the HWI and returns it, ignoring \( y_{ab} \) (wich is =0).</p>
+
+<h3>Measuring overall association</h3>
+
+<p>With HWI in hand, we can calculate an association number for each pair of dolphins.  But we also want some overall, &ldquo;population&rdquo; measure of association. Belder et al. suggest using Manly&#39;s (1995) \( S \) statistic:
+\[ 
+S = \sum_{i=1}^D \sum_{j=1}^D \frac{(o_{ij} - e_{ij})^2}{D^2}
+ \]
+where \( o_{ij} \) is the HWI value for dolphins \( i \) and \( j \), and \( e_{ij} \) is the expected value of \( o_{ij} \) if associations are random.</p>
+
+<p>We want to compare the observed value of \( S \) to a bunch of random values, to see how likely our data are under the null hypothesis of randomness.  To do this, we need to generate a bunch of randomized data matrices. But there are a few problems:</p>
+
+<ol>
+<li><p>We need to generate the all the random matrices and \( o_{ij} \)&#39;s <em>before</em> we can calculate the \( e_{ij} \)&#39;s.</p></li>
+<li><p>We don&#39;t want our random matrices to be <em>too</em> random.  Bejder et al. decided they wanted to preserve the row and column sums of the observed data matrix.  To do this, they randomly choose two rows and two columns of the matrix, and if the four cells at their intersections have either of the following patterns</p>
+
+<pre><code>0 1       1 0
+1 0       0 1
+</code></pre>
+
+<p>they are swapped around to the other pattern.  This preserves the row and column sums, BUT&hellip;</p></li>
+<li><p>Each swap only changes a few cells of the matrix, meaning that most of the HWIs will remain the same from one iteration to the next.  As a result, the series of random \( S \)-values will be highly autocorrelated, and we will need to deal with that fact to make sure we have enough truly random samples.</p></li>
+</ol>
 
 </body>
 
