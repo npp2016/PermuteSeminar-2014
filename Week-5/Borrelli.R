@@ -7,12 +7,11 @@ colnames(dolphins) <- LETTERS[1:18]
 colSums(dolphins)
 
 
-
 get_hwi <- function(mat){
   hwi <- matrix(nrow = ncol(mat), ncol = ncol(mat))
   for(i in 1:ncol(mat)){
     for(j in 1:ncol(mat)){
-      x <- sum(mat[,i] == mat[j,])
+      x <- sum(mat[,i] == mat[,j])
       ya <- sum(mat[,i] == 1 & mat[,j] == 0)
       yb <- sum(mat[,i] == 0 & mat[,j] == 1)
       hwi[j,i] <- x / (x + 0.5 * (ya + yb)) 
@@ -54,15 +53,15 @@ permutes <- function(mat, iter = 100){
 }
 
 system.time(
-  letstryit <- permutes(dolphins, iter = 1000)
+  pdolph <- permutes(dolphins, iter = 5000)
 )
 
-mat.ij <- t(sapply(letstryit$hwi, FUN = function(x){x[which(lower.tri(x))]}))
+mat.ij <- t(sapply(pdolph$hwi, FUN = function(x){x[which(lower.tri(x))]}))
 e.ij <- colMeans(mat.ij)
 
 S <- c()
 for(i in 1:ncol(mat.ij)){
-  top <- (mat.ij[,i] - e.ij[i])^2
+  top <- (mat.ij[i,] - e.ij[i])^2
   bottom <- ncol(dolphins)^2
   S[i] <- sum(top/bottom)
 }
@@ -74,4 +73,5 @@ oij <- true[which(lower.tri(true))]
 test.stat <- sum((oij - e.ij)^2/18^2)
 abline(v = test.stat)
 
-sum(S[which(S > test.stat)])
+sum(S > test.stat)/length(S)
+sum(S < test.stat)/length(S)
