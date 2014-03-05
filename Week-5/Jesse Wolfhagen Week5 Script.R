@@ -27,7 +27,7 @@ hwi <- function(a, b) #two columns of the dataset (they're both vectors of equal
   }
   x/(x + 0.5*(ya + yb)) #returns the HWI for that dyad
 }
-runs <- 100 #define how many times you want to run the randomization
+runs <- 1000 #define how many times you want to run the randomization
 outputdata <- list(data) #start with the original data
 for(l in 2:runs) #creates randomized data matrices by switching pairs of observations
 {
@@ -86,3 +86,14 @@ for(m in 2:18) #go through each column as the focal one (don't do group 18)
 #e_ij: Expected value is just the mean of the dyad HWI for all runs
 #D: number of total individuals (sum(data) without the group numbers)
 D <- sum(data[2:19]) #171
+statistic <- c() #the statistic value for each data matrix
+for(p in 1:length(outputdata)) #going through each data matrix
+{
+  value <- c()
+  for(q in 1:ncol(dyads))
+  {
+    value <- c(value, ((dyads[p,q] - mean(dyads[,q]))^2)/D^2)
+  }
+  statistic <- c(statistic, sum(value))
+}
+sum(statistic >= statistic[1])/length(statistic) #the empirical p-value
