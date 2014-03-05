@@ -8,6 +8,7 @@ colSums(dolphins)
 
 
 get_hwi <- function(mat){
+<<<<<<< HEAD
   hwi <- matrix(nrow = ncol(mat), ncol = ncol(mat))
   for(i in 1:ncol(mat)){
     for(j in 1:ncol(mat)){
@@ -15,6 +16,15 @@ get_hwi <- function(mat){
       ya <- sum(mat[,i] == 1 & mat[,j] == 0)
       yb <- sum(mat[,i] == 0 & mat[,j] == 1)
       hwi[j,i] <- x / (x + 0.5 * (ya + yb)) 
+=======
+  hwi <- matrix(nrow = nrow(mat), ncol = nrow(mat))
+  for(i in 1:nrow(mat)){
+    for(j in 1:nrow(mat)){
+      x <- sum(mat[i,] == mat[j,])
+      ya <- sum(mat[i,] == 1 & mat[j,] == 0)
+      yb <- sum(mat[i,] == 0 & mat[j,] == 1)
+      hwi[i,j] <- x / (x + 0.5 * (ya + yb)) 
+>>>>>>> FETCH_HEAD
     }
   }
   return(hwi)
@@ -29,7 +39,7 @@ permutes <- function(mat, iter = 100){
   mat.list <- list()
   hwi.list <- list()
   
-  while(count < iter){
+  while(count <= iter){
     srow <- sample(1:nrow(mat), 2)
     scol <- sample(1:ncol(mat), 2)
     
@@ -53,6 +63,7 @@ permutes <- function(mat, iter = 100){
 }
 
 system.time(
+<<<<<<< HEAD
   pdolph <- permutes(dolphins, iter = 5000)
 )
 
@@ -75,3 +86,12 @@ abline(v = test.stat)
 
 sum(S > test.stat)/length(S)
 sum(S < test.stat)/length(S)
+=======
+  letstryit <- permutes(dolphins, iter = 10)
+)
+
+
+letstryit$permuted.matrices[[1]]
+letstryit$hwi[[1]]
+
+>>>>>>> FETCH_HEAD
