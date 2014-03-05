@@ -1,41 +1,18 @@
 library(animation)
+library(gplots)
 
 #read data
-data<- read.csv("C:/R/Dolphin_data.csv", header=T)
+data<- read.csv("C:/R/Dolphindata.csv", header=T)
 data<-data[,2:19]
 #make a backup of the data for later comparison
 datainit=data
-<<<<<<< HEAD
-#set chain length
-samps=5000
 
-#calculate HWI for given matrix
-calculateHWI<-function(data){
-  X=matrix(nrow=18,ncol=18)
-  
-  for(i in 1:18){
-    for(j in 1:18){
-      X[i,j]=sum(data[,i]*data[,j])
-    }
-  }
-  
-  Ya=matrix(nrow=18,ncol=18)
-  
-  for(i in 1:18){
-    for(j in 1:18){
-      Ya[i,j]=sum(data[,i]*(data[,j]!=1))
-    }
-  }
-  
-  Yb=matrix(nrow=18,ncol=18)
-  
-  
-  for(i in 1:18){
-    for(j in 1:18){
-      Yb[i,j]=sum(data[,j]*(data[,i]!=1))
-    }
-=======
+#set chain length
 samps=500
+
+
+
+#calculate HWI from data
 calculateHWI<-function(data){
 X=matrix(nrow=18,ncol=18)
 
@@ -59,11 +36,13 @@ Yb=matrix(nrow=18,ncol=18)
 for(i in 1:18){
   for(j in 1:18){
     Yb[i,j]=sum(data[,j]*(data[,i]!=1))
->>>>>>> c45fe29cb0b72116804441e9296a8ab57f6bfb4d
+
   }
+}
   
   
   HWI=X/(X+0.5*(Ya+Yb))
+
   return(HWI)
 }
 
@@ -96,11 +75,11 @@ switchMatrix<-function(data,changes){
   return(data)
 }
 
-<<<<<<< HEAD
-#initiate array to hold HWI's
-=======
 
->>>>>>> c45fe29cb0b72116804441e9296a8ab57f6bfb4d
+#initiate array to hold HWI's
+
+
+
 results=array(dim=c(18,18,samps))
 #initiate matrix to track how often an element has been swapped
 switched.elements=matrix(nrow=40,ncol=18,data=0)
@@ -143,14 +122,13 @@ saveGIF(interval = 0.01,ani.height = 600, ani.width = 3000, expr={par(mfrow=c(1,
 
 
 
-<<<<<<< HEAD
-=======
+
 S=vector()
 for(i in 1:samps){
   S[i]=sum((results[,,i]-meanHWI)^2/18)
 }
   
->>>>>>> c45fe29cb0b72116804441e9296a8ab57f6bfb4d
+
 sobs=sum((calculateHWI(datainit)-meanHWI)^2/18)
 
 sum(S>=sobs)/samps
@@ -159,3 +137,4 @@ abline(v=sobs)
 datacols=matrix(nrow=18,ncol=18,data=1)
 datacols[1,1]=2
 textplot(as.matrix(data),cmar = 0.8,rmar = 0.8)
+
