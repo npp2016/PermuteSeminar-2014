@@ -1,0 +1,137 @@
+Week 5 Emily Rollinson + Phil McDowall
+========================================================
+
+Readings for week 5:
+Efron and Tibshirani, Chapter 15 "Permutation Tests"
+Handout - Chapter 1 "Randomization" from Manly (2006)
+Beijder et al. (1998)
+Manly (1995)
+
+
+
+*In-class exercises*
+Using the dolphin data from Beijder et al. (1998):
+Calculate HWI for the observed pairs
+Create a pair-swapping algorithm to create new matrices
+calculate S
+
+```{r} 
+#code for directly importing data from github
+require(RCurl)
+options(RCurlOptions = list(cainfo = system.file("CurlSSL", "cacert.pem", package = "RCurl")))
+raw <- getURL("https://raw.github.com/PermuteSeminar/PermuteSeminar-2014/master/Week-5/Emily.Rollinson/dolphindata.csv") #insert the  raw URL for the data file on github here
+data <- read.csv(text = raw) #read in the github file
+colnames(data) <- LETTERS[1:18]
+```
+
+Calculate HWI.
+
+$$HWI=\frac{x}{x+y_{ab}+0.5(y_{a}+y_{b})}$$
+where
+$x$ = the number of encounters where dolphins A and B are observed in the same group
+$y_{a}$ = the number of encounters where dolphin A was observed and B was not
+$y_{b}$ = the number of encounters where dolphin B was observed and A was not
+$y_{ab}$ = the number of encounters where dolphins A and B were both observed, but in different groups (in this dataset, $y_{ab}$ will always equal 0 because different groups were not scored simultaneously)
+
+Calculate HWI for each dyad from the observed data, then calculate a summary statistic for testing the randomness of co-occurrences
+
+```{r}
+samps=500
+calculateHWI<-function(data){ #defining the function to calculate HWI
+X=matrix(nrow=18,ncol=18) #X is the number of encounters where dolphins A and B were observed together
+
+for(i in 1:18){       #for dolphin A
+  for(j in 1:18){     #for dolphin B
+    X[i,j]=sum(data[,i]*data[,j])  #contains the product of each pair - returns a 1 if they were observed together and a 0 if they were not, then adds up all those occurrences, reporting the number of times each was observed together
+  }
+}
+
+Ya=matrix(nrow=18,ncol=18)  #Ya is when dolphin A was observed and B was not
+
+for(i in 1:18){ #for dolphin A
+  for(j in 1:18){ #for dolphin B
+    Ya[i,j]=sum(data[,i]*(data[,j]!=1))  #add up all the i values for when j=0 (absent)
+  }
+}
+
+Yb=matrix(nrow=18,ncol=18)
+
+
+for(i in 1:18){
+  for(j in 1:18){
+    Yb[i,j]=sum(data[,j]*(data[,i]!=1)) #add up all the j values for when i=0 (absent)
+  }
+}
+
+
+HWI=X/(X+0.5*(Ya+Yb)) #calculate HWI
+return(HWI)
+}
+```
+
+permute the matrix
+
+```{r}
+switchMatrix<-function(data,changes){
+submatrixa=matrix(nrow=2,data=c(0,1,1,0))
+submatrixb=matrix(nrow=2,data=c(1,0,0,1))
+index=1:18
+switched=0
+while(switched==0){
+for(swap in 1:changes){
+js=sample(index,2,replace=FALSE)
+is=sample(index,2,replace=FALSE)
+
+test.submatrix=matrix(nrow=2,data=c(data[is[1],js[1]],data[is[1],js[2]],data[is[2],js[1]],data[is[2],js[2]]))
+if(sum(test.submatrix==submatrixa)==4|sum(test.submatrix==submatrixb)==4){
+  a=data[is[1],js[1]]
+  b=data[is[1],js[2]]
+  c=data[is[2],js[1]]
+  d=data[is[2],js[2]]
+  data[is[1],js[1]]=b
+  data[is[1],js[2]]=a
+  data[is[2],js[1]]=d
+  data[is[2],js[2]]=c
+  switched=1
+}
+}
+}
+return(data)
+}
+```
+
+save the permuted matrices, calculate S
+
+```{r}
+
+results=array(dim=c(18,18,samps))
+
+
+for(i in 1:samps){
+  
+  data=switchMatrix(data,1)
+  results[,,i]=calculateHWI(data)
+}
+
+meanHWI=matrix(nrow=18,ncol=18)
+
+for(i in 1:18){
+  for(j in 1:18){
+    meanHWI=mean(results[i,j,]) 
+  }
+}
+
+S=vector()
+for(i in 1:samps){
+  S[i]=sum((results[,,i]-meanHWI)^2/18)
+}
+```
+
+plot the histogram of S values 
+```{r}
+sobs=sum((calculateHWI(data)-meanHWI)^2/18)
+
+sum(S>=sobs)/samps
+hist(S)
+abline(v=sobs)
+```

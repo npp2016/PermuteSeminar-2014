@@ -1,0 +1,191 @@
+Week #4 Summary 
+========================================================
+
+**Solution to reading files (such as .csv) on Rmarkdown documents:**
+
+Install the RCurl package
+> Use getUrL() function:
+
+```{r}
+require(RCurl)
+```
+
+I was experiencing a certificate error with getURL().  The following code seems to fix the problem in case you experience the same:
+```{r}
+options(RCurlOptions = list(cainfo = system.file("CurlSSL", "cacert.pem", package = "RCurl")))
+      
+raw <- getURL("https://raw.github.com/PermuteSeminar/PermuteSeminar-2014/master/Week-2/ClutchSize.csv")
+clutch <- read.csv(text = raw)  #make sure to upload RAW data file
+```
+
+Lecture Notes 
+==============
+adapted from Emily Rollinsion
+-------------------------------
+
+> For this week, we read Chapter 8 in Efron and Tibshirani, and notes on bootstrapping dependent data (Steigerwald; posted to GitHub and on Blackboard).  This chapter provides an overview of bootstrapping procedues for more complicated data structures than the one-sample model, such as time-dependent data or otherwise non-IID data.
+
+In-class discussion:
+---------------------
+
+The goal of the bootstrap algorithm is to estimate the probability distribution that underlies our data.  We can use our empirical distribution in lieu of the full distribution to understand the distribution of statisics of interest (mean, variance, etc.).
+
+Bootstraps are often used to estimate standard errors.  We select $B$ independent bootstrap samples, calculate our test statistic using the bootstrap samples, and use the standard deviation of the $B$ replications as an estimate of the standard error of the unknown distribution $F$ that underlies our empirical data.  Resampled populations should equal the number of orginal samples. *'s are used to indicate resampled items.
+
+This works for both a single unknown distribution (see Figure 8.1 in E&T) or a more complicated underlying process or a whole set of unknown distributions (see Figure 8.3 in E&T). We could easily imagine some biological measure influenced by many processes (i.e., many underlying and unknown statistical distributions). 
+
+
+Today's example:
+-------------------
+
+We used the data from Leutenizing hormone example in Efron and Tibshirani (Ch. 8).  This formed a time series with some temporal stucture.
+the whole distirbution may be normal.
+
+We will model this using an autoregressive model of period 1.
+$$
+AR(1): z_{t} = \beta_{z_{t-1}} + \epsilon_{t}
+$$
+> where $z_{t}$ has an expectation 0 and $\beta$ is an unknown parameter, a number between -1 and 1.  
+
+
+In class Excercises
+=====================
+
+**Use dataset from book:**
+
+**1. Estimate $\hat{\beta}$ **
+-------------------------------
+
+
+
+Solution: Adapted from Jon Borrelli
+---------------------------------------
+
+Load Required Packages
+```{r}
+require(RCurl)
+require(ggplot2)
+```
+
+Load Dataset:
+```{r}
+rawURL <- getURL("https://raw.github.com/PermuteSeminar/PermuteSeminar-2014/master/Week-4/hormone_data.csv")
+hormone <- read.csv(text = rawURL)
+```
+
+
+Calculate $z_t$ for each data point: $z_t = y_t-\mu$
+
+```{r}
+z.t <- hormone$level - mean(hormone$level)
+```
+Calculate residual squared errors for each value of $z_t$ and all possible values of $b$.
+$$
+RSE(b) = \sum_{t-U}^{V}(z_t - bz_{t-1})^2
+$$
+
+Generate a function that does this calculation over these values and picks out the best value for $b$ that minimizes RSE.
+```{r}
+rse <- function(zt, b){
+  est.b <- c()
+  for(i in 1:length(b)){
+    res <- c()
+    for(j in 2:length(zt)){
+      res[j-1] <- (zt[j] - b[i]*zt[j-1])^2  #RSE equation
+    }
+    est.b[i] <- sum(res)
+  }
+  bhat <- b[which.min(est.b)]
+  return(bhat)
+}
+```
+
+Run the function and get $\hat{\beta}$
+```{r}
+b <- seq(-1, 1, .001) #generates a sequence of possible values for b
+bhat <- rse(z.t, b)  #runs the function 
+```
+
+**So our estimate of $\hat{\beta}$ is `r bhat`**
+
+ 2a. See how good our estimate of $\hat{\beta}$ is by figuring out confidence intervals (Standard error) of $\beta$ by bootstrapping methods
+------------------------------------------------------------------------------------------------------------------------------------------------
+
+We need to estimate $P = (\beta,F)$ from the data.
+
+Since we have $\hat{\beta}$ we can use it to estimate $F$ distribution of the distubances and calculate $\epsilon_{t} = z_{t} - \beta z_{t-1}$ for every $t$  
+
+```{r}
+eps <- c()  #collects all the calculate values of epsilon
+
+for(i in 1:length(z.t)){
+  eps[i] <- z.t[i] - bhat * z.t[i-1]
+}
+```
+
+A histrogram of the approximate disturbances. It is not a normal distribution.   The Mean = `r mean(eps[2:48])`
+```{r}
+hist(eps)
+```
+
+
+Resample $F$ Distribtuion of values of $\epsilon$ with replacement:
+```{r}
+boot.eps <- matrix(nrow = 200, ncol = 47)
+for(rep in 1:200){
+  boot.eps[rep, ] <- sample(eps[2:48], 47, replace = T)
+}
+```
+
+Generate bootstrap values for time series $z_{t}*$: 
+```{r}
+z.tmat <- matrix(nrow = 200, ncol = 48)
+z.tmat[,1] <- z.t[1]
+for(rep in 1:200){
+  for(cols in 1:47){
+    z.tmat[rep, cols+1] <- bhat *z.tmat[rep, cols] + boot.eps[rep, cols]
+  }
+}
+```
+
+Generate bootsrap replications of $\hat{\beta}$ 
+```{r}
+b.test <- seq(0,1,.001)
+bhatboot <- apply(z.tmat, 1, rse, b = b.test) #Uses RSE function created above
+```
+
+Histogram of the generated $\hat{\beta}$ values. The mean = `r mean(bhatboot)`  
+```{r}
+hist(bhatboot, freq = F)
+```
+
+2b. Use a moving blocks bootstrap
+--------------------------------------
+
+```{r}
+head(hormone)
+block <- matrix(nrow = 3, ncol = 46)
+for(i in 1:46){
+  block[1,i] <- z.t[i]
+  block[2,i] <- z.t[i + 1]
+  block[3,i] <- z.t[i + 2]               
+}
+
+boot.block <- matrix(nrow = 500, ncol = 48)
+for(i in 1:500){
+  bcol <- sample(1:46, 16, replace = T)
+  boot.block[i,] <- as.vector(block[,bcol])
+}
+
+
+b.test <- seq(0,1,.001)
+
+bhatboot2 <- apply(boot.block, 1, rse, b = b.test)
+```
+Histogram of estimates generatated from the Moving Blocks BootStrap with mean of `r  mean(bhatboot2)`
+
+```{r}
+hist(bhatboot2)
+```
+
+

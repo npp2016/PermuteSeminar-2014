@@ -1,0 +1,64 @@
+Week 4 - Time Structured Data
+========================================================
+
+Goal 1:
+====
+Find beta hat eq 820 (p94), fit the time series to find beta that minimizes the total error. Validate answer in 8.22
+
+That will give you beta hat, the best value, we still din't know the standard error
+
+Goal 2:
+====
+Sample with replacement from the random deviations. Then resample using moving blocks in the autocorrelations and new time series.
+
+
+Read in data
+
+```{r}
+dat<-read.csv("Week-4/hormone_data.csv")
+```
+
+Step 1, following 8.19 - the residuals for each y values
+```{r}
+dat$z<-dat$level-mean(dat$level)
+```
+
+Create a sequence of beta values from -1 to 1
+
+```{r}
+#potential betas
+pB<-seq(-1,1,.001)
+```
+
+Define a function that computes equation 8.20
+
+```{r}
+
+foo<-function(b,x){
+(dat$z[x] - b * dat$z[x-1])^2
+}
+
+bvals<-sapply(pB,function(f){
+  
+#Get the estimates for the entire time series
+vals<-sapply(2:max(dat$period),foo,b=f)
+
+#append first value to the vector
+final<-c(dat$z[1],vals)})
+
+colnames(bvals)<-pB
+
+#Sum the matrix rows
+rowS<-data.frame(B=pB,RSE=apply(bvals,2,sum))
+
+hist(rowS$RSE)
+
+#which beta value minimizes the value
+rowS[which.min(rowS$RSE),]
+```
+
+
+```{r fig.width=7, fig.height=6}
+plot(cars)
+```
+
