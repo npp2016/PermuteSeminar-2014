@@ -53,7 +53,7 @@ permutes <- function(mat, iter = 100){
 }
 
 system.time(
-  pdolph <- permutes(dolphins, iter = 5000)
+  pdolph <- permutes(dolphins, iter = 1000)
 )
 
 mat.ij <- t(sapply(pdolph$hwi, FUN = function(x){x[which(lower.tri(x))]}))
@@ -61,7 +61,7 @@ e.ij <- colMeans(mat.ij)
 
 S <- c()
 for(i in 1:ncol(mat.ij)){
-  top <- (mat.ij[i,] - e.ij[i])^2
+  top <- (mat.ij[i,] - e.ij)^2
   bottom <- ncol(dolphins)^2
   S[i] <- sum(top/bottom)
 }
