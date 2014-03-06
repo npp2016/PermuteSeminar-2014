@@ -8,17 +8,46 @@ Manly (1995)
 
 In-class discussion
 --------------------------------------------------------
+To read later
+"serial method" in Manly (1995)
 
 In-class exercises
 --------------------------------------------------------
+Data are from Bejder et al. (1998)
+
+Calculate HWI for the dolphin data
+Write code for pairwise swapping
+Examine the difference between generating null distributions by long chains vs. short chains; look for burn-in effect
 
 ```{r} 
 #code for directly importing data from github
 require(RCurl)
 options(RCurlOptions = list(cainfo = system.file("CurlSSL", "cacert.pem", package = "RCurl")))
-raw <- getURL("insertURLhere") #insert the  raw URL for the data file on github here
-data <- read.csv(text = raw) #read in the github file
+raw <- getURL("https://raw.github.com/PermuteSeminar/PermuteSeminar-2014/master/Week-5/Dolphin+data.csv") #insert the  raw URL for the data file on github here
+dolphindata <- read.csv(text = raw) #read in the github file
 ```
+
+
+HWI = x/ (x+y{ab}+ 0.5(y{a}+y{b}))
+x = number of encounters including both dolphins A and B in the same group
+ya = number of encounters including A but not B
+yb = vice versa
+yab = number of encounters including dolphins A and B, but in different groups (always 0 in this data set because different groups were not scored simultaneously)
+
+Calculate HWI for each dyad from the observed data, then calculate a summary statistic for testing the randomness of co-occurrences
+
+```{r}
+together=matrix(nrow=18,ncol=18)
+for(i in 1:18){
+  for(j in 1:18)
+}
+
+
+
+```
+
+
+
 
 Notes and practice from the readings
 --------------------------------------------------------
