@@ -88,27 +88,11 @@ mean(bhatboot)
 
 ### Part 2
 
-
 ```{r}
 head(hormone)
-block <- matrix(nrow = 3, ncol = 46)
-for(i in 1:46){
-  block[1,i] <- z.t[i]
-  block[2,i] <- z.t[i + 1]
-  block[3,i] <- z.t[i + 2]               
+
+for(i in 1:length(hormone$level)-2){
+  c(hormone$level[i], hormone$level[i+1], hormone$level[i+2])
 }
-
-boot.block <- matrix(nrow = 500, ncol = 48)
-for(i in 1:500){
-  bcol <- sample(1:46, 16, replace = T)
-  boot.block[i,] <- as.vector(block[,bcol])
-}
-
-
-b.test <- seq(0,1,.001)
-
-bhatboot2 <- apply(boot.block, 1, rse, b = b.test)
-hist(bhatboot2)
-mean(bhatboot2)
 ```
 

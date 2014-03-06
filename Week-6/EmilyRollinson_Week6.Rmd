@@ -1,13 +1,23 @@
-Week 5 Emily Rollinson + Phil McDowall
+Emily Rollinson Week 6 Notes
 ========================================================
 
-Readings for week 5:
-Efron and Tibshirani, Chapter 15 "Permutation Tests"
-Handout - Chapter 1 "Randomization" from Manly (2006)
-Beijder et al. (1998)
-Manly (1995)
+Monte Carlo = a random draw from a distribution
+Markov chain = each value only depends on the one immediately before it (so for our week 5 dolphin data, each permuted matrix depends on the one before it)
 
+Discussion based on slides from Patrick Lam (Harvard)
 
+Say we are creating a chain of association matrices like we did for the dolphin data.  Each one depends on the one before it so you would imagine that adjacent matrices are closely related to one another, but over time they may change substantially.  It may take a while (many steps in the chain) to generate matrices very different from the original matrix.  This leads to the idea of the "burn-in" period; we may want to throw away the initial matrices (maybe the first thousand) to get rid of the matrices quite similar to the original.  Then we can sample at various intervals along the stable chain beyond that.  We can use traceplots - a plot of the iteration number against the value of the draw of the parameter at each iteration.  We can see if our chain is stuck at various points in the iterative process (which would be bad).  Multiple chains DON'T have the goal of searching different areas of space - that means they haven't converged - we want them to converge to confirm that we are arriving at a correctly generated distribution.
+
+How do we ensure that our traces are sampling over all of the space?  For the dolphin data, how many pair switches do we need to feel like we've sufficiently covered the space?  We have options of doing one really long chain (permuting one long series from the original data) or multiple short chains (starting from the original several times and moving in different directions).  Note that you lose the burn-in with multiple short chains, so you're throwing away more data - potentially.  Multiple chains take more time but allow for diagnostic tests to see if you've arrived at an answer - you can never really know with one long chain.  
+
+Gelman and Rubin Multiple Sequence Diagnostic
+
+Today:
+What do chains look like if we run them for a long time? (for HWI in the dolphin data)
+What if we sample randomly along the starter chain and use them as seeds for three independent chains?
+Look at the scale reduction factor
+
+Can we treat row and column sums as draws from a multinomial?
 
 *In-class exercises*
 Using the dolphin data from Beijder et al. (1998):
