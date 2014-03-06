@@ -14,136 +14,14 @@ Today's examples will focus on data of lutenizing hormone over time.  We will mo
 $$
 AR(1): z_{t} = \beta z+{t-1} + \epsilon_{t}
 $$
-
--Look at a histogram of the level values (ignoring the time data).
--Find the value of $\hat{b}$ as described in E&T equation 8.20
--Create new bootstrapped time series using the $\hat{b}$ that we found.
--An alternative: Using the moving blocks method
+1) Look at a histogram of the level values (ignoring the time data).
+2) Find the value of $\hat{b}$ as described in E&T equation 8.20 using two methods:
+2a) Sample with replacement from the random deviations $\epsilon
+2b) Using the moving blocks method
 
 
 Examples from Efron and Tibshirani:
 ---------------------
-
-**(8.5) Lutenizing hormone**
-
-This data set shows the levels of a lutenizing hormone for 48 consecutive 10-minute intervals in one woman.  These data are not a random sample from a distribution; they instead are an example of a time series (see the figure below). 
-
-Let's look at a histogram of the data first just for fun:
-
-```r
-lh <- read.csv("hormone_data.csv", header = TRUE)
-hist(lh$level)
-```
-
-![plot of chunk unnamed-chunk-1](figure/unnamed-chunk-1.png) 
-
-
-Looks pretty normal!  Which is rad, but unhelpful, because the data aren't IID - it's a time series.
-
-
-```r
-
-require(ggplot2)
-```
-
-```
-## Loading required package: ggplot2
-```
-
-```r
-ggplot(lh, aes(period, level)) + geom_line(col = "black") + theme_classic() + 
-    labs(title = "Lutenizing Hormone Data")
-```
-
-![plot of chunk unnamed-chunk-2](figure/unnamed-chunk-2.png) 
-
-
-We will assume that these data follow a first order autoregressive scheme.  First, we will define the centered measurements $z_{t}=y_{t}-\mu$, where all $z_{t}$ have expectation $0$.
-
-Each $z_{t}$ is a linear combination of the previous value $z_{t-1}$ and an independent disturbance term $\epsilon_{t}$, where the $\epsilon_{t}$ is assumed to be a random sample from an unknown distribution $F$ with expectation $0$.
-
-$$F \rightarrow (\epsilon_{U}, \epsilon_{U+1}, \epsilon_{U+2}, \cdots, \epsilon_{V})  
-[E_{F}(\epsilon)=0]$$
-
-The dates $U$ and $V$ are the beginning and end of the time period; $U=2$; $V=48$.  We define $z_{u} = \beta z_{U-1} + \epsilon_{U}$, and $z_{U-1} = z_{1}$. $\beta$ is an unknown parameter varying between $-1$ and $1$. 
-
-We can estimate the value of $\beta$ using a least squares approach.  First, we estimate the expectation $\mu$ to be the observed average $\bar{y}$, so that $z_{t} = y_{t} - \bar{y}$.
-
-
-```r
-lhc <- lh$level - mean(lh$level)
-lh$c = lhc  #defining the new z(t) as y(t) - mean(y) and adding it to the existing data frame
-ggplot(lh, aes(period, c)) + geom_line(col = "black") + theme_classic() + labs(title = "Centered Data")  #plot z
-```
-
-![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3.png) 
-
-
-We expect that $RSE(b)$ has expectation $E(RSE(b))$ and is minimized when $b = \beta$.  We can calculate $RSE(b)$ asa function of $b$, and choose the value that minimizes this function to serve as our estimate of $\beta$.  Remember that $\beta$ varies between $-1$ and $1$.
-
-```r
-Z = data.frame(t1 = c(lh$c[1:47]), t2 = c(lh$c[2:48]))
-bvals <- seq(-1, 1, by = 0.001)
-# not sure where to go from here
-```
-
-
-We can use bootstrap to see how accurate our estimate of $\hat{\beta}$ is.  
-
-
-```r
-mu = mean(lh$level)
-beta = 0.586  #This is the beta estimate given in Efron and Tibshirani
-e = (Z$t2) - beta * (Z$t1)  #create the estimated value of espilon for each t
-# I'm not sure where to go from here
-```
-
-
-**(8.6) The moving blocks bootstrap**
-
-This is a different approach to bootstrapping time series data that is closer to the approach used in one-sample problems than what is used above.  To generate a bootstrapped version of an observed time series, we choose a particular block length and consider all possible contiguous blocks of this length in the observed data.  We sample these blocks with replacement, instead of sampling single values with replacement.  This preserves some of the autocorrelation in the bootstrapped dataset.  The sampled blocks are pasted together to form a bootstrap time series, so we only want to sample as many blocks as we need to recreate a series approximately the same length as the observed series.  (So if the block length is $l$, we sample $k$ blocks where $n \approx k \cdot l$. 
-
-
-
-```r
-size = 3
-
-data = NULL
-for (i in 1:length(lh$level/size)) {
-    block = lh$level[i:(i + (size - 1))]
-    s = sample(block, 1)
-    data = append(data, s)
-}
-
-par(mfrow = c(1, 1))
-plot(lh$period, lh$level, type = "l")
-points(lh$period, data, type = "l", col = "steelblue")
-```
-
-![plot of chunk unnamed-chunk-6](figure/unnamed-chunk-6.png) 
-
-
-If we make the block size larger, we lose the pattern in the original time series:
-
-
-```r
-size2 = 10
-
-data2 = NULL
-for (i in 1:length(lh$level)) {
-    block2 = lh$level[i:(i + (size2 - 1))]
-    s2 = sample(block2, 1)
-    data2 = append(data2, s2)
-}
-
-par(mfrow = c(1, 1))
-plot(lh$period, lh$level, type = "l")
-points(lh$period, data2, type = "l", col = "steelblue")
-```
-
-![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-7.png) 
-
-
 
 **(8.3) The two-sample problem**
 
@@ -197,7 +75,7 @@ se
 ```
 
 ```
-## [1] 26.77
+## [1] 27.41
 ```
 
 
@@ -209,7 +87,7 @@ mean(thetabs)/se
 ```
 
 ```
-## [1] 1.148
+## [1] 1.073
 ```
 
 
@@ -218,11 +96,135 @@ standard errors above zero.
 
 ```r
 require(ggplot2)
+```
+
+```
+## Loading required package: ggplot2
+```
+
+```r
 seplot <- data.frame(thetabs)
 names(seplot) = "SE"
 mean = mean(seplot$SE)
 ggplot(seplot, aes(SE)) + geom_histogram(fill = "black", binwidth = 10) + theme_classic() + 
     geom_vline(xintercept = mean, col = "steelblue")
+```
+
+![plot of chunk unnamed-chunk-6](figure/unnamed-chunk-6.png) 
+
+
+**(8.5 Lutenizing hormone)**
+
+This data set shows the levels of a lutenizing hormone for 48 consecutive 10-minute intervals in one woman.  These data are not a random sample from a distribution; they instead are an example of a time series (see the figure below). 
+
+Let's look at a histogram of the data first just for fun:
+
+```r
+lh <- read.csv("hormone_data.csv", header = TRUE)
+hist(lh$level)
+```
+
+![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-7.png) 
+
+
+Looks pretty normal!  Which is rad, but unhelpful, because the data aren't IID - it's a time series.
+
+
+
+```r
+
+require(ggplot2)
+ggplot(lh, aes(period, level)) + geom_line(col = "black") + theme_classic() + 
+    labs(title = "Lutenizing Hormone Data")
+```
+
+![plot of chunk unnamed-chunk-8](figure/unnamed-chunk-8.png) 
+
+
+We will assume that these data follow a first order autoregressive scheme.  First, we will define the centered measurements $z_{t}=y_{t}-\mu$, where all $z_{t}$ have expectation $0$.
+
+Each $z_{t}$ is a linear combination of the previous value $z_{t-1}$ and an independent disturbance term $\epsilon_{t}$, where the $\epsilon_{t}$ is assumed to be a random sample from an unknown distribution $F$ with expectation $0$.
+
+$$F \rightarrow (\epsilon_{U}, \epsilon_{U+1}, \epsilon_{U+2}, \cdots, \epsilon_{V})  
+[E_{F}(\epsilon)=0]$$
+
+The dates $U$ and $V$ are the beginning and end of the time period; $U=2$; $V=48$.  We define $z_{u} = \beta z_{U-1} + \epsilon_{U}$, and $z_{U-1} = z_{1}$. $\beta$ is an unknown parameter varying between $-1$ and $1$. 
+
+We can estimate the value of $\beta$ using a least squares approach.  First, we estimate the expectation $\mu$ to be the observed average $\bar{y}$, so that $z_{t} = y_{t} - \bar{y}$.
+
+
+```r
+lhc <- lh$level - mean(lh$level)
+lh$c = lhc  #defining the new z(t) as y(t) - mean(y) and adding it to the existing data frame
+ggplot(lh, aes(period, c)) + geom_line(col = "black") + theme_classic() + labs(title = "Centered Data")  #plot z
+```
+
+![plot of chunk unnamed-chunk-9](figure/unnamed-chunk-9.png) 
+
+
+We expect that $RSE(b)$ has expectation $E(RSE(b))$ and is minimized when $b = \beta$.  We can calculate $RSE(b)$ asa function of $b$, and choose the value that minimizes this function to serve as our estimate of $\beta$.  Remember that $\beta$ varies between $-1$ and $1$.
+
+```r
+Z = data.frame(t1 = c(lh$c[1:47]), t2 = c(lh$c[2:48]))
+optimize(f = )  #I'm stuck on how to actually calculate the least-squares estimate of beta.
+```
+
+```
+## Error: 'interval' is missing
+```
+
+
+We can use bootstrap to see how accurate our estimate of $\hat{\beta}$ is.  
+
+
+```r
+mu = mean(lh$level)
+beta = 0.586  #This is the beta estimate given in Efron and Tibshirani
+e = (Z$t2) - beta * (Z$t1)  #create the estimated value of espilon for each t
+# I'm not sure where to go from here
+```
+
+
+**(8.6) The moving blocks bootstrap**
+
+This is a different approach to bootstrapping time series data that is closer to the approach used in one-sample problems than what is used above.  To generate a bootstrapped version of an observed time series, we choose a particular block length and consider all possible contiguous blocks of this length in the observed data.  We sample these blocks with replacement, instead of sampling single values with replacement.  This preserves some of the autocorrelation in the bootstrapped dataset.  The sampled blocks are pasted together to form a bootstrap time series, so we only want to sample as many blocks as we need to recreate a series approximately the same length as the observed series.  (So if the block length is $l$, we sample $k$ blocks where $n \approx k \cdot l$. 
+
+
+
+```r
+size = 3
+
+data = NULL
+for (i in 1:length(lh$level)) {
+    block = lh$level[i:(i + (size - 1))]
+    s = sample(block, 1)
+    data = append(data, s)
+}
+
+par(mfrow = c(1, 1))
+plot(lh$period, lh$level, type = "l")
+points(lh$period, data, type = "l", col = "steelblue")
+```
+
+![plot of chunk unnamed-chunk-12](figure/unnamed-chunk-12.png) 
+
+
+If we make the block size larger, we lose the pattern in the original time series:
+
+
+```r
+size2 = 10
+
+data2 = NULL
+for (i in 1:length(lh$level)) {
+    block2 = lh$level[i:(i + (size2 - 1))]
+    s2 = sample(block2, 1)
+    data2 = append(data2, s2)
+}
+
+par(mfrow = c(1, 1))
+plot(lh$period, lh$level, type = "l")
+points(lh$period, data2, type = "l", col = "steelblue")
 ```
 
 ![plot of chunk unnamed-chunk-13](figure/unnamed-chunk-13.png) 
