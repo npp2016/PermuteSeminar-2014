@@ -1,0 +1,114 @@
+Borrelli Week 4 Notes
+========================================================
+
+```{r}
+require(RCurl)
+require(ggplot2)
+```
+
+```{r}
+rawURL <- getURL("https://raw.github.com/PermuteSeminar/PermuteSeminar-2014/master/Week-4/hormone_data.csv")
+hormone <- read.csv(text = rawURL)
+```
+
+```{r}
+ggplot(hormone, aes(x = period, y = level)) + geom_line() 
+```
+
+
+Calculate $z_t$
+```{r}
+z.t <- hormone$level - mean(hormone$level)
+```
+
+```{r}
+rse <- function(zt, b){
+  est.b <- c()
+  for(i in 1:length(b)){
+    res <- c()
+    for(j in 2:length(zt)){
+      res[j-1] <- (zt[j] - b[i]*zt[j-1])^2
+    }
+    est.b[i] <- sum(res)
+  }
+  bhat <- b[which.min(est.b)]
+  return(bhat)
+}
+```
+
+Run the function and get bhat
+```{r}
+best <- seq(-1, 5, .001)
+guess <- rse(z.t, best)
+plot(best, guess, typ = "l")
+bhat <- best[which.min(guess)]
+abline(v = bhat)
+```
+
+So our estimate of $\hat{\Beta}$ is **`r bhat`**
+
+
+
+```{r}
+eps <- c()
+for(i in 2:length(z.t)){
+  eps[i] <- z.t[i] - bhat * z.t[i-1]
+}
+eps
+```
+
+Resample with replacement
+
+```{r}
+boot.eps <- matrix(nrow = 200, ncol = 47)
+for(rep in 1:200){
+  boot.eps[rep, ] <- sample(eps[2:48], 47, replace = T)
+}
+```
+
+```{r}
+z.tmat <- matrix(nrow = 200, ncol = 48)
+z.tmat[,1] <- z.t[1]
+for(rep in 1:200){
+  for(cols in 1:47){
+    z.tmat[rep, cols+1] <- bhat *z.tmat[rep, cols] + boot.eps[rep, cols]
+  }
+}
+z.tmat
+```
+
+```{r}
+b.test <- seq(0,1,.001)
+bhatboot <- apply(z.tmat, 1, rse, b = b.test)
+
+hist(bhatboot, freq = F)
+
+mean(bhatboot)
+```
+
+### Part 2
+
+
+```{r}
+head(hormone)
+block <- matrix(nrow = 3, ncol = 46)
+for(i in 1:46){
+  block[1,i] <- z.t[i]
+  block[2,i] <- z.t[i + 1]
+  block[3,i] <- z.t[i + 2]               
+}
+
+boot.block <- matrix(nrow = 500, ncol = 48)
+for(i in 1:500){
+  bcol <- sample(1:46, 16, replace = T)
+  boot.block[i,] <- as.vector(block[,bcol])
+}
+
+
+b.test <- seq(0,1,.001)
+
+bhatboot2 <- apply(boot.block, 1, rse, b = b.test)
+hist(bhatboot2)
+mean(bhatboot2)
+```
+

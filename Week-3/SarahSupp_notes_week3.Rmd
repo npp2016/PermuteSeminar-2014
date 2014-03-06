@@ -1,0 +1,183 @@
+Permute Seminar, Week 3
+========================================================
+**for week 3** read Chapter 8 in Efron & Tibshirani, and notes on Dependent Bootstrap (on GitHub)
+
+Load the libraries that we will need for examples
+```{r}
+library(ggplot2)
+library(boot)
+
+se <- function(x) sqrt(var(x)/length(x))
+```
+
+**notes**
+---------
+
+
+**From the text:**
+--------------------
+Chapter 8
+----------
+
+Complex data structures might include time-series, analysis of variance, regression models, multi-sample problems, censored data, or stratified sampling datasets.
+Up to now, we have just looked at simple, one-sample models.
+*F* gives *x* by random sampling --> *Fhat* gives *x** by random sampling.
+
+**P --> x** an unknown probability model has yieled the observed data set x.
+
+Two-sample problem
+---------------------
+Consider the mouse dataset:
+```{r}
+trmt = c(94, 197, 16, 38, 99, 141, 23)
+control = c(52, 104, 146, 10, 51, 30, 40, 27, 46)
+```
+
+*x* is the vector of datasets *z* (treatment) and *y* (control).
+*P --> x* is described by *F --> z* independent of *G --> y*
+
+z is a random sample (n=7) from F and y is a random sample (n=9) from G.
+
+$\hat{\mbox{P}} \rightarrow \mbox{x*}$
+
+```{r}
+theta = mean(trmt) - mean(control)
+print(paste("from the data, theta =", round(theta,2), ", indicating that the treatment works"))
+```
+
+But when we take the bootstrap estimate,
+```{r}
+meanA=NULL
+meanB=NULL
+medianA=NULL
+medianB=NULL
+for (i in 1:1400){
+  bootA = sample(trmt, 7, replace=TRUE)
+  bootB = sample(control, 9, replace=TRUE)
+  meanA = append(meanA, mean(bootA))
+  meanB = append(meanB, mean(bootB))
+  medianA = append(medianA, median(bootA))
+  medianB = append(medianB, median(bootB))
+}
+
+theta2 = mean(meanA) - mean(meanB)
+se1400 = theta/theta2
+print(paste("Bootstrapping shows the mean is ", round(theta2,2), "thus the value is only", round(se1400, 2), "standard errors from zero, and thus NOT strong evidence that the treatment works."))
+```
+
+The standard error of $\hat{\theta}$ can be written as $\mbox{se}_{\hat{\mbox{P}}}(\hat{\theta})$ and the bootstrap estimate of this is the plug-in estimate:
+ $$\mbox{se}_{\hat{\mbox{P}}}(\hat{\theta^{*}}) = {\mbox{var}_\hat{\mbox{P}}(z^{*}-y^{*})}^{1/2}$$
+ 
+```{r}
+se = data.frame(meanA-meanB)
+  names(se) = "se"
+mn = mean(se$se)
+ggplot(se, aes(se)) + geom_histogram() + theme_classic() + geom_vline(xintercept=mn, col="indianred", size=2)
+```
+
+
+In other datasets, the form of x may be dependent of the data structure. 
+1. We need to estimate the entire probability mechanism from the observed data.
+2. We need to simulate bootstrap data from P according to the data structure.
+
+For example, lets look at data for the lutenizing hormone (Diggle 1990). This data is time structure and is NOT random:
+```{r}
+period = c(1:48)
+level = c(2.4, 2.4, 2.4, 2.2, 2.1, 1.5, 2.3, 2.3, 2.5, 2.0, 1.9, 1.7, 2.2, 1.8, 3.2, 3.2, 2.7, 2.2, 2.2, 1.9, 1.9, 1.8, 2.7, 3.0, 2.3, 2.0, 2.0, 2.9, 2.9, 2.7, 2.7, 2.3, 2.6, 2.4, 1.8, 1.7, 1.4, 1.4, 2.1, 3.3, 3.5, 3.5, 3.1, 2.6, 2.1, 3.4, 3.0, 2.9)
+lut = data.frame(period, level)
+
+ggplot(lut, aes(period, level)) + geom_line() + theme_classic()
+```
+
+For time-series, we might use a *first order auto-regressive scheme*. 
+```{r}
+z = level-mean(level)
+lut$z = z
+ggplot(lut, aes(period, z)) + geom_line() + theme_classic()
+```
+
+This is a scheme where each each $\mbox{z}_\mbox{t}$ is a linear combination of the previous value $\mbox{z}_\mbox{t-1}$ and an independent error term $\epsilon_\mbox{t}$. All should have expectation of 0. The error term $\epsilon_\mbox{t}$ is assumed to be a random sample from an unknown distribution with expectation 0.
+
+$\Beta$ is an unknown parameter ranging -1 to 1.
+
+*U* is date 1 and *V* is date 2 i the time period of interest.
+
+To start, we use U = 2, and reference period 1 (t-1). We also need to estimate Beta.
+In a first-order autoregressive scheme, each z depends only on z (t-1) ; *first-order Markov process*
+A second-order autoregressive scheme would extend dependence to z (t-2)
+
+```{r}
+Z = data.frame("t_1" = c(level[2:47]), "t_2" = c(level[1:46]))
+
+#calculate least squares beta in R
+B = ((Z[,2]*Z[,1])**-1)*Z[,2]
+```
+
+There are two unknowns here: Beta and F that comprise P.  ## PAGE 95
+```{r}
+mu = mean(level)
+beta = 0.586
+
+zu_est = NULL
+for (p in 2:length(period)){
+  zu = beta * z[p-1] + err[p]
+  zu_est = append(zu_est, zu)
+}
+```
+
+```{r}
+#note: this is not the same beta as in the text, but simply an example for using function boot
+betfun = function(data,b,formula){  
+# This is a function for finding beta coefficient
+  #b is the random indexes for the bootstrap sample
+  d = data[b,] 
+	return(lm(d[,1]~d[,2], data = d)$coef[2])  
+# thats for the beta coefficient
+	}
+
+# now you can bootstrap: #R is the number of bootstrap samples
+bootbet = boot(data=lut, statistic=betfun, R=5000) 
+
+names(bootbet)
+plot(bootbet)
+hist(bootbet$t, breaks = 100)
+
+#this code will show you which indices were picked at each bootstrap take:
+zoombot = boot.array(bootbet, indices = T)
+dim(zoombot)
+# this is the frequency of each index, [1,] for the first bootstrap run
+hist(zoombot[1,], breaks = 100) 
+
+#example for bootstrapping confidence intervals
+nb = 5000
+bet = NULL
+n = nrow(lut)
+ptm <- proc.time() # have a look at the time it takes
+for (i in 1:nb){
+  unifnum = sample(c(1:n),n,replace = T)  # pick random indices
+  bet[i] = lm(lut[unifnum,1] ~ lut[unifnum,2])$coef[2]
+	}
+proc.time() - ptm
+```
+
+
+**Moving blocks bootstrap**
+Choose a block length, and consider all contiguous blocks of this length (same as moving window approach?)
+Sample with replacement from each of the blocks and paste together to form a bootstrap time series
+If block length is *l*, choose enought *k* blocks so that n ~= *k * l*
+
+We can play with *size* below to see when we start to destroy the correlation in the data. Here, if size > 5, the pattern starts to disappear. With the moving blocks approach, must be careful with choosing block size.
+```{r}
+size = 3
+
+data=NULL
+for (i in 1:length(level)){
+  block = c(level[i:(i+(size-1))])
+  s = sample(block,1)
+  data = append(data,s)
+}
+
+par(mfrow=c(1,1))
+plot(period, level, type="l", main="actual vs. simulated data",lwd=2)
+points(period,data, type="l", col="orange", lwd=2)
+```

@@ -1,0 +1,118 @@
+Permute Seminar, Week 2
+========================================================
+
+Load the libraries that we will need for examples
+```{r}
+library(ggplot2)
+
+se <- function(x) sqrt(var(x)/length(x))
+```
+
+**notes**
+---------
+A census is an exact count, a sample is only some of those things in the total population.
+In a census, the information that you have is a description.
+In a sample, need statistical inference to use your sample to make inferences about the whole population.
+
+Parameter describes the distribution of the population, statistic can be used to estimate a parameter. A statistic is any metric that you can calculate from your data.
+Paramter is a function of F
+statistic is a function of x (which is drawn from f)
+
+Plug-in principle says that you can estimate a parameter from the sample, and use it to describe the population.
+The empirical distribution {F hat} is your sampled data. Since we aren't assuming a partiular distribution (*nonparametric*), this is the best we can do. If the data are really sparse (e.g. n = 5) it would be much better if you knew the distribution, and could draw from that (*parametric*), versus taking a bootstrap approach (because you don't have enough information).
+
+Goal of bootstrapping is to try to recreate the process that generated the data. The method of bootstrapping used should reflect this, and take into consideration the hypothesis that is being tested.
+
+** LateX notes**
+--------------------
+We can show equations in R markdown. We use double dollar signs to start a LateX equation.
+$$
+\pi=3.14
+$$
+
+This is how we can say $\pi=3.14$ inline text.
+
+Superscripts $x^{3}$ and subscripts $x_{3}$ can be done too.
+
+Here is a fraction: $\frac{13}{100}$
+
+Here is a combination: $\frac{x_{3}}{5}$
+
+Greek letters:
+---------------
+Beta $\beta$
+gamma $\gamma$
+Gamma $\Gamma$
+
+Text
+-------
+$\mbox{standard deviation}$
+
+$\sqrt{25}$
+
+Symbols
+--------
+hat: $\hat{\alpha}$ , $\hat{\theta}$
+
+Lim: $\lim_{n\rightarrow3}$
+
+Integral: $\int_{0}^{10}$
+
+Sum: $\sum$
+
+Sim: $\sim 3$
+
+Approx: $\approx 3$
+
+Complicated expression:
+$$\lim_{\epsilon\rightarrow 0_{+}} \frac{\int_{a_{i}}^{a_{i}+\epsilon}\sqrt{1+(x-\mu)^{2}dx}}{\Phi(\epsilon)}$$
+
+
+**From the text:**
+--------------------
+Chapter 3
+----------
+
+* a random sample is a collection of n units from "universe" of individuals, U
+
+**Law school dataset:**
+A random sample of 15 was taken from a population of 82 schools. The data is average LSAT score and GPA.
+
+```{r}
+lsat = c(576, 635, 558, 578, 666, 580, 555, 661, 651, 605, 653, 575, 545, 572, 594)
+gpa = c(3.39, 3.30, 2.81, 3.03, 3.44, 3.07, 3.00, 3.43, 3.36, 3.13, 3.12, 2.74, 2.76, 2.88, 2.96)
+school = data.frame(lsat,gpa)
+
+ggplot(school, aes(lsat, gpa)) + geom_point() + theme_classic() + stat_smooth(method = "lm") + 
+  theme(text = element_text(size=20)) + xlab("average LSAT score") + ylab ("average GPA")
+
+print (mean(lsat))
+print (se(lsat))
+
+print (paste("There is a", 68 ,"% chance that the true LSAT mean lies in the interval", round(mean(lsat),2), 
+             "+/-", round(se(lsat),2)))
+```
+
+**probability theory review**
+* Statistical inference is about using a random sample to infer properties of the complete population
+* Probability is about understanind the propties of a sample from the population, and of statistics calculated from the sample.
+
+Probability distributions:
+
+Binomial distribution has size n with probability success p.
+```{r}
+d = rbinom(1000, 1, 1/2)
+hist(d, main = "binomial distribution", col = "indianred")
+```
+
+Normal distribution has mean u and variance sigma
+```{r}
+d = rnorm(1000, 1:5)
+hist(d, main = "normal distribution", col = "cadetblue")
+```
+
+The expectation of a random variable E(x) is its average value where the average is taken over the possible outcomes of x weighted by its probabilty distribution F.
+
+Random sampling with replacement guarantees independence of two variables, because all n observations of x will be identically distributed and mutually independent of each other.
+
+

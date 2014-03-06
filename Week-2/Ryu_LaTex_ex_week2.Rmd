@@ -1,0 +1,67 @@
+Title
+========================================================
+
+$$
+\pi=3.14
+$$
+$$
+\frac{2}{4}
+\frac{X_{3}}{5}
+$$
+$$
+\beta
+\gamma
+\Gamma
+$$
+$$
+\hat{\alpha}
+$$
+$$
+\lim_{n\rightarrow3}
+$$
+$$
+\int_{0}^{10}
+$$
+$$
+\sum
+$$
+$$
+\sim 3
+$$
+$$
+\approx 3
+$$
+$$
+\left(blabla right)
+$$
+$$
+\lim_{\epsilon\rightarrow0_{+}}
+$$
+$$
+\int_{a_{i}}^{a_{i}+\epsilon}
+$$
+$$
+\sqrt{1+(x-\mu)^{2}}dx
+$$
+$$
+\phi(\epsilon)
+$$
+$$
+\lim_{\epsilon\rightarrow0_{+}}\frac({\phi(\epsilon)}{\int_{a_{i}}^{a_{i}+\epsilon}\sqrt{1+(x-\mu)^{2}}dx})
+$$
+
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring web pages (click the **Help** toolbar button for more details on using R Markdown).
+
+When you click the **Knit HTML** button a web page will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+summary(cars)
+```
+
+You can also embed plots, for example:
+
+```{r fig.width=7, fig.height=6}
+plot(cars)
+```
+
