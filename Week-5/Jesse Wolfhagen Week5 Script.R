@@ -28,7 +28,7 @@ hwi <- function(a, b) #two columns of the dataset (they're both vectors of equal
   x/(x + 0.5*(ya + yb)) #returns the HWI for that dyad
 }
 runs <- 1000 #define how many times you want to run the randomization
-outputdata <- list(data) #start with the original data
+outputdata <- list(data[which(sum())]) #start with the original data
 for(l in 2:runs) #creates randomized data matrices by switching pairs of observations
 {
   flag <- F
