@@ -1,0 +1,103 @@
+Week 3 - Complex Data Stuructures
+========================================================
+
+```{r}
+require(RCurl)
+library(ggplot2)
+library(MASS)
+
+setwd("/Users/sarah/Documents/GitHub/PermuteSeminar-2014/Week-4/")
+hormone <- read.csv("hormone_data.csv")
+
+#to grab the data straight from the web
+raw <- getURL("https://raw2.github.com/PermuteSeminar/PermuteSeminar-2014/master/Week-4/hormone_data.csv")
+hormones <- read.csv(text = raw)
+```
+
+Step 1:
+Find Beta hat, find best value that minimizes the error
+```{r}
+
+data = hormone$level - mean(hormone$level)
+
+fit = function(beta, data){
+  RSE = sum((data[2:length(data)] - beta * data[1:length(data)-1])^2)
+  return (RSE)
+}
+
+residuals = function(beta, data){
+  (data[2:48] - beta * data[1:47])
+}
+
+# Gives beta (par) and residual squared error (value)
+fitted = optim(par = 0.5, fn = fit,data=data)
+beta = fitted$par
+resids = residuals(fitted$par, data)
+```
+
+
+Step 2:
+What are the confidence intervals on Beta hat
+Sample with replacement from the random deviations, sampling with replacement from the error
+```{r}
+
+fit_boot = function(beta){
+    RSE = sum((boot_obs[2:48] - beta * boot_obs[1:47])^2)
+  return (RSE)
+}
+
+boots = 2000
+stat = vector(length=boots)
+boot_res = matrix(ncol = boots, nrow = length(data) - 1)
+boot_obs = matrix(ncol = boots, nrow = length(data))
+boot_obs[1,] = rep(data[1], boots)
+
+for (i in 1:boots){
+  boot_res[,i] = sample(resids, 47, replace = TRUE)
+  for (j in 2:48){
+    boot_obs[j,i] = beta * boot_obs[j-1, i] + boot_res[j-1,i]
+  }
+  stat[i] = optim(par = 0.5, fn = fit, data = boot_obs[,i])$par
+}
+ #TODO: Find out why stat is not centered on 0.5
+```
+
+
+Step 3:
+Use a moving blocks approach to bootstrap the data, find Beta, and find the distribution of Beta
+```{r}
+boots = 1000
+size = 6
+Beta_est = vector(length=boots)
+
+for (i in 1:boots){
+  est=NULL
+  for (j in 1:length(data)){
+    block = c(data[i:(i+(size-1))])
+    s = sample(block,1)
+    est = append(est,s)
+  }
+  est = est[1:45]
+  Beta_est[i] = optim(par = 0.5, fn = fit, data = est)$par
+}
+
+
+par(mfrow=c(1,1))
+plot(hormones[,1], data, type="l", main="actual vs. simulated data",lwd=2)
+points(hormones[,1],est, type="l", col="orange", lwd=2)
+
+#Phil's version ** BETTER **
+
+boot_stat = vector()
+for (i in 1:boots){
+  newdata=vector()
+  starts = round(runif(n = 8, min = 1, max = 42))
+  for(r in 1:8) {
+    newdata = c(newdata, data[starts[r]: (starts[r] + 6)])
+  }
+  boot_stat[i] = optim(par = 0.5, fn = fit, data = newdata)$par
+}
+
+
+```
+
