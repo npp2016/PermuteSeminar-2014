@@ -4,7 +4,7 @@
 # memory and goes a lot faster.  On my laptop, generating 1000 random matrices
 # with this script takes ~ 0.25 seconds, compared with 18-19 seconds in R.
 
-function hwi{I<:Integer}(a::I, b::I, m::Matrix{I})
+function hwi(a, b, m)
 	ya, yb, x = 0, 0, 0
 	for i in 1:size(m, 1)
 		ya += m[i, a]
@@ -14,7 +14,7 @@ function hwi{I<:Integer}(a::I, b::I, m::Matrix{I})
 	return x / (x + 0.5 * (ya + yb))
 end
 
-function swap!{I<:Integer}(m::Matrix{I})
+function swap!(m)
 	# operates in place
 	while true
 		i = rand(1:size(m, 1), 2)
@@ -26,7 +26,7 @@ function swap!{I<:Integer}(m::Matrix{I})
 	end
 end
 
-function association_matrix{I<:Integer}(m::Matrix{I})
+function association_matrix(m)
 	D = size(m, 2)
 	result = zeros(D, D)
 	for j in 1:D, i in j:D # j first for performance
@@ -35,11 +35,11 @@ function association_matrix{I<:Integer}(m::Matrix{I})
 	return result
 end
 
-function S{T}(assoc_mat::Matrix{T}, e_mat::Matrix{T})
+function S{T}(assoc_mat, e_mat)
 	sum((assoc_mat - e_mat).^2) / size(assoc_mat, 2)
 end
 
-function randomized_S{I<:Integer}(m::Matrix{I}, n_swaps::I)
+function randomized_S(m, n_swaps)
 	D = size(m, 2)
 	e_matrix = zeros(D, D)
 	S_trace = zeros(n_swaps)
