@@ -36,13 +36,10 @@ yab = number of encounters including dolphins A and B, but in different groups (
 
 Calculate HWI for each dyad from the observed data, then calculate a summary statistic for testing the randomness of co-occurrences
 
-Calculating HWI
 ```{r}
-
-x=matrix(nrow=18,ncol=18)
+together=matrix(nrow=18,ncol=18)
 for(i in 1:18){
   for(j in 1:18)
-    x
 }
 
 
@@ -51,13 +48,42 @@ for(i in 1:18){
 
 
 
-Permuting the original data
+
+Notes and practice from the readings
+--------------------------------------------------------
+**From the Manly (2006) handout - the randomization test of golden jackals data**
+
+Mandible lengths (mm) for male and female golden jackals.  Sample size of 10 for each sex.
 ```{r}
-mat1=matrix(nrow=2, data=c(0,1,1,0))
-mat2=matrix(nrow=2, data=c(1,0,0,1))
+m <- c(120, 107, 110, 116, 114, 111, 113, 117, 114, 112) #male mandible lengths
+f <- c(110, 111, 107, 108, 110, 105, 107, 106, 111, 111) #female mandible lengths
+c <- c(m,f) #combined vector of male and female mandible lengths
+obd <- mean(m) - mean(f) #observed difference between males and females
+
+n = 10
+perm = NULL
+mtest = NULL
+for (i in 1:9999){ #randomly generating 1000 new male and female data sets from the pooled original data and generating 1000 test statistics - the difference in means between the two groups)
+  mper = sample(c, n, replace=FALSE)
+  fper = sample(c, n, replace = FALSE)  #this is wrong, I need to include some dependence on the line above
+  diff = (mean(mper)-mean(fper))
+  perm = append(perm, diff)
+}
+
+hist(perm)
+sig <- (sum((perm > obd)/9999))
+sig
 ```
 
+**Extraneous handy bits of code**
 ```{r}
-
-S <- sum(sum())
-```
+#combining two vectors
+v1 <- c(1,2,3)
+v2 <- c(4,5,6)
+v3 <- c(v1,v2)
+#make it a data frame
+V3 <- as.data.frame(v3)
+#add a column
+z <- c("a", "a", "a", "b", "b", "b")
+V3$z = z
+```{r}
