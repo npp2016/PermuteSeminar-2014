@@ -5,10 +5,12 @@ dolphins
 
 ## Use the vegan package to test.
 library(vegan)
+## Ben's suggested package
 dolph.veg<- oecosimu(dolphins, nestedchecker, "r0")
 dolph.veg
 
-## sequential model, one-sided test, a vector statistic
+## Playing a little more: sequential model, one-sided test, a vector statistic
 out.dolph <- oecosimu(dolphins, decorana, "swap", burnin=100, thin=10, 
                 statistic="evals", alt = "greater")
 out.dolph
+
