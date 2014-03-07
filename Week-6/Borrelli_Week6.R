@@ -1,9 +1,8 @@
-setwd("~/Desktop/GitHub/PermuteSeminar-2014/Week-5")
+setwd("~/Desktop/GitHub/PermuteSeminar-2014/Week-6")
 
 require(ggplot2)
 require(RCurl)
-url <- getURL("https://raw.github.com/PermuteSeminar/
-              PermuteSeminar-2014/master/Week-5/Dolphin+data.csv")
+url <- getURL("https://raw.github.com/PermuteSeminar/PermuteSeminar-2014/master/Week-5/Dolphin+data.csv")
 dolphins <- read.csv(text = url, row.names = 1, header = F)
 colnames(dolphins) <- LETTERS[1:18]
 colSums(dolphins)
@@ -36,7 +35,7 @@ permutes <- function(mat, iter = 100){
     scol <- sample(1:ncol(mat), 2)
     
     test <- mat[srow, scol]
-   
+    
     if(sum(test == pattern1) == 4){
       count <- count + 1
       mat[srow, scol] <- pattern2
@@ -64,14 +63,14 @@ mat.ij <- t(sapply(pdolph$hwi, FUN = function(x){x[which(lower.tri(x))]}))
 e.ij <- colMeans(mat.ij)
 
 S <- c()
-for(i in 1:ncol(mat.ij)){
+for(i in 1:nrow(mat.ij)){
   top <- (mat.ij[i,] - e.ij)^2
   bottom <- ncol(dolphins)^2
   S[i] <- sum(top/bottom)
 }
 
+plot(S, typ = "l")
 hist(S)
-
 true <- get_hwi(dolphins)
 oij <- true[which(lower.tri(true))] 
 test.stat <- sum(((oij - e.ij)^2)/(18^2))
@@ -95,36 +94,77 @@ p <- p + geom_vline(x = c(mean(S), test.stat, -test.stat),
 p
 
 
-# This script will iterate through a vector of possible permutation numbers and then output
-# a p-value for each null distribution
+#### Trace
 
-# For each value of the number of permutations, 5 p-values are calculated
+ggplot(data.frame(S = S), aes(x = 1:5000, y = S)) + geom_line()
 
-# Using this we can determine how the number of permutations influences the p-value
-# Currently not working code
 
-n.perm <- c(1000, 5000, 10000, 15000, 20000)
-p.test <- list()
-for(p in 1:2){
-  p.value <- c()
-  for(j in 1:5){
-    permdolph <- permutes(dolphins, n.perm[p])
-    matij <- t(sapply(permdolph$hwi, FUN = function(x){x[which(lower.tri(x))]}))
-    eij <- colMeans(matij)
-    
-    S <- c()
-    for(i in 1:ncol(mat.ij)){
-      top <- (matij[i,] - eij)^2
-      bottom <- ncol(dolphins)^2
-      S[i] <- sum(top/bottom)
-    }
-    p.value[j] <- sum(abs(S.2) > abs(test.stat))/length(S.2)
-    cat("The number", j, "run of", n.perm[p], "is done", "\n")
+threemore <- sample(1:5000, 3)
+S.list <- list()
+for(i in 1:3){
+  sample.mat <- pdolph$permuted.matrices[[threemore[1]]]
+  
+  p.sample <- permutes(sample.mat, 1000)
+  
+  mat.ij.s <- t(sapply(p.sample$hwi, FUN = function(x){x[which(lower.tri(x))]}))
+  e.ij.s <- colMeans(mat.ij.s)
+  
+  S.s <- c()
+  for(j in 1:nrow(mat.ij.s)){
+    top <- (mat.ij.s[i,] - e.ij.s)^2
+    bottom <- 18^2
+    S.s[j] <- sum(top/bottom)
   }
-  p.test[[p]] <- p.value
-  cat(n.perm[p], "is complete.", "\n")
+  
+  S.list[[i]] <- S.s
 }
 
-p.test
+
+p1 <- ggplot(data.frame(S = S.list[[1]]), aes(x = 1:5000, y = S)) + geom_line()
+p1 <- p1 + geom_line(data.frame(S1 = S.list[[2]]), aes(x = 1:5000, y = S1))
+p1 <- p1 + geom_line(data.frame(S2 = S.list[[3]]), aes(x = 1:5000, y = S2))
+p1
 
 
+
+
+require(vegan)
+?permatfull
+
+
+cS <- colSums(dolphins)/nrow(dolphins)
+rS <- rowSums(dolphins)/ncol(dolphins)
+
+mat <- matrix(nrow =nrow(dolphins), ncol = ncol(dolphins))
+for(i in 1:nrow(dolphins)){
+  for(j in 1:ncol(dolphins)){
+    mat[i,j] <- sum((rS[i]+cS[j])/2)
+  }
+}
+dim(dolphins)
+
+mat.list <- list()
+for(q in 1:5000){
+  mat2 <- matrix(nrow =nrow(dolphins), ncol = ncol(dolphins))
+  for(i in 1:nrow(dolphins)){
+    for(j in 1:ncol(dolphins)){
+      mat2[i,j] <- rbinom(1,1,prob = mat[i,j])
+    }
+  }
+  mat.list[[q]] <- mat2
+}
+
+hwi.list <- lapply(mat.list, get_hwi)
+
+lower.mat <- t(sapply(hwi.list, FUN = function(x){x[which(lower.tri(x))]}))
+
+prob.e.ij <- colMeans(lower.mat)
+
+S.p <- c()
+for(i in 1:nrow(lower.mat)){
+  top <- (lower.mat[i,] - prob.e.ij)^2
+  bottom <- ncol(dolphins)^2
+  S.p[i] <- sum(top/bottom)
+}
+
+ggplot(data.frame(S = S.p), aes(x = 1:length(S.p), y = S)) + geom_line()
