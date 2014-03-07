@@ -28,7 +28,7 @@ func.hwi <- function(dat) {
 func.hwi(dolphin)
 
 # Number of iterations = n
-n <- 10000
+n <- 1000
 permu <- function(dat, n) {
   
   grp1 <- matrix(c(0,1,1,0), nrow=2, ncol=2)
@@ -55,19 +55,24 @@ permu <- function(dat, n) {
       dat.list[[count]] <- dat
       hwi.list[[count]] <- func.hwi(dat)
       next
-    } else {next}
+    } else {
+      next
+      dat <- dat
+    }
+    dat
   }
   return(list(permuted.matrices = dat.list, hwi = hwi.list))
 }
 
-per.dolph <- permu(dolphin, n=1000)
-sum(per.dolph[[8]] != per.dolph[[7]])
+per.dolph <- permu(dolphin, n=20000)
+## To check that the matrices are accumulating swaps and not just redoing them
+# sum(per.dolph$permuted.matrices[[900]] != per.dolph$permuted.matrices[[200]])
 
 dat.ij <- t(sapply(per.dolph$hwi, FUN = function(x){x[which(lower.tri(x))]}))
 e.ij <- colMeans(dat.ij)
 
 S <- c()
-for(i in 1:ncol(dat.ij)){
+for(i in 1:nrow(dat.ij)){
   top <- (dat.ij[i,] - e.ij)^2
   bottom <- ncol(dolphin)^2
   S[i] <- sum(top/bottom)
@@ -79,7 +84,6 @@ true <- func.hwi(dolphin)
 oij <- true[which(lower.tri(true))] 
 test.stat <- sum(((oij - e.ij)^2)/(18^2))
 abline(v = test.stat)
-
 sum(S > test.stat)/length(S)
 sum(S < test.stat)/length(S)
 
