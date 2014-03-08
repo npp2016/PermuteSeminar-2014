@@ -54,7 +54,7 @@ permutes <- function(mat, iter = 100){
 }
 
 system.time(
-  pdolph <- permutes(dolphins, iter = 5000)
+  pdolph <- permutes(dolphins, iter = 1000)
 )
 # ~ 4.5  minutes for iter = 5000
 # ~ 8 minutes for iter = 10000
@@ -96,40 +96,38 @@ p
 
 #### Trace
 
-ggplot(data.frame(S = S), aes(x = 1:5000, y = S)) + geom_line()
+ggplot(data.frame(S = S), aes(x = 1:1000, y = S)) + geom_line()
 
 
-threemore <- sample(1:5000, 3)
+test.three.at.random <- sample(1:1000, 3)
 S.list <- list()
 for(i in 1:3){
-  sample.mat <- pdolph$permuted.matrices[[threemore[1]]]
+  sample.mat <- pdolph$permuted.matrices[[test.three.at.random[i]]]
   
   p.sample <- permutes(sample.mat, 1000)
   
-  mat.ij.s <- t(sapply(p.sample$hwi, FUN = function(x){x[which(lower.tri(x))]}))
+  test <- lapply(p.sample$permuted.matrices, get_hwi)
+  mat.ij.s <- t(sapply(test, FUN = function(x){x[which(lower.tri(x))]}))
   e.ij.s <- colMeans(mat.ij.s)
   
   S.s <- c()
   for(j in 1:nrow(mat.ij.s)){
-    top <- (mat.ij.s[i,] - e.ij.s)^2
+    top <- (mat.ij.s[j,] - e.ij.s)^2
     bottom <- 18^2
     S.s[j] <- sum(top/bottom)
   }
   
   S.list[[i]] <- S.s
 }
-
-
-p1 <- ggplot(data.frame(S = S.list[[1]]), aes(x = 1:5000, y = S)) + geom_line()
-p1 <- p1 + geom_line(data.frame(S1 = S.list[[2]]), aes(x = 1:5000, y = S1))
-p1 <- p1 + geom_line(data.frame(S2 = S.list[[3]]), aes(x = 1:5000, y = S2))
+require(reshape2)
+threesampl <- melt(S.list)
+p1 <- ggplot(threesampl, aes(x = 1:1000, y = value[L1 == 1])) + geom_line(col = "purple")
+p1 <- p1 + geom_line(aes(x = 1:1000, y = value[L1 == 2]), col = "blue")
+p1 <- p1 + geom_line(aes(x = 1:1000, y = value[L1 == 3]), col = "darkgreen")
 p1
 
 
-
-
-require(vegan)
-?permatfull
+## Bascompte null model ---------------------------
 
 
 cS <- colSums(dolphins)/nrow(dolphins)
@@ -168,3 +166,4 @@ for(i in 1:nrow(lower.mat)){
 }
 
 ggplot(data.frame(S = S.p), aes(x = 1:length(S.p), y = S)) + geom_line()
+
