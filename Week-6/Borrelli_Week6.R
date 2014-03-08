@@ -94,10 +94,12 @@ p <- p + geom_vline(x = c(mean(S), test.stat, -test.stat),
 p
 
 
-#### Trace
+#### Trace plot ---------------------------------------
 
 ggplot(data.frame(S = S), aes(x = 1:1000, y = S)) + geom_line()
 
+#### Grab three random permuted matrices -----------------
+#### Generate three trace plots from three of the matrices that were originally permuted
 
 test.three.at.random <- sample(1:1000, 3)
 S.list <- list()
@@ -119,6 +121,9 @@ for(i in 1:3){
   
   S.list[[i]] <- S.s
 }
+
+## Trace plots for the three randoms --------------
+
 require(reshape2)
 threesampl <- melt(S.list)
 p1 <- ggplot(threesampl, aes(x = 1:1000, y = value[L1 == 1])) + geom_line(col = "purple")
