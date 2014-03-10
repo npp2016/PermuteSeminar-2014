@@ -46,6 +46,36 @@ $y_{ab}$ = the number of encounters where dolphins A and B were both observed, b
 Calculate HWI for each dyad from the observed data, then calculate a summary statistic for testing the randomness of co-occurrences
 
 ```{r}
+samps=5000
+calculateHWI<-function(data){ #defining the function to calculate HWI
+X=matrix(nrow=18,ncol=18) #X is the number of encounters where dolphins A and B were observed together
+
+for(i in 1:18){       #for dolphin A
+  for(j in 1:18){     #for dolphin B
+    X[i,j]=sum(data[,i]*data[,j])  #contains the product of each pair - returns a 1 if they were observed together and a 0 if they were not, then adds up all those occurrences, reporting the number of times each was observed together
+  }
+}
+
+Ya=matrix(nrow=18,ncol=18)  #Ya is when dolphin A was observed and B was not
+
+for(i in 1:18){ #for dolphin A
+  for(j in 1:18){ #for dolphin B
+    Ya[i,j]=sum(data[,i]*(data[,j]!=1))  #add up all the i values for when j=0 (absent)
+  }
+}
+
+Yb=matrix(nrow=18,ncol=18)
+
+
+for(i in 1:18){
+  for(j in 1:18){
+    Yb[i,j]=sum(data[,j]*(data[,i]!=1)) #add up all the j values for when i=0 (absent)
+  }
+}
+
+
+HWI=X/(X+0.5*(Ya+Yb)) #calculate HWI
+return(HWI)
 }
 ```
 
