@@ -108,7 +108,7 @@ oij <- true[which(lower.tri(true))]
 
 n.perm <- c(1000, 5000, 10000, 15000, 20000)
 p.test <- list()
-for(p in 1:1){
+for(p in 1:5){
   p.value <- c()
   for(j in 1:5){
     permdolph <- permutes(dolphins, n.perm[p])
@@ -116,7 +116,7 @@ for(p in 1:1){
     eij <- colMeans(matij)
     
     S <- c()
-    for(i in 1:nrow(mat.ij)){
+    for(i in 1:nrow(matij)){
       top <- (matij[i,] - eij)^2
       bottom <- ncol(dolphins)^2
       S[i] <- sum(top/bottom)
@@ -133,8 +133,9 @@ for(p in 1:1){
   }
   p.test[[p]] <- p.value
   cat(n.perm[p], "is complete.", "\n")
+  cat("------------------------------------", "\n")
 }
 
-mean(p.test[[1]])
+boxplot(p.test)
 
 
