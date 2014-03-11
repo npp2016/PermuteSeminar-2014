@@ -54,7 +54,7 @@ permutes <- function(mat, iter = 100){
 }
 
 system.time(
-  pdolph <- permutes(dolphins, iter = 1000)
+  pdolph <- permutes(dolphins, iter = 5000)
 )
 # ~ 4.5  minutes for iter = 5000
 # ~ 8 minutes for iter = 10000
@@ -96,17 +96,17 @@ p
 
 #### Trace plot ---------------------------------------
 
-ggplot(data.frame(S = S), aes(x = 1:1000, y = S)) + geom_line()
+ggplot(data.frame(S = S), aes(x = 1:5000, y = S)) + geom_line()
 
 #### Grab three random permuted matrices -----------------
 #### Generate three trace plots from three of the matrices that were originally permuted
 
-test.three.at.random <- sample(1:1000, 3)
+test.three.at.random <- sample(1:5000, 3)
 S.list <- list()
 for(i in 1:3){
   sample.mat <- pdolph$permuted.matrices[[test.three.at.random[i]]]
   
-  p.sample <- permutes(sample.mat, 1000)
+  p.sample <- permutes(sample.mat, 5000)
   
   test <- lapply(p.sample$permuted.matrices, get_hwi)
   mat.ij.s <- t(sapply(test, FUN = function(x){x[which(lower.tri(x))]}))
@@ -126,9 +126,9 @@ for(i in 1:3){
 
 require(reshape2)
 threesampl <- melt(S.list)
-p1 <- ggplot(threesampl, aes(x = 1:1000, y = value[L1 == 1])) + geom_line(col = "purple")
-p1 <- p1 + geom_line(aes(x = 1:1000, y = value[L1 == 2]), col = "blue")
-p1 <- p1 + geom_line(aes(x = 1:1000, y = value[L1 == 3]), col = "darkgreen")
+p1 <- ggplot(threesampl, aes(x = 1:5000, y = value[L1 == 1])) + geom_line(col = "purple")
+p1 <- p1 + geom_line(aes(x = 1:5000, y = value[L1 == 2]), col = "blue")
+p1 <- p1 + geom_line(aes(x = 1:5000, y = value[L1 == 3]), col = "darkgreen")
 p1
 
 
