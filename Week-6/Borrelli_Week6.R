@@ -54,7 +54,7 @@ permutes <- function(mat, iter = 100){
 }
 
 system.time(
-  pdolph <- permutes(dolphins, iter = 5000)
+  pdolph <- permutes(dolphins, iter = 5000) #long-chain
 )
 # ~ 4.5  minutes for iter = 5000
 # ~ 8 minutes for iter = 10000
@@ -76,8 +76,8 @@ oij <- true[which(lower.tri(true))]
 test.stat <- sum(((oij - e.ij)^2)/(18^2))
 abline(v = test.stat)
 
-S.2 <- (S - mean(S))/sd(S) 
-test.stat <- (test.stat - mean(S))/sd(S)
+S.2 <- (S - mean(S))/sd(S)  #standardize the S values
+test.stat <- (test.stat - mean(S))/sd(S) 
 
 p.value <- sum(abs(S.2) > abs(test.stat))/length(S.2)
 
@@ -86,7 +86,7 @@ p.value <- sum(abs(S.2) > abs(test.stat))/length(S.2)
 # with the test statistic (for both tails)
 
 
-p <- ggplot(data.frame(s = S.2), aes(x = s)) 
+p <- ggplot(data.frame(s = S.2), aes(x = s)) #distribution graph
 p <- p + geom_histogram(aes(y = ..density..), binwidth = .25, fill = "white", col = "black")
 p <- p + geom_density() 
 p <- p + geom_vline(x = c(mean(S), test.stat, -test.stat),
@@ -101,6 +101,7 @@ ggplot(data.frame(S = S), aes(x = 1:5000, y = S)) + geom_line()
 #### Grab three random permuted matrices -----------------
 #### Generate three trace plots from three of the matrices that were originally permuted
 
+#permute matrix 5000 times, took 3 out and permuted these three and then ran trace for these
 test.three.at.random <- sample(1:5000, 3)
 S.list <- list()
 for(i in 1:3){
