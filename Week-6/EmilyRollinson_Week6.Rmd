@@ -1,0 +1,187 @@
+Emily Rollinson Week 6 Notes
+========================================================
+
+Monte Carlo = a random draw from a distribution
+Markov chain = each value only depends on the one immediately before it (so for our week 5 dolphin data, each permuted matrix depends on the one before it)
+
+Discussion based on slides from Patrick Lam (Harvard)
+
+Say we are creating a chain of association matrices like we did for the dolphin data.  Each one depends on the one before it so you would imagine that adjacent matrices are closely related to one another, but over time they may change substantially.  It may take a while (many steps in the chain) to generate matrices very different from the original matrix.  This leads to the idea of the "burn-in" period; we may want to throw away the initial matrices (maybe the first thousand) to get rid of the matrices quite similar to the original.  Then we can sample at various intervals along the stable chain beyond that.  We can use traceplots - a plot of the iteration number against the value of the draw of the parameter at each iteration.  We can see if our chain is stuck at various points in the iterative process (which would be bad).  Multiple chains DON'T have the goal of searching different areas of space - that means they haven't converged - we want them to converge to confirm that we are arriving at a correctly generated distribution.
+
+How do we ensure that our traces are sampling over all of the space?  For the dolphin data, how many pair switches do we need to feel like we've sufficiently covered the space?  We have options of doing one really long chain (permuting one long series from the original data) or multiple short chains (starting from the original several times and moving in different directions).  Note that you lose the burn-in with multiple short chains, so you're throwing away more data - potentially.  Multiple chains take more time but allow for diagnostic tests to see if you've arrived at an answer - you can never really know with one long chain.  
+
+Gelman and Rubin Multiple Sequence Diagnostic
+
+Today:
+What do chains look like if we run them for a long time? (for HWI in the dolphin data)
+What if we sample randomly along the starter chain and use them as seeds for three independent chains?
+Look at the scale reduction factor
+
+Can we treat row and column sums as draws from a multinomial?
+
+*In-class exercises*
+Using the dolphin data from Beijder et al. (1998):
+Calculate HWI for the observed pairs
+Create a pair-swapping algorithm to create new matrices
+calculate S
+
+```{r} 
+#code for directly importing data from github
+require(RCurl)
+options(RCurlOptions = list(cainfo = system.file("CurlSSL", "cacert.pem", package = "RCurl")))
+raw <- getURL("https://raw.github.com/PermuteSeminar/PermuteSeminar-2014/master/Week-5/Emily.Rollinson/dolphindata.csv") #insert the  raw URL for the data file on github here
+data <- read.csv(text = raw) #read in the github file
+colnames(data) <- LETTERS[1:18]
+```
+
+Calculate HWI.
+
+$$HWI=\frac{x}{x+y_{ab}+0.5(y_{a}+y_{b})}$$
+where
+$x$ = the number of encounters where dolphins A and B are observed in the same group
+$y_{a}$ = the number of encounters where dolphin A was observed and B was not
+$y_{b}$ = the number of encounters where dolphin B was observed and A was not
+$y_{ab}$ = the number of encounters where dolphins A and B were both observed, but in different groups (in this dataset, $y_{ab}$ will always equal 0 because different groups were not scored simultaneously)
+
+Calculate HWI for each dyad from the observed data, then calculate a summary statistic for testing the randomness of co-occurrences
+
+```{r}
+samps=5000
+calculateHWI<-function(data){ #defining the function to calculate HWI
+X=matrix(nrow=18,ncol=18) #X is the number of encounters where dolphins A and B were observed together
+
+for(i in 1:18){       #for dolphin A
+  for(j in 1:18){     #for dolphin B
+    X[i,j]=sum(data[,i]*data[,j])  #contains the product of each pair - returns a 1 if they were observed together and a 0 if they were not, then adds up all those occurrences, reporting the number of times each was observed together
+  }
+}
+
+Ya=matrix(nrow=18,ncol=18)  #Ya is when dolphin A was observed and B was not
+
+for(i in 1:18){ #for dolphin A
+  for(j in 1:18){ #for dolphin B
+    Ya[i,j]=sum(data[,i]*(data[,j]!=1))  #add up all the i values for when j=0 (absent)
+  }
+}
+
+Yb=matrix(nrow=18,ncol=18)
+
+
+for(i in 1:18){
+  for(j in 1:18){
+    Yb[i,j]=sum(data[,j]*(data[,i]!=1)) #add up all the j values for when i=0 (absent)
+  }
+}
+
+
+HWI=X/(X+0.5*(Ya+Yb)) #calculate HWI
+return(HWI)
+}
+```
+
+permute the matrix
+
+```{r}
+switchMatrix<-function(data,changes){
+submatrixa=matrix(nrow=2,data=c(0,1,1,0))
+submatrixb=matrix(nrow=2,data=c(1,0,0,1))
+index=1:18
+switched=0
+while(switched==0){
+for(swap in 1:changes){
+js=sample(index,2,replace=FALSE)
+is=sample(index,2,replace=FALSE)
+
+test.submatrix=matrix(nrow=2,data=c(data[is[1],js[1]],data[is[1],js[2]],data[is[2],js[1]],data[is[2],js[2]]))
+if(sum(test.submatrix==submatrixa)==4|sum(test.submatrix==submatrixb)==4){
+  a=data[is[1],js[1]]
+  b=data[is[1],js[2]]
+  c=data[is[2],js[1]]
+  d=data[is[2],js[2]]
+  data[is[1],js[1]]=b
+  data[is[1],js[2]]=a
+  data[is[2],js[1]]=d
+  data[is[2],js[2]]=c
+  switched=1
+}
+}
+}
+return(data)
+}
+```
+
+save the permuted matrices, calculate S
+
+```{r}
+
+results=array(dim=c(18,18,samps))
+
+
+for(i in 1:samps){
+  
+  data=switchMatrix(data,1)
+  results[,,i]=calculateHWI(data)
+}
+
+meanHWI=matrix(nrow=18,ncol=18)
+
+for(i in 1:18){
+  for(j in 1:18){
+    meanHWI=mean(results[i,j,]) 
+  }
+}
+
+S=vector()
+for(i in 1:samps){
+  S[i]=sum((results[,,i]-meanHWI)^2/18)
+}
+```
+
+plot the histogram of S values 
+```{r}
+sobs=sum((calculateHWI(data)-meanHWI)^2/18)
+
+sum(S>=sobs)/samps
+hist(S)
+abline(v=sobs)
+plot(S, type="l")
+```
+
+
+sample randomly within the chain to use multiple starting points 
+
+can also try using the permatfull function in vegan (permat) - this code isn't working
+
+
+```{r}
+require(vegan)
+oecosimu(data, nestfun=calculateHWI, method="quasiswap", nsimul=500, burnin=0, statistic=HWI)
+
+```
+
+parametric alternative-
+model the row and column sums each as a multinomial distribution so the value from each cell is a draw from a binomial distribution - what does the distribution of S look like when we create these association matrices with that approach?
+
+
+```{r}
+colsums<-colSums(data)
+hist(colsums)
+rowsums<-rowSums(data)
+hist(rowsums)
+
+parsamps=500
+parresults=array(dim=c(18,18,parsamps))
+for (i in 1:parsamps){
+  newcol=sample(colsums,1)
+  newrow=sample(rowsums(1)
+  matrix()
+  parresults=append(parresults,)              
+}
+
+
+for (i in 1:length(lh$level)){
+  block = lh$level[i:(i+(size-1))]
+  s = sample(block,1)
+  data = append(data,s)
+
+```

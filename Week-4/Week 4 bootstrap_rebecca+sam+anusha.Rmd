@@ -1,0 +1,43 @@
+Fourth Week: Hormone Data_Anusha, Rebecca, Sam
+
+```{r}
+
+hormone<-read.csv("/Users/rebeccakulp/Documents/Classes/2014/Stats II/PermuteSeminar-2014/Week-4/hormone_data.csv",head=T)
+```
+
+visualize the data
+```{r}
+hist(hormone$level)
+```
+
+Graph period versus hormone level
+
+```{r}
+plot(hormone)
+```
+Need to determine an estimate of Beta by regression
+
+```{r}
+n<-nrow(hormone)
+lm(hormone$level[2:n]~hormone$level[1:(n-1)])
+```
+
+Now that we have the beta estimate, will then it to calculate the error of our ability to predict the next variable using beta.
+
+```{r}
+d<-hormone$level-mean(hormone$level)
+error<-matrix(data=0,nrow=n,ncol=1)
+for (i in 2:n)
+  {
+  error[i]<-d[i]-(0.585*d[i-1])
+}
+```
+We will use the beta and epsilon values to bootstrap 500 new time series datasets, then will calculate a new beta value for each new distribution
+
+```{r}
+epsilon<-sample(x=error,size=1,replace=T)
+new.sample<-function(n,epsilon,)  
+for (i in 1: 500){
+    
+  }
+```
