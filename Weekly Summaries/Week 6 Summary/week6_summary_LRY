@@ -1,0 +1,60 @@
+============================================================
+Week 6: Markov Chain Monte Carlo, chain convergence, & more 
+============================================================
+
+Part 1: reviewing the dolphin permutation problem with swapping
+---------------------------------------------------------------
+->We first reviewed our code that we were to have preprared for class that involved a functioning permutation script using with the dolphin data from Manly (1995). (See Sam's notes, week 5 for details on the problem). It seemed that everyone was on the same page in terms of having a working code in terms fo being able to swap the matrices.
+
+->Having a functioning swap and permute algorithm was critical to extend for MCMC chain convergence.
+
+Part 2: Markov Chain Monte Carlo overview and discussion
+---------------------------------------------------------------
+->Heather provided a background on MCMC searches and chain convergence using slides written by Patrick Lam from Harvard. THe main segway in this topic was from the dolphin project, in that an MCMC is searching association matrices based on the previous matrix swap. The point is that each next search is closely related to the search before it. 
+
+->A fundamental question from this discussion: How many pair-switches do we need to feel like we sampled the space? For example: do we make 3 chains, each with length 400, and have a burn-in of 200 (keeping the last 200 of each chain) OR we have one chain of 1200 with 50% burn-in. Which is more informative?
+
+->We then proceeded to discuss the Gelman & Rubin Diagnostic which addresses the following concepts:
+-never use multiple chains because you want to sample different parts of space
+-want to send out multiple chains so they end up in the same place
+-how much variation is within each of these chains
+-G&B quantifies within chain variances (mean of within chain variances) and then like between chain variance (just like an anova!)
+
+Part 3: Implementation of plotting chain convergence of dolphin data
+---------------------------------------------------------------
+->We want to visualize the MCMC run and view if there is a convergence on an interpretable distribution.
+
+#continuation of my code with Rocio from the permutation
+Calculate.S <- function (assoc.m, e.matrix){
+  (sum((assoc.mat - e.mat)^2) / D^2)/2 #D is number of individuals of study
+}
+
+##loop to calculate all S values for all the collected association matrices
+LongRun1<-c()
+S.values <- c()
+
+for (i in 1:length(data.matrices)){
+  
+  LongRun1[i] <- Calculate.S(data.matrices[[i]],expected.values )
+  
+}
+#Calculate.S(data.matrices[[10]],expected.values )
+
+#plot the data
+hist(S.values)
+hist(LongRun1)
+plot(LongRun1, type = "l")
+
+#Please also see Emily Rollinson's code from Week 6 for the same code but perhaps more clearly written in terms of variable names.
+
+Part 4: an alternative using "vegan" package
+---------------------------------------------------------------
+->Jon Borrelli proposed a different alternative to running the chain using a fucntion in the "vegan" package. The oecosimu() function will simulate the formula (HWI) for a given number of simulations.
+
+#from Emily R's code
+require(vegan)
+oecosimu(data, nestfun=calculateHWI, method="quasiswap", nsimul=500, burnin=0, statistic=HWI)
+
+->While this does allow you to write the MCMC in one line, you still must write the function to calculate the HWI function. It was a general consensus that most of the class could not get this working.
+
+For next week, we will discuss papers to prepare our minds for randomization methods in spatial statistics.
