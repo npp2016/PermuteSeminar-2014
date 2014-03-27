@@ -1,5 +1,6 @@
 setwd("~/github_permute/PermuteSeminar-2014/Paulet Island")
 
+library(maptools)
 #read in the shape file 
 pts<-readShapePoints("AVIA seals.shp")
 
