@@ -1,0 +1,4 @@
+how to determine if points are random?
+-poisson distribution if quadrant and probability (deviation from poisson is nonrandomness)
+-if completely spatially random will be poisson distribution for each quadrant regardless of scale (only lamda would change)
+-nearest neighbor is also a method

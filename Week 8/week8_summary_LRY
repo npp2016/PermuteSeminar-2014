@@ -1,0 +1,16 @@
+============================================================
+Week 6: Markov Chain Monte Carlo, chain convergence, & more 
+============================================================
+
+Part 1: Reviewing Loosmore and Ford (2006)
+------------------------------------------
+-simulation envelope: simulate upper and lower estimate of K-statistic
+
+Part 2: Seal data
+------------------
+-install "spatstat" package
+-first order process: density of points with respect to area
+-then try to distinguish between random/clustered/regular
+-how does density vary across space?
+-often relationship between raster to point pattern
+
