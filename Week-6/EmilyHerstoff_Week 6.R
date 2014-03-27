@@ -14,3 +14,12 @@ out.dolph <- oecosimu(dolphins, decorana, "swap", burnin=100, thin=10,
                 statistic="evals", alt = "greater")
 out.dolph
 
+## I am unsure of what the outputs of the vegan package actually mean with respect to the data...
+
+#==============================================================
+
+## Playing with data...
+row<-rowSums(dolphins)
+  hist(row, col="aliceblue")
+col<-colSums(dolphins)
+  plot(col, pch=20, cex=1.5, col="blue")
