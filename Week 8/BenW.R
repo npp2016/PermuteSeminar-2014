@@ -39,6 +39,7 @@ sps = SpatialPolygons(list(ps))
 polyR<-rasterize(x=sps,r)
 plot(polyR)
 
+#draw randomly from the alpha hull and compare.
 
 randomD<-lapply(1:5,function(x){
   randomP<-sampleRandom(polyR,size=length(pts),sp=TRUE)
