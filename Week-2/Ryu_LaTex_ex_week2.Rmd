@@ -47,7 +47,7 @@ $$
 \phi(\epsilon)
 $$
 $$
-\lim_{\epsilon\rightarrow0_{+}}\frac({\phi(\epsilon)}{\int_{a_{i}}^{a_{i}+\epsilon}\sqrt{1+(x-\mu)^{2}}dx})
+\lim_{\epsilon\rightarrow0_{+}}\frac{\int_{a_{i}}^{a_{i}+\epsilon}\sqrt{1+(x-\mu)^{2}}dx}{\phi(\epsilon)}
 $$
 
 
