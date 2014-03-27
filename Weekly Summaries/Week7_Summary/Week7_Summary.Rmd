@@ -48,6 +48,12 @@ Spatial autocorrelation. Lancaster and Downes (2004)
 -----------------------
 We then continued by discussing the Lancaster and Downes (2004) paper and parts of the Crowley (1992) paper in parallel, as their themes overlapped. The Lancaster and Downes paper addressed spatial point pattern analysis, given patchiness vs regularity of resource availability.
 
+The first problem is that of autocorrelation. It does not allow you to easily write down likelihoods, as they would be functions of other likelihoods. Here arises the difference between independent variables, and conditionally independent variables. In this case, the spatial structure of covariates and responses is important. You only have to account for spatial autocorrelation when you create a joint probability of all likelihoods- when there is conditional independence. For example:
+
+P(brown hair AND blue eyes) = P(brown hair)*P(blue eyes)
+
+is true only if the two terms on the right are independent. Otherwise, you don't know the interaction term where they intersect. In these situations of conditional probability, randomisation methods come in handy. In our partcular interest here- with spatial autocorrelation- you would use MCMC methods, because even though you can't write down the likelihood function, you can sample from the likelihood distribution. The Knox test is one technique, where you hold space constant and permute time, and the other way around. This technique is not used much, because specifying a cut-off is difficult.
+
 
 
 
