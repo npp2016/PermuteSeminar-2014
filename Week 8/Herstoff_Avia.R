@@ -3,6 +3,8 @@ library(maptools)
 library(ggplot2)
 beginner ## getting help files for spatstat... 
 
+###=========================================================================
+
 ## Avia Island seals
 setwd("~/PermuteSeminar-2014/Week 8/AVIA shapefile/")
 ## read in data from shape file
@@ -17,6 +19,8 @@ plot(av$Lat, av$Long) ## plot by lat/long
 convex <- chull(lat, long)
 plot(lat[convex], long[convex], type='l') ## plot lat/long WRT convex hull indices
 points(lat, long) ## adds seals to the plot above so you can see where they are
+
+###=========================================================================
 
 ## Calculate the G-stat using spatstat package
 help(spatstat)
