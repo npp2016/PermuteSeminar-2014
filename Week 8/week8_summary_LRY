@@ -14,3 +14,7 @@ Part 2: Seal data
 -how does density vary across space?
 -often relationship between raster to point pattern
 
+.shp file--use for mapping
+
+Calculate Ripley's K function or G function for either island
+-do permutation to do some sort 
