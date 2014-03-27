@@ -42,7 +42,7 @@ The GB diagnostic can be run in R. The steps involve running out multiple chains
 
 Part 4: Implementation of plotting chain convergence of dolphin data  
 -----------------------------------------------------
-We want to visualize the MCMC run and view if there is a convergence on an interpretable distribution.  
+We want to visualize the MCMC run and view if there is a convergence on an interpretable distribution.  We use Jon Borelli's code to compare short-chain and long-chain runs. We will then look at the plots and try to diagnose convergence.
 
 ```r
 require(ggplot2)
@@ -173,7 +173,7 @@ system.time(pdolph <- permutes(dolphins, iter = 100)  #short-chain
 
 ```
 ##    user  system elapsed 
-##   5.245   0.012   5.256
+##   5.089   0.012   5.101
 ```
 
 ```r
@@ -196,7 +196,7 @@ system.time(pdolph.long <- permutes(dolphins, iter = 5000)  #short-chain
 
 ```
 ##    user  system elapsed 
-## 258.003   0.326 258.345
+## 260.053   0.328 260.388
 ```
 
 ```r
@@ -215,7 +215,7 @@ for (i in 1:nrow(long.mat.ij)) {
 ```
 
 
-You can also embed plots, for example:
+Plots of the short-chain and long-chain runs.  
 
 
 ```r
@@ -231,3 +231,4 @@ ggplot(data.frame(S.2 = S.2), aes(x = 1:5000, y = S.2)) + geom_line()
 ![plot of chunk unnamed-chunk-2](figure/unnamed-chunk-22.png) 
 
 
+We can see in the longer chain there is convergence around a mean around 0.08. In the short-chain, we cannot identify a distribution that the sampling is converging on. It has not sampled enough space!  
