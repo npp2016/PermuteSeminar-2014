@@ -268,7 +268,7 @@ mean(est)
 ```
 
 ```
-## [1] 3.448
+## [1] 3.449
 ```
 
 
@@ -292,7 +292,7 @@ mean(est2)
 ```
 
 ```
-## [1] 3.467
+## [1] 3.465
 ```
 
 
@@ -319,7 +319,7 @@ mean(est3)
 ```
 
 ```
-## [1] 3.462
+## [1] 3.464
 ```
 
 
@@ -344,13 +344,19 @@ ggplot(bootdata, aes(est, fill = "species")) + geom_histogram(alpha = 0.5) +
 ## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
 ```
 
+```
+## Warning: position_stack requires constant width: output may be incorrect
+## Warning: position_stack requires constant width: output may be incorrect
+## Warning: position_stack requires constant width: output may be incorrect
+```
+
 ![plot of chunk unnamed-chunk-10](figure/unnamed-chunk-10.png) 
 
 
 <br/>
 
 The population mean is 3.448.
-The data bootstrapped by species is 3.4476, by family is 3.4673, and by family hierarchically is 3.4624.
+The data bootstrapped by species is 3.4492, by family is 3.4649, and by family hierarchically is 3.464.
 
 <br/>
 <br/>
