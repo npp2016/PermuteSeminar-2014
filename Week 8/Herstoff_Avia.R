@@ -37,6 +37,11 @@ g.stat<- Gest(pp) ## ignore the error message
 g.stat 
 plot(g.stat)
 
+## Just to play, try with K-stat
+k.stat <- Kest(pp)
+k.stat
+plot(k.stat)
+
 ###=========================================================================
 
 ## Now to permute.
