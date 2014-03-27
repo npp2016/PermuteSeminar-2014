@@ -82,8 +82,8 @@ randomized.S <- function(m, n.swaps) {
   
   for (i in 1:n.swaps) {
     o.matrix <-  association.matrix(m)
-    S.trace[i] <- S(o.matrix, e.matrix / i)
     e.matrix  <- e.matrix + o.matrix
+    S.trace[i] <- S(o.matrix, e.matrix / i)
     m <- swap(m)
   }
   return(S.trace)  
@@ -101,7 +101,7 @@ image(dolphins == swap(dolphins))
 
 m <- dolphins
 D <- ncol(m)
-n.swaps <- 5000
+n.swaps <- 1000
 stack <- array(0, c(D, D, n.swaps))
 
 for (i in 1:n.swaps) {
@@ -117,4 +117,9 @@ plot(S.trace, ty="l")
 acf(S.trace, 100)
 acf(diff(S.trace), 40)
 
+o.matrix.observed <- association.matrix(dolphins)
+S.observed  <- S(o.matrix.observed, e.matrix)
 
+S.observed
+burn.in <- 500
+sum(S.trace[burn.in:n.swaps] >= S.observed) / (n.swaps - burn.in)
