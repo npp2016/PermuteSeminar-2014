@@ -75,6 +75,7 @@ However this convex hull includes a lot of space in which there are no seals, pr
 >see 'Handbook of Spatial Point-Pattern Analysis in Ecology'. Wiegand, Thorsten, and Kirk A. Moloney. CRC Press, 2013. pg 121
 
 This was dealt with by sub-setting the data into regions where the intensity appeared to be constant, either through selecting a smaller window, or by selecting a subset of the points and fitting a convex hull to those points.
+
 ```{r,warning=FALSE}
 avianSub<-avian[which(avian$lon< -7967000),]
 avianSubBoundary=as.data.frame(convex.hull(as.matrix(avianSub))$rescoords)

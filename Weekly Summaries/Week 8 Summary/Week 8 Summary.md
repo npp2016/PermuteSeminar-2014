@@ -80,15 +80,10 @@ paulet.ppp = ppp(paulet$lon, paulet$lat, poly = list(x = rev(pauletBoundary[,
 
 
 However this convex hull includes a lot of space in which there are no seals, probably due to the terrain rather than a second order point interaction. In this case simulating a Poisson point process over the whole window would be inappropriate, as we know that the intensity of the process varies over the window. This leads to a problem called 'virtual clustering' where points appear to be under-dispersed in statistics such as Ripleys K, while the points may actually be distributed completely randomly within the available space. A more appropriate null would be to simulate a PPP in the region that is actually available to seals. 
-<<<<<<< HEAD
 >see 'Handbook of Spatial Point-Pattern Analysis in Ecology'. Wiegand, Thorsten, and Kirk A. Moloney. CRC Press, 2013. pg 121
 
 This was dealt with by sub-setting the data into regions where the intensity appeared to be constant, either through selecting a smaller window, or by selecting a subset of the points and fitting a convex hull to those points.
-=======
->see Wiegand, Thorsten, and Kirk A. Moloney. Handbook of Spatial Point-Pattern Analysis in Ecology. CRC Press, 2013. pg 121
 
-This was dealt with by sub-setting the data into regions where the intensity appeared to be constant, either through selecting a smaller window, or by selected a subset of the points and fitting a convex hull to those points.
->>>>>>> d7a85b10c4742948a96d585f13213d21d3106645
 
 ```r
 avianSub <- avian[which(avian$lon < -7967000), ]
