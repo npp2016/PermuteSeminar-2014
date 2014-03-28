@@ -56,9 +56,14 @@ is true only if the two terms on the right are independent. Otherwise, you don't
 
 We then moved to the exciting issue of edge correction. Drawing an amorphous form on the board, which was then christened a lake, we discussed different ways of correcting for sampling from edges. To determine how resource availability and species presence are related, for instance in stated lake, we might sample a point at random from within the lake. We would then draw a circle of radius 't' with that ,point at the center, and count how many points in total that circle encompasses. The Lancaster and Downes paper focuses on how you can correct for the inevitable bias of sampling points near the edge of this lake- the circles around those points would encompass much fewer points than those at the center, simply because half the circle would fall outside the habitat edge.
 
-Using this formula, you can describe a cumulative frequency distribution of all point-to-point distances:
+Using this formula, you can describe a cumulative frequency distribution of all point-to-point distances: 
+\[
+K(t) = n^{-2}A\sum_{i=i}^{n} \sum_{j\neq i}^{n}w_{ij}I_{t}(u_{ij})
+\]
 
-$$latex 
-K(t) = n^{-2} A \sum_{i=i}^{n} \sum_{j!=i}^{n} w<mn>ij</mn> I<mn>t</mn> (u<mn>ij</mn>)
-$$
+This K(t) function is often represented as a linearised L function:
+\[
+L(t) = \sqrt{K(t)/\pi} - t
+\]
+L(t)= K(t)/- t 
 
