@@ -1,0 +1,57 @@
+Week 8 Discussion
+======================
+
+Loosemore and Ford 2006 discussion
+-----------------------------------
+Generally approach of analyzing point patterns - generate a ton of random ones, look at the envelope of Ripley's K (or w/e) these point patterns create, compare observed data against this.  observed is considered different if it falls outside that envelope at any point.  But really you're doing multiple comparisons since you're checking against the envelope at every possible distance.  Additionally, the test statistics are non-independent because they are calculated from each individual point pattern over a range of distances (K at distance 100 depends on the same data generating K at distance 10...) so multiple corrections processes don't work.
+
+Loosemore and Ford note that when they generated 99 CSR point patterns, 74 of those had the most extreme K at some distance - so functionally your type 1 error rate is really about 0.74.
+
+Baddeley spatial course examples
+---------------------------------
+
+
+
+Seal examples - Paulet island 
+---------------------------------
+#load packages
+require(spatstat)
+require(igraph)
+
+#load data
+paul<-read.csv("paulet_island1.csv")
+plot(x=paul$long, y=paul$lat, xlab="Longitude", ylab="Latitude")
+
+#converting to PPP
+paulppp<-ppp(paul$long, paul$lat, window=owin(xrange=c(-55.795,-55.78),yrange=c(-63.576,-63.572)))
+plot(paulppp)
+
+#this is plotting all of the points outside my defined window but it at least is recognizing my defined window
+
+#trying some spatial stats
+tryG<-Gest(paulppp)
+plot(tryG)
+tryK<-Kest(paulppp)
+plot(tryK)
+
+
+
+#trying to define a hull properly instead of just drawing a rectangular window: this isn't working
+paulhull<-convex.hull(paul)
+plot(paulhull)
+
+window<-chull(paulppp)
+plot(window)
+
+#fxn nndist in spatstat calculates the distance of each point to its nearest neighbor, you can also add an argument k to specify which neighbor you care about (first nearest, second nearest...)
+
+#function "envelope" in 
+#varblock can estimate confidence intervals in try 
+
+
+#latfirst
+
+
+#converting to PPP
+paulppp2<-ppp(paul$lat, paul$long, window=owin(yrange=c(-55.80,-55.795),xrange=c(-63.576,-63.570)))
+plot(paulppp2) 
