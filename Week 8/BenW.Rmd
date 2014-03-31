@@ -1,0 +1,28 @@
+Point Patterns in Seal Imagery - Ben Weinstein
+========================================================
+
+```{r}
+require(maptools)
+require(raster)
+```
+
+Read in data
+----
+```{r}
+pts<-readShapePoints("~/Week 8/AVIA shapefile/AVIA seals.shp")
+```
+
+View data
+-----------
+
+```{r fig.width=7, fig.height=6}
+plot(pts)
+```
+
+Create distance matrix
+------------------------
+
+```{r}
+
+
+

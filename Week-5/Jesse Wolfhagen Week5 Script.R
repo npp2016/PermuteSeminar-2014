@@ -27,8 +27,8 @@ hwi <- function(a, b) #two columns of the dataset (they're both vectors of equal
   }
   x/(x + 0.5*(ya + yb)) #returns the HWI for that dyad
 }
-runs <- 1000 #define how many times you want to run the randomization
-outputdata <- list(data[which(sum())]) #start with the original data
+runs <- 500 #define how many times you want to run the randomization
+outputdata <- list(data) #start with the original data
 for(l in 2:runs) #creates randomized data matrices by switching pairs of observations
 {
   flag <- F
@@ -85,15 +85,26 @@ for(m in 2:18) #go through each column as the focal one (don't do group 18)
 #o_ij: HWI for a dyad
 #e_ij: Expected value is just the mean of the dyad HWI for all runs
 #D: number of total individuals (sum(data) without the group numbers)
-D <- sum(data[2:19]) #171
+D <- ncol(data) #number of dolphins
 statistic <- c() #the statistic value for each data matrix
-for(p in 1:length(outputdata)) #going through each data matrix
+e.ij <- colMeans(dyads)
+value <- c()
+for(q in 1:nrow(dyads))
 {
-  value <- c()
-  for(q in 1:ncol(dyads))
-  {
-    value <- c(value, ((dyads[p,q] - mean(dyads[,q]))^2)/D^2)
-  }
-  statistic <- c(statistic, sum(value))
+  num <- (dyads[q,] - e.ij)^2
+  den <- D^2
+  value[q] <- sum(num/den)
 }
+
+
+
+statistic[1]
+
 sum(statistic >= statistic[1])/length(statistic) #the empirical p-value
+plot(x = 1:length(statistic), y = statistic, type = "l")
+
+##Check if the median(HWI) is good: 0.207 (from the paper)
+median(dyads[1,])
+nonzeros <- dyads[1,]
+nonzeros <- nonzeros[which(nonzeros != 0)]
+median(nonzeros)
