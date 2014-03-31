@@ -1,0 +1,27 @@
+library(maptools)
+aviandata <- readShapePoints("AVIA shapefile/AVIA seals")
+plot(aviandata)
+aviandata
+latlong <- matrix(aviandata[,c(2,3)])
+names(latlong)
+avian.data <- read.csv("Week-8/ avian_island.csv")
+hullthings <- chull(latlong)
+plot(abs(avian.data))
+latlong <- abs(avian.data)
+hullthings <- c(hullthings, hullthings[1])
+lines(latlong[hullthings,])
+sample <- latlong[which(latlong[,1] < 67.766),]
+
+lines <- chull(sample)
+lines <- c(lines, lines[1])
+plot(sample)
+lines(sample[lines,])
+sampleppp <- ppp(sample[,2], sample[,1], window = Window)
+plot(sampleppp)
+Window <- owin(poly = list(x = c(sample[chull(sample),2]), y = c(sample[chull(sample),1])))
+plot(sampleppp)
+Kest(sampleppp)
+plot(Kest(sampleppp))
+
+fullppp <- ppp(latlong[,2], latlong[,1], xrange = range(latlong[,2]), yrange = range(latlong[,1]))
+plot(Gest(sampleppp))
