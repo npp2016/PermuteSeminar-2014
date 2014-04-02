@@ -1,6 +1,6 @@
 Week #7 Summary
 ========================================================
-Anusha
+Anusha. (Class on March 13, 2014)
 
 What we did:
 -------------
@@ -65,5 +65,5 @@ This K(t) function is often represented as a linearised L function:
 \[
 L(t) = \sqrt{K(t)/\pi} - t
 \]
-L(t)= K(t)/- t 
 
+So, if you are dealing with datasets with complex edges that you want to compensate for, these are some possible tools to use. Note that it is not always prudent to do edge corrections. In some cases, it does not change the results at all, in others it in fact confounds the results. Thus it should only be performed when there is a biological/ecological basis to use edge corrections.
