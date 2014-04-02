@@ -3,6 +3,7 @@
 # a loop instead of indexing with vectors to count up the presences.  This saves
 # memory and goes a lot faster.  On my laptop, generating 1000 random matrices
 # with this script takes ~ 0.25 seconds, compared with 18-19 seconds in R.
+using PyPlot
 
 function hwi(a, b, m)
 	ya, yb, x = 0, 0, 0
@@ -35,7 +36,7 @@ function association_matrix(m)
 	return result
 end
 
-function S{T}(assoc_mat, e_mat)
+function S(assoc_mat, e_mat)
 	sum((assoc_mat - e_mat).^2) / size(assoc_mat, 2)
 end
 
@@ -46,10 +47,16 @@ function randomized_S(m, n_swaps)
 	o_matrix = zeros(D, D)
 	for i in 1:n_swaps
 		o_matrix = association_matrix(m)
-		S_trace[i] = S(o_matrix, e_matrix)
+		e_matrix = e_matrix + o_matrix
+		S_trace[i] = S(o_matrix, e_matrix / i)
 		swap!(m)
 	end
-	return S_trace
+	return S_trace, e_matrix / n_swaps
+end
+
+function pvalue(S_trace, e_matrix, burnin=1000) 
+	n = length(S_trace)
+	sum(S_trace[burnin:end] .>= S_observed) / (n_swaps - burnin)
 end
 
 ## Script ########################
@@ -57,9 +64,24 @@ end
 dolphins, = readcsv("Dolphin data.csv", has_header=true)
 dolphins = int(dolphins[:, 2:end])
 
+n_swaps = 
+
 m = copy(dolphins)
-n_swaps = 1000
+n_swaps = 10000
 
 randomized_S(m, 2) # run once to make randomized_S compile
 m = copy(dolphins) # redo
-@time S_trace = randomized_S(m, n_swaps)
+@time S_trace, e_matrix = randomized_S(m, n_swaps)
+
+o_matrix_observed = association_matrix(dolphins)
+S_observed = S(o_matrix_observed, e_matrix)
+
+burnin = 1000
+figure()
+subplot(121)
+plot(S_trace)
+subplot(122)
+plt.hist(S_trace[burnin:end], 30)
+
+pvalue(S_trace, e_matrix, burnin)
+
