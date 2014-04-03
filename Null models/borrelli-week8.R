@@ -44,24 +44,39 @@ wrapper <- function(n, data){
 }
 
 ## Hummingbird
-test <- wrapper(1000, humming)
+test <- wrapper(5000, humming)
 boxplot(test)
 points(1:25, rowSums(humming), typ = "l", col = "blue")
+
+#get quantiles
+quant.hu <- apply(test, 2, quantile, probs = c(.025, .975))
+q.dat <- melt(data.frame(t(quant.hu)))
+q.dat2 <- cbind(q.dat, num=rep(1:25, 2))
 
 ## Make it pretty with ggplot2
 colnames(test) <- elev.hu
 mtest <- melt(test, id.vars = colnames(test))
 g <- ggplot(mtest, aes(x = factor(Var2), y = value)) + geom_boxplot()
-g + geom_point(data = humming, aes(x = factor(elev.hu), y = rowSums(humming[,1:50])), col = "blue", size = 3)
+g <- g + geom_path(data = humming, aes(x = 1:25, y = rowSums(humming[,1:50])), col = "blue")
+g <- g + geom_point(data = humming, aes(x = 1:25, y = rowSums(humming[,1:50])), col = "blue", size = 3)
+g + geom_line(data = q.dat2, aes(x=num, y = value, col = variable))
 
 
 ## Hylids
-test2 <- wrapper(1000, hylids)
+test2 <- wrapper(5000, hylids)
 boxplot(test2)
 points(1:25, rowSums(hylids), typ = "l", col = "blue")
+
+#get quantiles
+quant.hy <- apply(test2, 2, quantile, probs = c(.025, .975))
+q.dat.hy <- melt(data.frame(t(quant.hy)))
+q.dat2.hy <- cbind(q.dat.hy, num=rep(1:25, 2))
+
 
 ## Make it pretty with ggplot2
 colnames(test2) <- elev.hu
 mtest2 <- melt(test2, id.vars = colnames(test2))
 g <- ggplot(mtest2, aes(x = factor(Var2), y = value)) + geom_boxplot()
-g + geom_point(data = hylids, aes(x = factor(elev.hu), y = rowSums(hylids[,1:50])), col = "blue", size = 3)
+g <- g + geom_path(data = hylids, aes(x = 1:25, y = rowSums(hylids[,1:50])), col = "blue")
+g <- g + geom_point(data = hylids, aes(x = 1:25, y = rowSums(hylids[,1:50])), col = "blue", size = 2)
+g + geom_line(data = q.dat2.hy, aes(x=num, y = value, col = variable))
