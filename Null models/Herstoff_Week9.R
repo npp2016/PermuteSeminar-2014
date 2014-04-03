@@ -14,4 +14,20 @@ hylid_data<- cbind(hylid_elev, hylid)
 hylid_data$Elevation<-NULL
 hylid_data
 
+#######=================================================================================================
+
+found_hylid <-colSums(hylid_data[,2:50]) ## num of times each spp (1:50) is found at diff elevations
+  plot(found_hylid) ## hot mess
+
+hylid_data
+rle(hylid_data$Sp1)
+
+
+## Plotting some stuff...
+plot(hylid_data$hylid_elev, hylid_data$Sp1)
+  lines(hylid_data$hylid_elev, hylid_data$Sp1)
+  lines(hylid_data$hylid_elev, hylid_data$Sp2)
+  lines(hylid_data$hylid_elev, hylid_data$Sp3)
+  lines(hylid_data$hylid_elev, hylid_data$Sp4)
+  lines(hylid_data$hylid_elev, hylid_data$Sp5)
 
