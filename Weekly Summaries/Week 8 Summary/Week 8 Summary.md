@@ -18,6 +18,13 @@ library(spatstat)
 
 
 
+```
+## Error: there is no package called 'igraph'
+```
+
+```
+## Error: there is no package called 'gridExtra'
+```
 
 
 Loading the data
@@ -27,8 +34,28 @@ Loading the data
 ```r
 avian <- read.table("c:\\R\\AVIA_table.txt", sep = ",", col.names = c("lat", 
     "lon"))
+```
+
+```
+## Warning: cannot open file 'c:\R\AVIA_table.txt': No such file or directory
+```
+
+```
+## Error: cannot open the connection
+```
+
+```r
 paulet <- read.table("c:\\R\\Paulet_table.txt", sep = ",", col.names = c("lat", 
     "lon"))
+```
+
+```
+## Warning: cannot open file 'c:\R\Paulet_table.txt': No such file or
+## directory
+```
+
+```
+## Error: cannot open the connection
 ```
 
 
@@ -36,14 +63,60 @@ The data points are in a geographic coordinate system (lat,lon) with a unit of d
 
 ```r
 library(rgdal)
+```
+
+```
+## Error: there is no package called 'rgdal'
+```
+
+```r
 
 coordinates(avian) <- ~lon + lat
+```
+
+```
+## Error: object 'avian' not found
+```
+
+```r
 proj4string(avian) <- CRS("+proj=longlat +ellps=WGS84")
+```
+
+```
+## Error: could not find function "CRS"
+```
+
+```r
 avian <- as.data.frame(spTransform(avian, CRS("+proj=stere  +units=m +ellps=WGS84")))
+```
+
+```
+## Error: could not find function "spTransform"
+```
+
+```r
 
 coordinates(paulet) <- ~lon + lat
+```
+
+```
+## Error: object 'paulet' not found
+```
+
+```r
 proj4string(paulet) <- CRS("+proj=longlat +ellps=WGS84")
+```
+
+```
+## Error: could not find function "CRS"
+```
+
+```r
 paulet <- as.data.frame(spTransform(paulet, CRS("+proj=stere  +units=m +ellps=WGS84")))
+```
+
+```
+## Error: could not find function "spTransform"
 ```
 
 
@@ -58,24 +131,56 @@ To create the window we took a convex hull of the points, either using..
 
 ```r
 avianBoundary = convex.hull(as.matrix(avian))$rescoords
+```
+
+```
+## Error: could not find function "convex.hull"
+```
+
+```r
 avian.ppp = ppp(avian$lon, avian$lat, poly = list(x = rev(avianBoundary[, 1]), 
     y = rev(avianBoundary[, 2])))
 ```
 
+```
+## Error: object 'avianBoundary' not found
+```
 
 
+
+```
+## Error: object 'avianBoundary' not found
+```
 
 
 
 
 ```r
 pauletBoundary = convex.hull(as.matrix(paulet))$rescoords
+```
+
+```
+## Error: could not find function "convex.hull"
+```
+
+```r
 paulet.ppp = ppp(paulet$lon, paulet$lat, poly = list(x = rev(pauletBoundary[, 
     1]), y = rev(pauletBoundary[, 2])))
 ```
 
+```
+## Error: object 'pauletBoundary' not found
+```
 
-![plot of chunk unnamed-chunk-8](figure/unnamed-chunk-8.png) 
+
+
+```
+## Error: object 'pauletBoundary' not found
+```
+
+```
+## Error: could not find function "grid.arrange"
+```
 
 
 
@@ -87,25 +192,72 @@ This was dealt with by sub-setting the data into regions where the intensity app
 
 ```r
 avianSub <- avian[which(avian$lon < -7967000), ]
+```
+
+```
+## Error: object 'avian' not found
+```
+
+```r
 avianSubBoundary = as.data.frame(convex.hull(as.matrix(avianSub))$rescoords)
+```
+
+```
+## Error: could not find function "convex.hull"
+```
+
+```r
 
 
 avianSub.ppp = ppp(avianSub$lon, avianSub$lat, poly = list(x = rev(avianSubBoundary[, 
     1]), y = rev(avianSubBoundary[, 2])))
 ```
 
+```
+## Error: object 'avianSubBoundary' not found
+```
+
 
 ```r
 pauletSub <- paulet[which(paulet$lat < -18230000 & paulet$lon > -7540000), ]
+```
+
+```
+## Error: object 'paulet' not found
+```
+
+```r
 pauletSubBoundary = as.data.frame(convex.hull(as.matrix(pauletSub))$rescoords)
+```
+
+```
+## Error: could not find function "convex.hull"
+```
+
+```r
 
 
 pauletSub.ppp = ppp(pauletSub$lon, pauletSub$lat, poly = list(x = rev(pauletSubBoundary[, 
     1]), y = rev(pauletSubBoundary[, 2])))
 ```
 
+```
+## Error: object 'pauletSubBoundary' not found
+```
 
-![plot of chunk unnamed-chunk-11](figure/unnamed-chunk-11.png) 
+
+
+```
+## Error: object 'pauletSubBoundary' not found
+```
+
+```
+## Error: object 'avianSubBoundary' not found
+```
+
+```
+## Error: could not find function "grid.arrange"
+```
 
 
 There are several other options for dealing with heterogeneity, such as:
@@ -117,7 +269,10 @@ There are several other options for dealing with heterogeneity, such as:
 ---
 
 
-![plot of chunk unnamed-chunk-12](figure/unnamed-chunk-12.png) 
+
+```
+## Error: could not find function "grid.arrange"
+```
 
 > A demonstration of virtual clustering. In the first example a Poisson point process has been generate with intensity 300 (300 points within 1x1 area). Ripley's K for this plot closely matches the expect under CSR and is well within the limits of the envelope created by calculating Ripleys K from 99 simulated Poisson Point Processes ($\lambda=300$) within the 1x1 window. In the second example the same points are used but the window is extended beyond the limits of the PPP. When Ripleys K is caluclated there appears to be clustering at all scales, when actually there is no interaction between points in the region where the PPP operates. In the third example the points are generated from two poisson point process (blue intensity = 300, red intensity = 100). Ripleys K again show clustering at all scales, despite the points being randomly distributed.
 
@@ -151,10 +306,44 @@ The `envelope()` function in the `spatstat` package can be used to create a set 
 
 ```r
 env.K = envelope(verbose = F, avianSub.ppp, fun = Kest, nsim = 199)
+```
+
+```
+## Error: object 'avianSub.ppp' not found
+```
+
+```r
 env.G = envelope(verbose = F, avianSub.ppp, fun = Gest, nsim = 199)
 ```
 
-![plot of chunk unnamed-chunk-14](figure/unnamed-chunk-14.png) 
+```
+## Error: object 'avianSub.ppp' not found
+```
+
+
+```
+## Error: object 'avianSubBoundary' not found
+```
+
+```
+## Error: object 'env.K' not found
+```
+
+```
+## Error: object 'df1' not found
+```
+
+```
+## Error: object 'env.G' not found
+```
+
+```
+## Error: object 'df2' not found
+```
+
+```
+## Error: could not find function "grid.arrange"
+```
 
 
 
@@ -164,11 +353,37 @@ env.G = envelope(verbose = F, avianSub.ppp, fun = Gest, nsim = 199)
 
 ```r
 env.K = envelope(verbose = F, pauletSub.ppp, fun = Kest, nsim = 199)
+```
+
+```
+## Error: object 'pauletSub.ppp' not found
+```
+
+```r
 env.G = envelope(verbose = F, pauletSub.ppp, fun = Gest, nsim = 199)
 ```
 
+```
+## Error: object 'pauletSub.ppp' not found
+```
 
-![plot of chunk unnamed-chunk-16](figure/unnamed-chunk-16.png) 
+
+
+```
+## Error: object 'pauletSubBoundary' not found
+```
+
+```
+## Error: object 'env.K' not found
+```
+
+```
+## Error: object 'env.G' not found
+```
+
+```
+## Error: could not find function "grid.arrange"
+```
 
 
 ---
@@ -189,22 +404,54 @@ nearest.distances <- data.frame(Island = c(rep("Avian", avian.ppp$n), rep("Paule
     paulet.ppp$n)), first = c(nndist(avian.ppp), nndist(paulet.ppp)), second = c(nndist(avian.ppp, 
     k = 2), nndist(paulet.ppp, k = 2)), third = c(nndist(avian.ppp, k = 3), 
     nndist(paulet.ppp, k = 3)))
+```
+
+```
+## Error: object 'avian.ppp' not found
+```
+
+```r
 
 ggplot(nearest.distances, aes(x = first)) + geom_histogram() + facet_grid(Island ~ 
     .)
 ```
 
-![plot of chunk unnamed-chunk-17](figure/unnamed-chunk-171.png) 
+```
+## Error: object 'nearest.distances' not found
+```
 
 ```r
 p1 = ggplot(nearest.distances, aes(x = first, y = second, color = Island)) + 
     geom_density2d() + labs(y = "Second NN Distance", x = "First NN Distance")
+```
+
+```
+## Error: object 'nearest.distances' not found
+```
+
+```r
 p2 = ggplot(nearest.distances, aes(x = first, y = third, color = Island)) + 
     geom_density2d() + labs(y = "Third NN Distance", x = "First NN Distance")
+```
+
+```
+## Error: object 'nearest.distances' not found
+```
+
+```r
 p3 = ggplot(nearest.distances, aes(x = second, y = third, color = Island)) + 
     geom_density2d() + labs(y = "Second NN Distance", x = "Third NN Distance")
+```
+
+```
+## Error: object 'nearest.distances' not found
+```
+
+```r
 grid.arrange(p1, p2, p3, ncol = 3)
 ```
 
-![plot of chunk unnamed-chunk-17](figure/unnamed-chunk-172.png) 
+```
+## Error: could not find function "grid.arrange"
+```
 
