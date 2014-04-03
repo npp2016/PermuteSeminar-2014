@@ -1,0 +1,1 @@
+#is it possible that the same pattern is produced by different processes?
