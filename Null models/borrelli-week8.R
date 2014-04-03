@@ -48,6 +48,7 @@ test <- wrapper(1000, humming)
 boxplot(test)
 points(1:25, rowSums(humming), typ = "l", col = "blue")
 
+## Make it pretty with ggplot2
 colnames(test) <- elev.hu
 mtest <- melt(test, id.vars = colnames(test))
 g <- ggplot(mtest, aes(x = factor(Var2), y = value)) + geom_boxplot()
@@ -59,6 +60,7 @@ test2 <- wrapper(1000, hylids)
 boxplot(test2)
 points(1:25, rowSums(hylids), typ = "l", col = "blue")
 
+## Make it pretty with ggplot2
 colnames(test2) <- elev.hu
 mtest2 <- melt(test2, id.vars = colnames(test2))
 g <- ggplot(mtest2, aes(x = factor(Var2), y = value)) + geom_boxplot()
