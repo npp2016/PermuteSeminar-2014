@@ -14,12 +14,34 @@ hylid_data<- cbind(hylid_elev, hylid)
 hylid_data$Elevation<-NULL
 hylid_data
 
-#######=================================================================================================
+#######=============== Hummingbirds ======================================================================
 
+# Start with hummingbirds
+## add sp richness across all elevations for all hummers
+hum_data[26,] <- colSums(hum_data)
+hum_data
+  hum_data[26,] # check output
+
+
+
+
+#######=============== Hylids ===========================================================================
+
+# Start with hummingbirds
+## add sp richness across all elevations for all hummers
+hylid_data[26,] <- colSums(hylid_data)
+hylid_data
+  hylid_data[26,] # check output
+
+
+
+
+
+#######============   Ignore!! =============================================================================
 found_hylid <-colSums(hylid_data[,2:50]) ## num of times each spp (1:50) is found at diff elevations
   plot(found_hylid) ## hot mess
 
-hylid_data
+# playing with rle
 rle(hylid_data$Sp1)
 
 
