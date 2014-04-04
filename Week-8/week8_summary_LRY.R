@@ -1,4 +1,4 @@
-setwd("~/Desktop/GitHub/PermuteSeminar-2014/Week 8/AVIA shapefile/")
+setwd("~/Desktop/GitHub/PermuteSeminar-2014/")
 
 <<<<<<< HEAD
 library(maptools)
