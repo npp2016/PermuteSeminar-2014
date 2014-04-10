@@ -136,8 +136,6 @@ options(RCurlOptions = list(cainfo = system.file("CurlSSL", "cacert.pem", packag
       
 raw <- getURL("https://raw.githubusercontent.com/PermuteSeminar/PermuteSeminar-2014/master/Week-10/speciescounts.csv")
 spcounts <- read.csv(text = raw) 
-
-
 ```
 
 
@@ -161,6 +159,20 @@ sitemat <- cast(columnquad, Site ~ Species, value='value', fun=sum) #sums the nu
 
 sitemat <- as.data.frame(sitemat) #fixes the recast as a data frame
 quadmat[is.na(quadmat)] <- 0 #refills the empty cells with 0
+```
+
+
+Counting the number of natives and the number of exotics in the entire data set (this needs to be held fixed as a quality of the species pool)
+
+```{r}
+#count the number of observations of N and I species in the original data set (this will duplicate some species, and undercounts species that had more than 1 indiv per quadrat for now)
+nat<-length(spcounts$Origin[spcounts$Origin=="N"])
+exo<-length(spcounts$Origin[spcounts$Origin=="I"])
+
+# need to find a way to scale by the number of individuals for each listed individual
+
+origin<-c(nat,exo)
+origin<-as.data.frame(origin)
 ```
 
 
