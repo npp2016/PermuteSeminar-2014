@@ -14,12 +14,30 @@ for (i in 1:length(bird$Elevation)){
 }
 plot(bird$Elevation, bird$presence)
 
+null.matrix<-function(data)
+{
+  randomatrix<-matrix(nrow=nrow(data), ncol=ncol(data))
+  for (j in 1:ncol(data)){
+    #start<-rle(data$Sp1)$length[1]+1
+    if (sum(data[,j])>0)
+      {
+        range.length<-rle(data[,j])$length[which(rle(data[,j])$values == 1)]
+        top.edge<-nrow(data-range.length
+        new.start<-sample(1:(top.edge),1)
+        randomatrix[,j]<-c(rep(0,(nrow(data)-(new.start+range.length))), rep (1, top.edge), rep(0, new.start))  
+    }
+    if (sum(data[,j])>0){
+      randomatrix[,j]<-rep(0, nrow(data))
+    }
+    
+  }
+  randomatrix
+}
+
+
+fake.bird<-null.matrix(bird[,c(-1,-52)])
+
 #start of range
-start<-rle(bird$Sp1)$length[1]+1
-range.length<-rle(bird$Sp1)$length[2]
-top.edge<-length(bird$Elevation)-range.length
-new.start<-sample(1:(top.edge),1)
-new.vector<-c(rep(0, (length(bird$Elevation)-(new.start+range.length))), rep (1, top.edge), rep(0, new.start))
 #caculate 
 i<-1
 hylid$presence<-c()
