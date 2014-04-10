@@ -162,16 +162,47 @@ head(site.gr)
 ##Input a bunch of parameters to run the model, same as above.
 
 reps.2 <- 100  		
-#number of replicates for each sample size
-
+  #number of replicates for each sample size
 samps.2 <- c(5,25,50,100)	
-#sample sizes, in number of represented individuals
-
+  #sample sizes, in number of represented individuals
 pool.range.2 <- c(20,100)		
-#range of species richness of total species pool (includes natives, exotics, and "bare spaces")
-
+  #range of species richness of total species pool (includes natives, exotics, and "bare spaces")
 NEprop.2 <- c(.71,.19,.1)		
-#proportion of, respectively, natives, exotics, and bare spaces in pool (totals to 1)
+  #proportion of, respectively, natives, exotics, and bare spaces in pool (totals to 1)
+##########################################################
+## Permute data across species and sites to see if you can reject the null (random distributions)
+
+
+
+
+
+##########################################################
+##########################################################
+##########################################################
+## Doesn't work. Ignore what's below.....
+
+
+sample.sp <- sample(x=sp.ct$Origin, replace=T)
+permutes <- function(mat, iter = 100){
+  
+  while(count < iter){
+    srow <- sample(1:nrow(sp.ct))
+    scol <- sample(1:ncol(sp.ct))
+    
+    
+}
+
+srow
+scol
+
+x <- 1:12
+# a random permutation
+sample(x)
+# bootstrap resampling -- only if length(x) > 1 !
+sample(x, replace = TRUE)
+
+
+
 
 ##########################################################
 #Output holding array:
