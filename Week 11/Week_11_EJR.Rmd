@@ -1,0 +1,64 @@
+Week 11 Exercise
+========================================================
+Import data from GitHub
+```{r}
+require(RCurl)
+options(RCurlOptions = list(cainfo = system.file("CurlSSL", "cacert.pem", package = "RCurl")))
+      
+raw <- getURL("https://raw.githubusercontent.com/PermuteSeminar/PermuteSeminar-2014/master/Week%2011/epipalassemblages.csv")
+epipal <- read.csv(text = raw) 
+```
+
+
+looking at some ordinations a bit
+```{r}
+epimat<-epipal[c(2:32)]
+rownames(epimat)<-c("KDr8", "HayC", "EGI", "EGII", "EGIII", "EGIV", "UR2a", "Fa3B","Fa3A", "Fa7", "WH26", "Jil6L", "Jil6M", "Jil6U", "Uw14M", "Uw14U", "Uw18")
+require(vegan)
+ord<-metaMDS(epimat, distance="bray", trymax=20, trace=1)
+
+plot(ord, type="n")
+text(ord, display ="sites", cex =0.7)
+
+plot(ord, type="n")
+text(ord, display ="species", cex =0.7)
+
+#overlay
+plot(ord)
+ordilabel(ord, display = "sites", font = 3, col = "black")
+ordilabel (ord, display = "species", font = 2, col = "red")
+
+```
+
+ANOSIM
+```{r}
+#making a dataframe for just the groupings of sites
+epigrp<-epipal[c(1,34:35)]
+
+#testing differences among periods
+anosim(epimat,epigrp$Period, permutations=999, distance="bray")
+
+#testing differences between regions
+anosim(epimat, epigrp$Region, permutations=999, distance="bray")
+```
+
+
+Playing with PCA
+```{r}
+PCA<-prcomp(epimat, scale=TRUE)
+biplot(PCA)
+```
+
+
+
+
+Notes from Ben about vegan
+------------------------------------------
+always set scale = 1 so it standardizes things in different units and also makes the PCA etc. easier to see
+
+prcomp() and princomp() are in the base package
+
+after PCA, do biplot(a) 
+
+vegan::cca()
+vegan::ordihull()
