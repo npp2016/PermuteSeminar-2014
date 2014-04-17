@@ -169,7 +169,7 @@ Counting the number of natives and the number of exotics in the entire data set 
 nat<-length(spcounts$Origin[spcounts$Origin=="N"])
 exo<-length(spcounts$Origin[spcounts$Origin=="I"])
 
-# need to find a way to scale by the number of individuals for each listed individual
+# need to find a way to scale by the number of individuals for each listed individual (could just cheat and count this in Excel)
 
 origin<-c(nat,exo)
 origin<-as.data.frame(origin)
