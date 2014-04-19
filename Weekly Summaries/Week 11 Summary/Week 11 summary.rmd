@@ -1,0 +1,201 @@
+Week 11 Summary
+========================================================
+
+Manly 1996 and Stutz and Eastabrook 2004
+========================================================
+
+In archeology, patterns of similarity between assemblages that vary in the number of artefacts have been analyzed using multivariate statistics. 
+
+For presence/absence data of artefacts, Manly 1996 used a reduced metrics, Dij, 
+
+$$
+Dij = \sqrt{(x_{i1} - x_{j1})^2 + (x_{i2} - x_{j2})^2 + ... + (x_{in} - x_{jn})^2}
+$$
+
+which measures the difference between the two burials based on the presence(1) and absence(0) of artefact type. This reduced the number of variables for ordination analysis and allowed the groupings of burials that are simliar to each other.
+
+Grouping of burials was also attempted for count data in Stutz and Eastabrook 2004 in which 
+
+$$
+Dij=\frac{\sum_{m}^{c}\left|f_{mi} - f_{mj}\right|}{2}
+$$
+
+was used as the difference between any two assemblages.
+
+Based on the ordination results, the paper tried to test two hypotheses, H1: The microlith assemblages within the same geogrphical region are more typologically similar.
+H2: The microlith assemblages within the same archaeological culture are more similar regardless of geographic location.
+
+Using ordination techniques, the authors first searched for significant clusters among assemblages and tested the 'gooodness of grouping' with the Dij value above (less Dij value represent better grouping).
+
+
+Exercise
+=========
+
+1) Using the dataset in Stutz and Eastabrook 2004 (counts of 31 types of artefacts in 17 different sites for 3 distinct time periods and 2 distinct regions), we explored the similarities between the burials and artefacts using several ordination techniques such as Principal Component Aanalysis (PCA), Non-metric multidimensional scaling (NMDS), and Canonical Correspondence Analysis (CCA). 
+
+2) Based on the results from several techniques, we tried to group the burials or artefacts together into groups that represent similar types.
+
+Loading the data
+----------------
+
+Import data from GitHub
+
+```{r}
+require(RCurl)
+options(RCurlOptions = list(cainfo = system.file("CurlSSL", "cacert.pem", package = "RCurl")))
+      
+raw <- getURL("https://raw.githubusercontent.com/PermuteSeminar/PermuteSeminar-2014/master/Week%2011/epipalassemblages.csv")
+data <- read.csv(text = raw) 
+```
+
+Using the function 'melt' in package 'reshape2', one can convert an object into a molten data frame which helps to visualize the data in a nicer fashion.
+
+```{r}
+library(reshape2)
+
+molten.data <- melt(data, id.var=c("Site", "Total", "Period", "Region"))
+head(molten.data)
+```
+
+Creating graphs of the data
+----------------------------
+
+To generate graphs of counts of each type of artefacts in the burials by different regions and periods, function 'ggplot' can be used in package 'ggplot2'.
+
+```{r}
+library(ggplot2)
+
+# The variables in the molten data frame are the types of artefacts and the values are the counts of each artefact in the site
+names(molten.data)[5:6] <- c("Artefact", "Count")
+
+# ggplot function is used to show the counts of each artefact type separated by region and period as a bar graph
+ggplot(molten.data, aes(x=Artefact, y=Count)) + geom_bar(stat='identity') +facet_grid(Period ~ Region)
+# same count data can be shown in a heat map form using ggplot
+# here, absolute count of each artefact type is shown in each site
+ggplot(molten.data, aes(x=Artefact, y=Site, fill=Count)) + geom_tile()
+# the heat map can be divided into different regions and periods in log scale
+ggplot(subset(molten.data, Count > 0), aes(x=Artefact, y=Site, fill=log10(Count))) + geom_tile() + facet_grid(Region ~ Period, scales='free_y', space='free_y') + theme_bw()
+```
+
+1) Ordination
+==================
+
+In multivariate analysis, ordination is a method of data clustering in which objects that are characterized by values on multiple variables are ordered so that similar objects are near each other and dissimilar objects are farther from each other. These relationships between the objects, on each of several axes (one for each variable), are then characterized numerically and/or graphically.  
+
+
+1. Principal Component Analysis (PCA)
+---------------------------------------
+Principal component analysis (PCA) is a statistical procedure that identifies a set of uncorrelated variables (called principal components) that accounts for the variability in the data set. The first principal component explains the largest variance in the data, and the succeeding components account for the next highest variance under the circumstance that they are uncorrelated to the preceeding components.   
+
+In R, function 'prcomp' in package 'vegan' is used for PCA.
+
+When using PCA, it is important that the units are standardized for different variables so that the results are relevant. 
+
+```{r}
+require(vegan)
+counts <- data[ , 2:32]
+rownames(counts) <- data$Site
+counts
+# scale=T in function 'prcomp' to standardize the units
+pca.counts <- prcomp(counts, scale=T)
+biplot(pca.counts)
+plot(pca.counts)
+summary(pca.counts)
+```
+
+2. Canonical Correspondence Analysis (CCA)
+-------------------------------------------
+Canonical Correspondence analysis (CCA) is conceptually similar to principal component analysis, but applies to categorical rather than continuous data.
+
+In R, function 'cca' in package 'vegan' is used for CCA.
+
+```{r}
+library(vegan)
+
+cca.counts<-cca(counts)
+cca.counts
+plot(cca.counts)
+summary(cca.counts)
+```
+
+3. Multidimensional Scaling (MDS)
+----------------------------------------------
+
+Multidimensional scaling (MDS) is a means of visualizing the level of similarity of individual cases of a dataset. 
+
+An MDS algorithm aims to place each object in N-dimensional space such that the between-object distances are preserved as well as possible. Each object is then assigned coordinates in each of the N dimensions. The number of dimensions of an MDS plot N can exceed 2 and is specified a priori. Choosing N=2 optimizes the object locations for a two-dimensional scatterplot.
+
+Non-metric multidimensional scaling (NMDS) is a special type of MDS that
+finds both a non-parametric monotonic relationship between the dissimilarities in the item-item matrix and the Euclidean distances between items, and the location of each item in the low-dimensional space. 
+
+In R, function 'metaMDS' in package 'vegan' performs Non-metric Multidimensional Scaling (NMDS). 
+
+```{r}
+library(vegan)
+
+nmds.counts<-metaMDS(counts, distance="bray", trymax=20, trace=1)
+# plot sites 
+plot(nmds.counts, type="n")
+text(nmds.counts, display ="sites", cex =0.7)
+# plot artefact types
+plot(nmds.counts, type="n")
+text(nmds.counts, display ="species", cex =0.7)
+# overlay the two plots on top of one another
+plot(nmds.counts)
+ordilabel(nmds.counts, display = "sites", font = 3, col = "black")
+ordilabel (nmds.counts, display = "species", font = 2, col = "red")
+```
+
+
+2) K-mean clustering
+======================
+
+Based on the above ordination techniques, one can perform a clustering analysis to group the items that are similar to each other. The number of clusters (k) is given a priori by the user and this can be determined based on the results from the ordination methods. 
+
+In R, the function 'kmeans' conducts k-means clustering which partitions n observations into k clusters.
+
+```{r}
+# k-means clustering with 2 clusters 
+kmeans.counts2 <- kmeans(counts, 2)
+kmeans.counts2
+# Using 2 groups there's a vector of the clusters
+clustergroups2 <- c(1,2,2,2,2,2,2,2,1,2,2,2,2,2,2,2,2)
+comparison2 <- data.frame(data$Period, data$Region, clustergroups2)
+comparison2
+# k-means clustering with 3 clusters 
+kmeans.counts3 <- kmeans(counts, 3)
+kmeans.counts3
+# Using 3 groups there's a vector of the clusters
+clustergroups3 <- c(1,2,2,2,2,2,2,2,1,2,2,2,2,2,3,3,3)
+comparison3 <- data.frame(data$Period, data$Region, clustergroups3)
+comparison3
+# k-means clustering with 4 clusters 
+kmeans.counts4 <- kmeans(counts, 4)
+kmeans.counts4
+# Using 4 groups there's a vector of the clusters
+clustergroups4 <- c(2,3,3,3,4,4,4,4,1,3,3,4,4,4,4,4,4)
+comparison4 <- data.frame(data$Period, data$Region, clustergroups4)
+comparison4
+```
+
+These groupings don't seem to be related to the Period or Region groups. Why?
+
+Analysis of Similarities (ANOSIM)
+=================================
+
+Analysis of similarities (ANOSIM) provides a way to test statistically whether there is a significant difference between two or more groups of sampling units.
+
+Function 'anosim' in package 'vegan' is used.
+
+```{r}
+library(vegan)
+
+# make a dataframe for just the groupings of sites
+data.grp<-data[c(1,34:35)]
+
+# test differences among periods
+anosim(counts,data.grp$Period, permutations=999, distance="bray")
+# test differences between regions
+anosim(counts, data.grp$Region, permutations=999, distance="bray")
+```
+
