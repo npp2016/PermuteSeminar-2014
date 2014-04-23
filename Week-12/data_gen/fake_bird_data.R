@@ -86,4 +86,4 @@ head(collected.data)
 
 pairs(collected.data)
 
-write.csv(collected.data, file="../bird_habitat.csv")
+write.csv(collected.data, file="../bird_habitat.csv", row.names=F)
