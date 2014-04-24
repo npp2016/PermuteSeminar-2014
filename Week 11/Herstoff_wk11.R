@@ -18,4 +18,17 @@ head(epI)
 
 require(ggplot2)
 
-ggplot(data=epI,aes(x=Site,y=value,color=Period,shape=Region)) + geom_point() + facet_wrap(~variable,scales="free") + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+p<-ggplot(data=epI,aes(x=variable,y=Site,fill=value)) + geom_tile() 
+p <- p + facet_grid(Region~Period,margins=TRUE) 
+p <- p + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + theme_bw()
+p <- p + scale_fill_continuous(low="blue",high="red")
+ggsave("out.eps",dpi=300)
+
+require(vegan)
+head(epi)
+
+ep<-epi[,-c(1,33,34,35)]
+rownames(ep)<-epi[,1]
+
+prcomp(ep)
+
