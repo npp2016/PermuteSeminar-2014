@@ -49,7 +49,7 @@ We will be using some data from a simulated survey of an imaginary mountain vall
 
 <img src="data_gen/landscape.png">
 
-You have spent an imaginary summer hiking all over the place, sampling random locations.  At each location, you have recorde whether the bird of interest was present, along with the percent cover of each of three plant species.  The high elevations are mostly bare rock and the valley floor is mostly farmland; there are variables coding for these types of cover as well.
+You have spent an imaginary summer hiking all over the place, sampling random locations.  At each location, you have recorded whether the bird of interest was present, along with the percent cover of each of three plant species.  The high elevations are mostly bare rock and the valley floor is mostly farmland; there are variables coding for these types of cover as well.
 
 The data are stored in "bird_habitat.csv."
 
