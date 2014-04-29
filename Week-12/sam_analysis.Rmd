@@ -1,0 +1,64 @@
+
+```{r}
+library(AICcmodavg)
+library(ggplot2)
+library(reshape)
+
+birds <- read.csv("bird_habitat.csv")
+head(birds)
+birds.m <- melt(birds, id="bird.present")
+ggplot(birds.m, aes(x=value, y=bird.present, color=factor(bird.present))) + 
+  geom_point() +  geom_jitter() + facet_wrap(~variable, scales='free_x')
+```
+
+
+```{r}
+hypotheses <- list(
+  LandType = bird.present ~ 0 + rock + farm,
+  Elevation = bird.present ~ elevation + I(elevation^2),
+  Plants = bird.present ~ plant1 + plant2 + plant3,
+  EcoZone = bird.present ~ elevation + I(elevation^2) + plant1 + I(plant1^2) + 
+    plant2 + I(plant2^2) + plant3 + I(plant3^2),
+  Regional = bird.present ~ easting + northing
+)
+
+models <- llply(hypotheses, glm, data=birds, family=binomial)
+model.comparison <- aictab(models, modnames=names(models))
+model.comparison
+```
+
+The land-type model is clearly the best one.  Check out the parameter estimates:
+
+```{r}
+summary(models$LandType)
+```
+
+So birds are basically not found on farms or bare rocks.  Try the remaining hypotheses on the subset of non-rock, non-farm data:
+
+```{r}
+birds.veg <- subset(birds, ! farm & ! rock)
+hypotheses2 <- hypotheses[2:5]
+models2 <- llply(hypotheses2, glm, data=birds.veg,  family=binomial)
+model.comparison2 <- aictab(models2, modnames=names(models2))
+model.comparison2
+```
+
+On the subset of undeveloped, vegetataed samples, the "best" hypothesis is much less certain.  The AICc weights give one estimate of how likely each model is to be chosen again.  A bootstrap gives another.
+
+```{r, warning=FALSE, message=FALSE}
+n.boot <- 500
+best.models <- rep("", n.boot)
+n <- nrow(birds.veg)
+
+for (i in 1:n.boot) {
+  boot.models <- llply(hypotheses2, glm, data=birds.veg[sample(n, n, replace=T), ],
+                        family=binomial)
+  best.models[i] <- as.character(aictab(boot.models, names(boot.models))$Modnames[1])
+}
+boot.results <- melt(table(best.models) / n.boot)
+names(boot.results) <- c("Modnames", "BootProb")
+boot.results <- join(model.comparison2, boot.results)
+boot.results[c("Modnames", "AICcWt", "BootProb")]
+```
+
+The ranking of the models remains the same by AIC or bootstrapping.  However, the best model ("Regional", using only latitude and longitude to model regional trends, is less confidently chosen when bootstrapped, with the extra weight being allocated to the worst two models.
