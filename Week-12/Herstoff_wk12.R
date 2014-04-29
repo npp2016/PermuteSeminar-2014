@@ -48,6 +48,15 @@ aictab(list(m.1, m.2, m.3, m.4), modnames = c("Plants.all", "plants.1", "plants.
 
 ##============================================================================================================
 
+sum(birds$bird.present) ## 37 total observations out of 300.
+sum(birds$rock) ## 29 total observations out of 300.
+sum(birds$farm) ## 27 total observations out of 300.
+
+sum(birds$plant1>0) ## 46 total observations out of 300.
+sum(birds$plant2>0) ## 111 total observations out of 300.
+sum(birds$plant3>0) ## 167 total observations out of 300.
+
+
 
 
 
