@@ -183,28 +183,26 @@ hljs.initHighlightingOnLoad();
 
 <p>Read in data</p>
 
-<pre><code class="r">a &lt;- read.csv(&quot;Week-13/Svoboda_Supp_T2_longform.csv&quot;, row.names = 1)
+<pre><code class="r">require(vegan)
 </code></pre>
 
-<pre><code>## Warning: cannot open file &#39;Week-13/Svoboda_Supp_T2_longform.csv&#39;: No such
-## file or directory
+<pre><code>## Loading required package: vegan
+## Loading required package: permute
+## Loading required package: lattice
+## This is vegan 2.0-9
 </code></pre>
 
-<pre><code>## Error: cannot open the connection
+<pre><code class="r">require(ggplot2)
 </code></pre>
 
-<pre><code class="r">
+<pre><code>## Loading required package: ggplot2
+</code></pre>
+
+<pre><code class="r">setwd(&quot;C:/Users/Ben/Documents/PermuteSeminar-2014&quot;)
+a &lt;- read.csv(&quot;Week-13/Svoboda_Supp_T2_longform.csv&quot;, row.names = 1)
+
 env &lt;- read.csv(&quot;Week-13/Svoboda_T2_csv.csv&quot;)
-</code></pre>
 
-<pre><code>## Warning: cannot open file &#39;Week-13/Svoboda_T2_csv.csv&#39;: No such file or
-## directory
-</code></pre>
-
-<pre><code>## Error: cannot open the connection
-</code></pre>
-
-<pre><code class="r">
 # reformat matrix
 require(reshape)
 </code></pre>
@@ -221,21 +219,11 @@ require(reshape)
 
 <pre><code class="r">
 envA &lt;- data.frame(colsplit(env$X, c(&quot;_&quot;), c(&quot;ecosystem&quot;, &quot;site&quot;)), env)
-</code></pre>
 
-<pre><code>## Error: object &#39;env&#39; not found
-</code></pre>
-
-<pre><code class="r">
 # Swamp pools for Ben
 
 dat &lt;- a[a$ecosystem == &quot;Swamp&quot;, ]
-</code></pre>
 
-<pre><code>## Error: object &#39;a&#39; not found
-</code></pre>
-
-<pre><code class="r">
 require(reshape)
 </code></pre>
 
@@ -243,91 +231,73 @@ require(reshape)
 
 <pre><code class="r">
 data(dune)
+data(dune.env)
+dune.dist &lt;- vegdist(dune)
+attach(dune.env)
+dune.ano &lt;- anosim(dune.dist, Management)
+summary(dune.ano)
 </code></pre>
 
-<pre><code>## Warning: data set &#39;dune&#39; not found
-</code></pre>
-
-<pre><code class="r">data(dune.env)
-</code></pre>
-
-<pre><code>## Warning: data set &#39;dune.env&#39; not found
-</code></pre>
-
-<pre><code class="r">dune.dist &lt;- vegdist(dune)
-</code></pre>
-
-<pre><code>## Error: could not find function &quot;vegdist&quot;
-</code></pre>
-
-<pre><code class="r">attach(dune.env)
-</code></pre>
-
-<pre><code>## Error: object &#39;dune.env&#39; not found
-</code></pre>
-
-<pre><code class="r">dune.ano &lt;- anosim(dune.dist, Management)
-</code></pre>
-
-<pre><code>## Error: could not find function &quot;anosim&quot;
-</code></pre>
-
-<pre><code class="r">summary(dune.ano)
-</code></pre>
-
-<pre><code>## Error: object &#39;dune.ano&#39; not found
+<pre><code>## 
+## Call:
+## anosim(dat = dune.dist, grouping = Management) 
+## Dissimilarity: bray 
+## 
+## ANOSIM statistic R: 0.258 
+##       Significance: 0.009 
+## 
+## Based on  999  permutations
+## 
+## Upper quantiles of permutations (null model):
+##   90%   95% 97.5%   99% 
+## 0.115 0.161 0.193 0.234 
+## 
+## Dissimilarity ranks between and within classes:
+##         0%   25%    50%    75%  100%   N
+## Between  4 58.50 104.00 145.50 188.0 147
+## BF       5 15.25  25.50  41.25  57.0   3
+## HF       1  7.25  46.25  68.12  89.5  10
+## NM       6 64.75 124.50 156.25 181.0  15
+## SF       3 32.75  53.50  99.25 184.0  15
 </code></pre>
 
 <pre><code class="r">plot(dune.ano)
 </code></pre>
 
-<pre><code>## Error: object &#39;dune.ano&#39; not found
+<pre><code>## Warning: some notches went outside hinges (&#39;box&#39;): maybe set notch=FALSE
 </code></pre>
+
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAfgAAAH4CAMAAACR9g9NAAAAnFBMVEX9/v0AAAAAADkAAGUAOY8AZrU5AAA5ADk5AGU5OQA5OY85Zo85ZrU5j7U5j9plAABlADllAGVlOTllOY9lZjllZmVlZrVlj49ltf2POQCPOTmPOWWPZgCPZo+Pj2WPj7WPtY+P29qP2/21ZgC1Zjm1ZmW1tWW124+1/rW1/tq1/v3ajznaj2Xa/rXa/v39tWX924/9/rX9/tr9/v2BPfDEAAAANHRSTlP///////////////////////////////////////////////////////////////////8AS1ciZQAAAAlwSFlzAAALEgAACxIB0t1+/AAADwVJREFUeJztnYl247YZRsPxkqk7tcdd5Zk2i50mqdxqff93K0nRYy2URBAfhOW/95wMV3wCcUUCpCL5uzWY5LvYFYA4IN4oiDcK4o2CeKMg3iiINwrijYJ4oyDeKIg3CuKNgnijIN4oiDcK4o2CeKMg3iiINwrijYJ4oyDeKIg3CuKNgnijIN4oiDcK4o2CeKMg3iiINwrijYJ4oyDeKIg3CuKNgnijIN4oiDcK4o2CeKMg3iiINwrijYJ4oyDeKIg3SlHiF7dVzdX0cMvyobqefdtnsl6/bnasl/Z232Tcn4ro5rrJYUQWlCX+Y2PgtfOzxeppsn69aeaWn5/Xi++f1y+Tt6W93duMZv3RiG6umywfJn2vmDwFit/8u8PycdqtnjfuXiarL63Zxd2s3baf0Ug9GtHNdZM24vB9kjwFit+cf/Pmil11/nbt1HP1ZbrZeOyMb64JRyO6ud3JhY5QR1ni2/6557o7v96ys3q6b802Z/17x72bcXDCb0V0c92kvdR/QHxUmrN13idh+7RcPryN3F4mjf/51eGlvi/7yBnfvFP+9AXxUWmlvW5E7lyn3zvo2tO3s/llsnMl2MrYcCRit49/25Yb5YlfPd0cbGiu7psheee9Mb76OnU4498jurlu0g4TDl8xecoTX7s9vAvf9OX19tfuLK6nTZ8w30y2fB8T/x6xdx8/7x1VJE9R4n34d35Xay8Qv2H1Y+waXBgf8RWkTEDxHmUhNIg3CuKNgnijIN4oiDcK4o2CeKMg3iiINwrijYJ4o0QX7/dZAowlunhFIXAH8UZBvFEQb5TU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" alt="plot of chunk unnamed-chunk-2"/> </p>
 
 <p>Make our data look like his data</p>
 
 <pre><code class="r">require(reshape)
 
 dat.f &lt;- t(cast(dat, Taxon ~ site + pool))
-</code></pre>
+dist.all &lt;- vegdist(dat.f)
+distA &lt;- melt(as.matrix(dist.all))
 
-<pre><code>## Error: object &#39;dat&#39; not found
-</code></pre>
-
-<pre><code class="r">dist.all &lt;- vegdist(dat.f)
-</code></pre>
-
-<pre><code>## Error: could not find function &quot;vegdist&quot;
-</code></pre>
-
-<pre><code class="r">distA &lt;- melt(as.matrix(dist.all))
-</code></pre>
-
-<pre><code>## Error: object &#39;dist.all&#39; not found
-</code></pre>
-
-<pre><code class="r">
 # split columns back out
 reformat1 &lt;- data.frame(distA, colsplit(distA$X1, &quot;_&quot;, c(&quot;siteTo&quot;, &quot;poolTo&quot;)))
-</code></pre>
 
-<pre><code>## Error: object &#39;distA&#39; not found
-</code></pre>
-
-<pre><code class="r">
 reformat2 &lt;- data.frame(reformat1, colsplit(distA$X2, &quot;_&quot;, c(&quot;siteFrom&quot;, &quot;poolFrom&quot;)))
-</code></pre>
 
-<pre><code>## Error: object &#39;reformat1&#39; not found
-</code></pre>
-
-<pre><code class="r">
 
 ggplot(reformat2, aes(y = value, x = factor(poolTo), col = factor(poolTo))) + 
     geom_boxplot() + facet_grid(~siteTo)
 </code></pre>
 
-<pre><code>## Error: could not find function &quot;ggplot&quot;
+<p><img src="data:image/png;base64,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" alt="plot of chunk unnamed-chunk-3"/> </p>
+
+<p>Aggregate and compute means among versus between</p>
+
+<pre><code class="r">anosim(env, &quot;&quot;)
+</code></pre>
+
+<pre><code>## Error: &#39;x&#39; must be numeric
+</code></pre>
+
+<pre><code class="r">
 </code></pre>
 
 </body>

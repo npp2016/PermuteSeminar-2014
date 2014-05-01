@@ -11,51 +11,30 @@ require(vegan)
 
 Load data
 ```{r}
-comm<-read.csv("Svoboda_transpose.csv")
+comm<-read.csv("Svoboda_transpose.csv", row.names=1)
 groups<-read.csv("EJR_siteinfo.csv")
 ```
 
 Run NMDS - plots the three different sites
 
 ```{r}
-ord<-metaMDS(comm[,2:96], distance="bray", k=3, trymax=50)
+ord<-metaMDS(comm, distance="bray", k=3, trymax=50)
 plot(ord, display="sites")
 ```
 
 Run anosim on the various groupings
 
 ```{r}
+#Difference between fen and bog
 anosim(comm, groups$Type, permutations=999, distance="bray")
-anosim(comm, groups$Site, permutations=999, distance="bray")
+
+#Differences among fens
+anosim(comm[1:9,], groups[1:9,]$Site, permutations=999, distance="bray")
+
+#Differences among bogs
+anosim(comm[10:18,], groups[10:18,]$Site, permutations=999, distance="bray")
 ```
 
-
-----------------------
-Team Swamp Code below
-----------------------
-
-Methods from Clark 1993 - section "A permutation test for the one-way layout: Frierfjord macrobenthos".
-rw = average of all rank similarities among replicates within sites
-rb = average of rank similarities among all pairs of replicates between different sites
-M = n((n-1))/2; n = total $ of samples being considered
-
-Our goal is to examine site to site differences in community structure (in this case, differences among the pools within the swamp sites - other groups are looking at differences among sites and differences among pools within the bog sites). 
-
-Calculating rank similarities
-```{r}
-bray<-vegdist()
-
-```
+Significant differences at all levels: between fen and bog (aka Swamp vs. NaCihadle); among pools in fens; among pools in bogs.
 
 
-```{r}
-# Transpose table YOU WANT
-fooData.T <- t(fooData[,2:ncol(fooData)])
-sp_t <- t(species[,2:ncol(species)])
-
-# Set the column headings
-colnames(fooData.T) <- fooData[1,]
-colnames(sp_t) <- species[1:nrow(species),]
-
-```
-```
