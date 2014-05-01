@@ -1,22 +1,65 @@
 Week 13
 ========================================================
 
-a<-read.csv("Week-13/Svoboda_Supp.T2.csv")
-
-require(vegan)
-
-R
-<-as.matrix(vegdist(a[,-1]))
-
-When you click the **Knit HTML** button a web page will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+Read in data
 
 ```{r}
-summary(cars)
+require(vegan)
+require(ggplot2)
+setwd("C:/Users/Ben/Documents/PermuteSeminar-2014")
+a<-read.csv("Week-13/Svoboda_Supp_T2_longform.csv",row.names=1)
+
+env<-read.csv("Week-13/Svoboda_T2_csv.csv")
+
+#reformat matrix
+require(reshape)
+
+envA<-data.frame(colsplit(env$X,c("_"),c("ecosystem","site")),env)
+
+#Swamp pools for Ben
+
+dat<-a[a$ecosystem=="Swamp",]
+
+require(reshape)
+
 ```
 
-You can also embed plots, for example:
+Using the anosim function in vegan to compare rank dis.
+```{r}
 
-```{r fig.width=7, fig.height=6}
-plot(cars)
+data(dune)
+data(dune.env)
+dune.dist <- vegdist(dune)
+attach(dune.env)
+dune.ano <- anosim(dune.dist, Management)
+summary(dune.ano)
+plot(dune.ano)
+
 ```
+
+Make our data look like his data
+
+```{r}
+require(reshape)
+
+dat.f<-t(cast(dat,Taxon~site+pool))
+dist.all<-vegdist(dat.f)
+distA<-melt(as.matrix(dist.all))
+
+#split columns back out
+reformat1<-data.frame(distA,colsplit(distA$X1,"_",c("siteTo","poolTo")))
+
+reformat2<-data.frame(reformat1,colsplit(distA$X2,"_",c("siteFrom","poolFrom")))
+
+
+ggplot(reformat2,aes(y=value,x=factor(poolTo),col=factor(poolTo))) + geom_boxplot() + facet_grid(~siteTo)
+
+```
+
+Aggregate and compute means among versus between
+
+```{r}
+anosim(env,"")
+
+
 
