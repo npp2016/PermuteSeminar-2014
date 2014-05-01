@@ -7,6 +7,7 @@ Load packages
 ```{r}
 require(RCurl)
 require(vegan)
+require(ggplot2)
 ```
 
 Load data
@@ -20,6 +21,12 @@ Run NMDS - plots the three different sites
 ```{r}
 ord<-metaMDS(comm, distance="bray", k=3, trymax=50)
 plot(ord, display="sites")
+
+#or in ggplot
+points<-as.data.frame(ord$points)
+points <- cbind(points, type = groups$Type)
+ggplot(points,aes(x=MDS1, y=MDS2, col=type)) + geom_point()
+#this is color-coded for bogs vs. fens, you could color code the pools as well
 ```
 
 Run anosim on the various groupings
@@ -36,5 +43,3 @@ anosim(comm[10:18,], groups[10:18,]$Site, permutations=999, distance="bray")
 ```
 
 Significant differences at all levels: between fen and bog (aka Swamp vs. NaCihadle); among pools in fens; among pools in bogs.
-
-
