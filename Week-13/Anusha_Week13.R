@@ -17,11 +17,11 @@ env$Type[10:18] <- "Bogs"
 head(env)
 
 # n is the number of samples being considered
-n <- nrow(svob)
-M <- n*(n-1)/2
+#n <- nrow(svob)
+#M <- n*(n-1)/2
 
-swamps <- svob[,1:9]
-bogs <- svob[,10:18]
+#swamps <- svob[,1:9]
+#bogs <- svob[,10:18]
 
 ## Using vegdist of the vegan package to calculate Bray-Curtis dissimilarity index
 svob_bray <- vegdist(x=svob,method="bray",binary=T, na.rm=T)
@@ -29,3 +29,4 @@ attach(env)
 sites.ano <- anosim(svob_bray, env$Type)
 summary(sites.ano)
 detach(env)
+plot(sites.ano)
