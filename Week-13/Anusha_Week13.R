@@ -9,9 +9,11 @@ head(svob)
 head(env)
 
 # Add column to env data to define swamp vs. bog
+env <- env[-1,]
+env <- env[-10,]
 env$Type <- 0
-env$Type[1:10] <- "Swamps"
-env$Type[11:20] <- "Bogs"
+env$Type[1:9] <- "Swamps"
+env$Type[10:18] <- "Bogs"
 head(env)
 
 # n is the number of samples being considered
@@ -25,8 +27,9 @@ bogs <- svob[,10:18]
 ## Using vegdist of the vegan package to calculate Bray-Curtis dissimilarity index
 svob_bray <- vegdist(x=svob,method="bray",binary=T, na.rm=T)
 attach(env)
-sites.ano <- anosim(svob_bray, Type)
+sites.ano <- anosim(svob_bray, env$Type)
 summary(sites.ano)
+detach(env)
 
 dune.dist <- vegdist(dune)
 attach(dune.env)
