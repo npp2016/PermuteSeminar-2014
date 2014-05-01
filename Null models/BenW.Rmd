@@ -1,0 +1,77 @@
+Mid-domain Effect
+========================================================
+
+
+```{r}
+elev<-read.csv("Null models/Hummingbirds.csv")
+
+elev$Elevation<-as.numeric(gsub("Elev_","",elev$Elevation))
+```
+
+```{r}
+plot(elev$Elevation)
+```
+
+Elevation richness
+```{r}
+elvR<-data.frame(elev$Elevation,apply(elev[,-1],1,sum))
+plot(elvR)
+```
+
+Find elevation range for each species
+
+```{r}
+require(vegan)
+
+siteXspp<-elev[,-1]
+
+plot(siteXspp[,3])
+
+```
+
+Create a function to shift species left of right, given their range size
+
+```{r}
+
+
+shiftR<-function(x){
+  
+  a<-siteXspp[,x]
+  
+  slots<-rle(a)
+  
+  if(length(slots$lengths)==3){
+  #choose available holes
+  rang<-seq(-slots$lengths[[1]],slots$lengths[[3]],1)
+  
+  #choose random shift
+  shift<-sample(rang,1)
+  
+  
+  slots$lengths[[1]]<-slots$lengths[[1]] + shift
+
+  slots$lengths[[3]]<-slots$lengths[[3]] - shift
+  inverse.rle(slots)
+  }
+  
+  if(length(slots$lengths)==2){
+  #choose available holes
+  rang<-seq(-slots$lengths[[1]],slots$lengths[[3]],1)
+  
+  #choose random shift
+  shift<-sample(rang,1)
+  
+  
+  slots$lengths[[1]]<-slots$lengths[[1]] + shift
+
+  slots$lengths[[3]]<-slots$lengths[[3]] - shift
+  inverse.rle(slots)
+  }
+  
+  
+  }
+```
+
+```{r}
+
+shiftR(1)
