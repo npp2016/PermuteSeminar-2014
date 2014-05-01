@@ -1,16 +1,30 @@
 library(reshape2)
 library(ggplot2)
 
-## Seeing how Sam's melt works
-desmids <- read.csv("Week-13/Svoboda_Supp.T2.csv")
-desmids.m <- melt(desmids) ## Using Taxon as id variables
-  head(desmids.m)
-desmids.m <- cbind(desmids.m, 
-                   colsplit(desmids.m$variable, "_", c("ecosystem", "sitepool")))
+## Trying again... uploading new data (tweaked in Excel)
+desmids <-read.csv("Week-13/Spp by Swamp vs. NaCihadle.csv")
+desmids[1]<-NULL
+head(desmids)
 
-desmids.m$site <- substr(as.character(desmids.m$sitepool), 1, 1)
-desmids.m$pool <- substr(as.character(desmids.m$sitepool), 3, 3)
-desmids.m <- desmids.m[c("Taxon", "value", "ecosystem", "site", "pool")]
+library(vegan)
+??anosim ## Analysis of Similarities
+??vegdist ## Dissimilarity Indices for Community Ecologists
 
-head(desmids.m)
-write.csv(desmids.m, "Svoboda_supp_T2_longform.csv")
+## Using vegdist to calculate dissimilarity indicies
+desmids.t <- t(desmids) ##transpose desmid data
+## Rename row/columns so they're numeric (for vegdist)
+desmids.t[2,]<-1
+
+
+desmid.dist<-vegdist(desmids.t)
+vegdist(x=desmids, method="bray", binary=FALSE, diag=FALSE, upper=FALSE, na.rm = FALSE) 
+
+
+
+data(dune)
+data(dune.env)
+dune.dist <- vegdist(dune)
+attach(dune.env)
+dune.ano <- anosim(dune.dist, Management)
+summary(dune.ano)
+plot(dune.ano)
