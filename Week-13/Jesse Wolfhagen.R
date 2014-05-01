@@ -45,7 +45,7 @@ Rmaker <- function(data, grp1, grp2, grp3) #vectors indicating which columns of 
   Rwithins <- c(sum(data[,grp1[1]] + data[,grp1[2]] == 2), sum(data[,grp1[1]] + data[,grp1[2]] == 2), sum(data[,grp1[2]] + data[,grp1[3]] == 2),
                 sum(data[,grp2[1]] + data[,grp2[2]] == 2), sum(data[,grp2[1]] + data[,grp2[2]] == 2), sum(data[,grp2[2]] + data[,grp2[3]] == 2),
                 sum(data[,grp3[1]] + data[,grp3[2]] == 2), sum(data[,grp3[1]] + data[,grp3[2]] == 2), sum(data[,grp3[2]] + data[,grp3[3]] == 2))
-  Rval <- (mean(Rbtwns) - mean(Rwithins))/((sum(data[,2:10])*(sum(data[,2:10] - 1)))/4)
+  Rval <- (mean(Rbtwns) - mean(Rwithins))/((sum(data[,2:10])*(sum(data[,2:10]) - 1))/4)
   Rval
 }
 #Now to do the permutation test
@@ -55,7 +55,8 @@ for(j in 1:999)
   newlist <- sample(2:10, 9, replace = F) #redrawing the three groups
   Rvaltest <- c(Rvaltest, Rmaker(swampdata, newlist[1:3], newlist[4:6], newlist[7:9]))
 }
-sum(Rvaltest >= Rvaltest[1])/length(Rvaltest) #0.001
+sum(Rvaltest <= Rvaltest[1])/length(Rvaltest) #0.001
 sum(abs(Rvaltest) >= abs(Rvaltest[1]))/length(Rvaltest) #testing two-sided, p = 0.516
 hist(Rvaltest)
 abline(v = Rvaltest[1])
+#Now I'm all confused.
