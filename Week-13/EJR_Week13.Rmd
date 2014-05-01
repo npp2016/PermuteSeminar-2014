@@ -1,0 +1,61 @@
+Emily Rollinson Week 13
+========================================================
+
+Data from Svoboda et al. 2014 - Spatial and temporal community structure of desmids
+
+Load packages
+```{r}
+require(RCurl)
+require(vegan)
+```
+
+Load data
+```{r}
+comm<-read.csv("Svoboda_transpose.csv")
+groups<-read.csv("EJR_siteinfo.csv")
+```
+
+Run NMDS - plots the three different sites
+
+```{r}
+ord<-metaMDS(comm[,2:96], distance="bray", k=3, trymax=50)
+plot(ord, display="sites")
+```
+
+Run anosim on the various groupings
+
+```{r}
+anosim(comm, groups$Type, permutations=999, distance="bray")
+anosim(comm, groups$Site, permutations=999, distance="bray")
+```
+
+
+----------------------
+Team Swamp Code below
+----------------------
+
+Methods from Clark 1993 - section "A permutation test for the one-way layout: Frierfjord macrobenthos".
+rw = average of all rank similarities among replicates within sites
+rb = average of rank similarities among all pairs of replicates between different sites
+M = n((n-1))/2; n = total $ of samples being considered
+
+Our goal is to examine site to site differences in community structure (in this case, differences among the pools within the swamp sites - other groups are looking at differences among sites and differences among pools within the bog sites). 
+
+Calculating rank similarities
+```{r}
+bray<-vegdist()
+
+```
+
+
+```{r}
+# Transpose table YOU WANT
+fooData.T <- t(fooData[,2:ncol(fooData)])
+sp_t <- t(species[,2:ncol(species)])
+
+# Set the column headings
+colnames(fooData.T) <- fooData[1,]
+colnames(sp_t) <- species[1:nrow(species),]
+
+```
+```
