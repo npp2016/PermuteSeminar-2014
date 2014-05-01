@@ -1,10 +1,27 @@
 library(reshape2)
 library(ggplot2)
-
+library(vegan)
 ## Trying again... uploading new data (tweaked in Excel)
 desmids <-read.csv("Week-13/Spp by Swamp vs. NaCihadle.csv")
-desmids[1]<-NULL
-head(desmids)
+  desmids[1]<-NULL
+  desmids[1]<-NULL ## removing col 1 and 2 (words) so only numbers (for vegdist)
+    head(desmids)
+des.dist <-vegdist(desmids, binary=T)
+
+###########################################################################
+
+#between two sites
+distance<-vegdist(data, binary = TRUE)
+attach(environment)
+R<-anosim(distance, environment$habitat)
+M<-(length(data$Taxon)*(length(data$Taxon)-1))/2
+
+#between site of the bog
+
+#between sites of teh swamps
+
+
+###########################################################################
 
 library(vegan)
 ??anosim ## Analysis of Similarities
