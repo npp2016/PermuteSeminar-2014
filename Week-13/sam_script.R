@@ -22,3 +22,11 @@ head(desmids.m)
 write.csv(desmids.m, "Svoboda_supp_T2_longform.csv")
 
 unique(desmids.m$Taxon)
+
+desmids.t <- dcast(desmids.m, ecosystem + site + pool ~ Taxon)
+desmids.dist <- dist(desmids.t[, 3:98])
+plot(hclust(desmids.dist))
+
+anosim(desmids.dist, desmids.t$ecosystem)
+anosim(desmids.dist, desmids.t$site)
+anosim(desmids.dist, desmids.t$pool)
