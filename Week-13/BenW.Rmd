@@ -4,6 +4,9 @@ Week 13
 Read in data
 
 ```{r}
+require(vegan)
+require(ggplot2)
+setwd("C:/Users/Ben/Documents/PermuteSeminar-2014")
 a<-read.csv("Week-13/Svoboda_Supp_T2_longform.csv",row.names=1)
 
 env<-read.csv("Week-13/Svoboda_T2_csv.csv")
@@ -53,7 +56,10 @@ ggplot(reformat2,aes(y=value,x=factor(poolTo),col=factor(poolTo))) + geom_boxplo
 
 ```
 
+Aggregate and compute means among versus between
 
+```{r}
+anosim(env,"")
 
 
 
