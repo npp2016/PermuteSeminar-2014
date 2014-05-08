@@ -1,0 +1,164 @@
+Week 13 Summary
+
+========================================================
+Based on data from Svoboda et al. 2014
+========================================================
+
+This week we explored questions similar to those posed in week 11.
+We compared the communities of Desmids (a type of algae) in wetland communities.
+
+Our primary goal was to test for spatial autocorrelation between the community composition of sites.
+
+This autocorelation can be tested using the test statistic R given in Clark 1993.
+
+$$
+R= \frac{(\bar{r}_{b} - \bar{r}_{w})}{M/2}
+$$
+
+R is calculated based on the distances between points in a Multi Dimentional Scaling (MDS) analysis. There are several problems with using the MDS distances in a test statistic however.  Different numbers of dimentions in the MDS would result in different values for the test statistic, even though the number of dimensions is somewhat arbitrary.
+These problems are solved by using the rank similarities between samples.  More similar samples are ranked higher than less similar samples.  Thus, in the test statistic R, $\bar{r}_{b}$ gives the average rank of the differences between sites while $\bar{r}_{w}$ gives the average rank of differences within sites. M is simply a constant based on sample size that scales R so that it does not exceed the range -1:1.
+
+Excercise
+=================
+The data provided were transformed in several different ways, and different analyses may require the data in different forms from what I will be using here, but the files I will be using are pre-transformed and uploaded on GitHub.
+
+
+```r
+require(RCurl)
+```
+
+```
+## Loading required package: RCurl
+## Loading required package: bitops
+```
+
+```r
+require(vegan)
+```
+
+```
+## Loading required package: vegan
+## Loading required package: permute
+## Loading required package: lattice
+## This is vegan 2.0-10
+```
+
+```r
+require(ggplot2)
+```
+
+```
+## Loading required package: ggplot2
+```
+
+```r
+options(RCurlOptions = list(cainfo = system.file("CurlSSL", "cacert.pem", package = "RCurl")))
+
+raw <- getURL("https://raw.githubusercontent.com/PermuteSeminar/PermuteSeminar-2014/master/Week-13/Svoboda_transpose.csv")
+data <- read.csv(text = raw, row.names = 1)
+raw.2 <- getURL("https://raw.githubusercontent.com/PermuteSeminar/PermuteSeminar-2014/master/Week-13/EJR_siteinfo.csv")
+Groups <- read.csv(text = raw.2)
+```
+
+
+First we can visualize the data in several different ways
+
+
+```r
+cca.data <- cca(data)
+plot(cca.data)
+```
+
+![plot of chunk unnamed-chunk-2](figure/unnamed-chunk-21.png) 
+
+```r
+# The crosses are species and the circles are sites
+
+
+MDS.data <- metaMDS(data, distance = "bray", trymax = 50)
+```
+
+```
+## Run 0 stress 0.04038 
+## Run 1 stress 0.04038 
+## ... procrustes: rmse 0.0002017  max resid 0.0006739 
+## *** Solution reached
+```
+
+```r
+points <- as.data.frame(MDS.data$points)
+points <- cbind(points, type = Groups$Type)
+ggplot(points, aes(x = MDS1, y = MDS2, col = type)) + geom_point()
+```
+
+![plot of chunk unnamed-chunk-2](figure/unnamed-chunk-22.png) 
+
+```r
+# this is color-coded for bogs vs. fens, you could color code the pools as
+# well
+```
+
+
+
+Now that we have visualized the data it is pretty clear that there is a difference between the Bog and Fen sites.
+To statistically test the differences between the two habitats or the sites within these habitats we need to calculate R, and then permute the similarities in order to create a bootstrap distribution to test the significance of our test statistic. 
+We could do this all by hand, but luckily the vegan package in R can do it all for us. 
+The function anosim both uses R as its test statistic, and it provides a p value via permutation.
+
+So to compare our sites all we have to do is the following.
+
+```r
+# Difference between fen and bog
+anosim(data, Groups$Type, permutations = 999, distance = "bray")
+```
+
+```
+## 
+## Call:
+## anosim(dat = data, grouping = Groups$Type, permutations = 999,      distance = "bray") 
+## Dissimilarity: bray 
+## 
+## ANOSIM statistic R: 0.749 
+##       Significance: 0.001 
+## 
+## Based on  999  permutations
+```
+
+```r
+
+# Differences among fens
+anosim(data[1:9, ], Groups[1:9, ]$Site, permutations = 999, distance = "bray")
+```
+
+```
+## 
+## Call:
+## anosim(dat = data[1:9, ], grouping = Groups[1:9, ]$Site, permutations = 999,      distance = "bray") 
+## Dissimilarity: bray 
+## 
+## ANOSIM statistic R: 0.918 
+##       Significance: 0.002 
+## 
+## Based on  999  permutations
+```
+
+```r
+
+# Differences among bogs
+anosim(data[10:18, ], Groups[10:18, ]$Site, permutations = 999, distance = "bray")
+```
+
+```
+## 
+## Call:
+## anosim(dat = data[10:18, ], grouping = Groups[10:18, ]$Site,      permutations = 999, distance = "bray") 
+## Dissimilarity: bray 
+## 
+## ANOSIM statistic R: 0.37 
+##       Significance: 0.044 
+## 
+## Based on  999  permutations
+```
+
+
+All three comparisons show significant differences meaning that, not only are the communities of desmids in bogs and fens different, each site has a different community composition.  This means that community composition of desmids is strongly spatially autocorrelated and not well explained by differences in abiotic factors of the water.
