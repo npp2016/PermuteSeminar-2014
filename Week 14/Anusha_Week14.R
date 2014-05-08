@@ -1,7 +1,10 @@
+## Anusha's code. Works!!
+
 library(picante)
 library(geiger)
 library(vegan)
 library(reshape)
+library(ggplot2)
 
 
 setwd("C://Users//Anusha//Documents//GitHub//PermuteSeminar-2014//Week 14/")
@@ -39,3 +42,7 @@ phyFunc <- function(a) {
 repCalc <- lapply(1:100, phyFunc)
 names(repCalc) <- 1:100
 m.rep <- melt(repCalc)
+
+cast.rep <- cast(m.rep, Site=L1, value.var="value")
+
+ggplot(data=m.rep, aes(x="value", y="density"))
