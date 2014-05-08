@@ -29,4 +29,14 @@ histCophen <- hist(coScore)
 ## Calculating mean pairwise distance
 phyDist <- mpd(newSp, coScore)
 
+for (i in 1:10) {
+  comm <- commsimulator(spp,method="r00",thin="swap")
+  
+}
+phyRepl <- 0
+as.array(phyRepl)
+n <- 12
 
+for(i in 1:n) {
+phyRepl[i] <- mpd(repl[[i]], coScore)
+}
