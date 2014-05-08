@@ -60,7 +60,6 @@ for (i in 1:1000) {
 meansSAMPLE <- rowMeans(samples)
 ```
 
-
   
 Bootstrapping 
 
@@ -76,8 +75,7 @@ meansBOOT <- rowMeans(boot)
 ```
 
 
-
-Plot the histograms
+Plot the histograms (blue=sample result, red=boostrapping result)
 
 
 ```r
@@ -90,13 +88,7 @@ abline(v = mean(meansSAMPLE), col = "blue", lwd = 2)
 ![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3.png) 
 
 
-![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3.png) 
-
-
-
 From Ben Weinstein:
-
-
 
 
 ```r
@@ -108,23 +100,13 @@ require(ggplot2)
 ## Loading required package: ggplot2
 ```
 
-
-```
-## Loading required package: ggplot2
-```
-
-
 ```r
 # Repeat the experiment 1000 times
 global_means <- replicate(1000, mean(rnorm(100, mean = 1, sd = 3)))  #HJL: Changed mean to 1
 hist(global_means)
 ```
 
-![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5.png) 
-
-
 ![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-41.png) 
-
 
 ```r
 # make a dataframe
@@ -133,7 +115,6 @@ draws <- data.frame(d = global_means)
 # 1000 bootstrap replicates of 1 experiment
 j <- rnorm(100, mean = 1, sd = 3)  #HJL: Changed mean to 1
 b <- replicate(1000, mean(sample(j, replace = TRUE)))
-
 boots <- data.frame(b = b)
 
 # compare histograms
@@ -146,24 +127,15 @@ ggplot() + geom_histogram(data = draws, aes(x = d), fill = "blue") + geom_histog
 ## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
 ```
 
-![plot of chunk unnamed-chunk-6](figure/unnamed-chunk-6.png) 
-
-
-```
-## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
-## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
-```
-
 ![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-42.png) 
-
 
 
 If you run this several times, you'll notice that the two histograms are not always right on top of one another. As you make the sample sizes (not the number of bootstraps, but the size of the original dataset) bigger, there is closer (and more robust) correspondence between the two histograms. However, even when the bootstrap distribution is off (in the sense of shifted from the original), its variance is usually pretty close. This is good news, since we are often interested in using the standard deviation of the bootstrapped estimates to estimated an estimates standard error. This is a good illustration of the fact that bootstrap gets better as sample sizes get better (and special caution should be applied when bootstrapping small datasets).
 
 Case Study #2: When bootstrap fails because of the sample statistic
-----------------------------
+------------------------------------------------------------------------------------------------
 
-One of the times when bootstrap is known to fail is when you are interested in the extremes of a distribution. To demonstrate this we worked through a classic example is which the bootstrap fails:
+One of the times when bootstrap is known to fail is when you are interested in the extremes of a distribution. To demonstrate this, we worked through a classic example is which the bootstrap fails:
 
 $$
 X \sim Unif(0,5)
@@ -174,7 +146,6 @@ with $\theta = max(X)$ (a.k.a. $X_{(n)}$).
 From Jon Borrelli:
 
 Exercise 2 - Uniform
-
 
 Drawing 1000 samples of 100 randomly drawn values from a uniform
 
@@ -187,7 +158,6 @@ for (i in 1:1000) {
 
 maxSAMPLE <- apply(samples2, 1, max)
 ```
-
 
   
 Bootstrapping 
@@ -204,7 +174,6 @@ maxBOOT <- apply(boot2, 1, max)
 ```
 
 
-
 Plot the histograms
 
 
@@ -213,13 +182,10 @@ hist(maxSAMPLE, border = "blue", main = NA, lwd = 3)
 hist(maxBOOT, border = "red", add = T, lwd = 3)
 ```
 
-![plot of chunk unnamed-chunk-9](figure/unnamed-chunk-9.png) 
-
-
 ![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-7.png) 
 
-  
-Probability of getting the largest value in original in the bootstrapped sample
+
+Probability of getting the largest value in original in the bootstrapped sample is
 
 $$
 \LARGE{
@@ -227,40 +193,31 @@ $$
 }
 $$
   
-so bootstrap is not very good with __extreme__ values  
+Therefore, bootstrap is not very good with __extreme__ values.  
 
 From Ben Weinstein:
-
 
 
 ```r
 # Seminar 1 - Bootstrap test
 require(ggplot2)
-
 # Repeat the experiment 1000 times
 global_means <- replicate(1000, max(runif(1000, 0, 5)))
 hist(global_means)
 ```
 
-![plot of chunk unnamed-chunk-10](figure/unnamed-chunk-10.png) 
-
-
 ![plot of chunk unnamed-chunk-8](figure/unnamed-chunk-81.png) 
 
-
 ```r
-
 # make a dataframe
 draws <- data.frame(d = global_means)
 
 # 1000 bootstrap replicates of 1 experiment
 j <- runif(1000, 0, 5)
 b <- replicate(1000, max(sample(j, replace = TRUE)))
-
 boots <- data.frame(b = b)
 
 # compare histograms
-
 ggplot() + geom_histogram(data = draws, aes(x = d), fill = "blue") + geom_histogram(data = boots, 
     aes(x = b), fill = "red", alpha = 0.4)
 ```
@@ -270,35 +227,12 @@ ggplot() + geom_histogram(data = draws, aes(x = d), fill = "blue") + geom_histog
 ## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
 ```
 
-```
-## Warning: position_stack requires constant width: output may be incorrect
-## Warning: position_stack requires constant width: output may be incorrect
-```
-
-![plot of chunk unnamed-chunk-11](figure/unnamed-chunk-11.png) 
-
-
-```
-## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
-## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
-```
-
-```
-## Warning: position_stack requires constant width: output may be incorrect
-## Warning: position_stack requires constant width: output may be incorrect
-```
-
 ![plot of chunk unnamed-chunk-8](figure/unnamed-chunk-82.png) 
 
-
 ```r
-
 ggplot() + geom_density(data = draws, aes(x = d), fill = "blue") + geom_density(data = boots, 
     aes(x = b), fill = "red", alpha = 0.4)
 ```
-
-![plot of chunk unnamed-chunk-12](figure/unnamed-chunk-12.png) 
-
 
 ![plot of chunk unnamed-chunk-8](figure/unnamed-chunk-83.png) 
 
@@ -324,13 +258,10 @@ From Jon Borrelli:
 hist(rcauchy(1000, 1, 2))
 ```
 
-![plot of chunk unnamed-chunk-13](figure/unnamed-chunk-13.png) 
-
-
 ![plot of chunk unnamed-chunk-9](figure/unnamed-chunk-9.png) 
 
 
-Drawing 1000 samples of 100 randomly drawn values from a cauchy
+Drawing 1000 samples of 100 randomly drawn values from a cauchy distribution
 
 
 ```r
@@ -343,7 +274,6 @@ varSAMPLE <- apply(samples3, 1, var)
 ```
 
 
-  
 Bootstrapping 
 
 
@@ -358,7 +288,6 @@ varBOOT <- apply(boot3, 1, var)
 ```
 
 
-
 Plot the histograms
 
 
@@ -367,68 +296,7 @@ hist(varSAMPLE, border = "blue", main = NA, lwd = 3, freq = F)
 hist(varBOOT, border = "red", lwd = 3, add = T, freq = F)
 ```
 
-![plot of chunk unnamed-chunk-16](figure/unnamed-chunk-16.png) 
-
-
 ![plot of chunk unnamed-chunk-12](figure/unnamed-chunk-12.png) 
-
-
-From Ben Weinstein:
-
-
-
-```r
-# Probability that the max value is the final dataset If we have 1000
-# values, there is one max value
-
-require(ggplot2)
-
-# Repeat the experiment 1000 times
-global_means <- replicate(1000, var(rcauchy(1000, 1, 2)))
-hist(global_means)
-```
-
-![plot of chunk unnamed-chunk-17](figure/unnamed-chunk-17.png) 
-
-
-![plot of chunk unnamed-chunk-13](figure/unnamed-chunk-131.png) 
-
-
-```r
-# make a dataframe
-draws <- data.frame(d = global_means)
-
-# 1000 bootstrap replicates of 1 experiment
-j <- cauchy(1000, 1, 2)
-```
-
-```
-## Error: could not find function "cauchy"
-```
-
-
-```
-## Error: could not find function "cauchy"
-```
-
-
-
-## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
-## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
-```
-
-![plot of chunk unnamed-chunk-13](figure/unnamed-chunk-132.png) 
-
-
-```r
-ggplot() + geom_density(data = draws, aes(x = d), fill = "blue") + geom_density(data = boots, 
-    aes(x = b), fill = "red", alpha = 0.4)
-```
-
-![plot of chunk unnamed-chunk-20](figure/unnamed-chunk-20.png) 
-
-
-![plot of chunk unnamed-chunk-13](figure/unnamed-chunk-133.png) 
 
 
 
@@ -446,10 +314,11 @@ Bickel, P.J., and D. A. Freedman. 1981. Some asymptotic theory for the bootstrap
 Week #4 Summary 
 ========================================================
 
-**Solution to reading files (such as .csv) on Rmarkdown documents:**
+**How to read files (such as .csv) from Github on Rmarkdown documents:**
 
 Install the RCurl package
-> Use getUrL() function:
+> Use getURL() function:
+
 
 
 ```r
@@ -464,12 +333,32 @@ require(RCurl)
 
 I was experiencing a certificate error with getURL().  The following code seems to fix the problem in case you experience the same:
 
+
 ```r
 options(RCurlOptions = list(cainfo = system.file("CurlSSL", "cacert.pem", package = "RCurl")))
 
-raw <- getURL("https://raw.github.com/PermuteSeminar/PermuteSeminar-2014/master/Week-2/ClutchSize.csv")
+raw <- getURL("https://raw.githubusercontent.com/PermuteSeminar/PermuteSeminar-2014/master/Week-2/ClutchSize.csv")
 clutch <- read.csv(text = raw)  #make sure to upload RAW data file
+head(clutch)
 ```
+
+```
+##   Family Genus_name             Species_name Clutch_size
+## 1      3   Dromaius Dromaius novaehollandiae        8.98
+## 2      4    Apteryx        Apteryx australis        2.00
+## 3      4    Apteryx          Apteryx haastii        1.00
+## 4      4    Apteryx           Apteryx owenii        1.00
+## 5      6    Ortalis           Ortalis vetula        2.88
+## 6      7   Alectura         Alectura lathami       14.78
+##              English_name
+## 1                     Emu
+## 2              Brown Kiwi
+## 3      Great Spotted Kiwi
+## 4     Little Spotted Kiwi
+## 5        Plain Chachalaca
+## 6 Australian Brush-turkey
+```
+
 
 
 Lecture Notes 
@@ -503,37 +392,43 @@ $$
 
 
 In class Excercises
-=====================
-
+--------------------
 **Use dataset from book:**
 
 **1. Estimate $\hat{\beta}$ **
 -------------------------------
 
-
-
 Solution: Adapted from Jon Borrelli
----------------------------------------
 
 Load Required Packages
+
 
 ```r
 require(RCurl)
 require(ggplot2)
 ```
 
-```
-## Loading required package: ggplot2
-```
-
 
 Load Dataset:
 
+
 ```r
-rawURL <- getURL("https://raw.github.com/PermuteSeminar/PermuteSeminar-2014/master/Week-4/hormone_data.csv")
-hormone <- read.csv(text = rawURL)
+options(RCurlOptions = list(cainfo = system.file("CurlSSL", "cacert.pem", package = "RCurl")))
+
+raw <- getURL("https://raw.githubusercontent.com/PermuteSeminar/PermuteSeminar-2014/master/Week-4/hormone_data.csv")
+hormone <- read.csv(text = raw)
+head(hormone)
 ```
 
+```
+##   period level
+## 1      1   2.4
+## 2      2   2.4
+## 3      3   2.4
+## 4      4   2.2
+## 5      5   2.1
+## 6      6   1.5
+```
 
 
 Calculate $z_t$ for each data point: $z_t = y_t-\mu$
@@ -541,7 +436,16 @@ Calculate $z_t$ for each data point: $z_t = y_t-\mu$
 
 ```r
 z.t <- hormone$level - mean(hormone$level)
+z.t
 ```
+
+```
+##  [1]  0.0  0.0  0.0 -0.2 -0.3 -0.9 -0.1 -0.1  0.1 -0.4 -0.5 -0.7 -0.2 -0.6
+## [15]  0.8  0.8  0.3 -0.2 -0.2 -0.5 -0.5 -0.6  0.3  0.6 -0.1 -0.4 -0.4  0.5
+## [29]  0.5  0.3  0.3 -0.1  0.2  0.0 -0.6 -0.7 -0.9 -1.0 -0.3  0.9  1.1  1.1
+## [43]  0.7  0.2 -0.3  1.0  0.6  0.5
+```
+
 
 Calculate residual squared errors for each value of $z_t$ and all possible values of $b$.
 $$
@@ -549,6 +453,7 @@ RSE(b) = \sum_{t-U}^{V}(z_t - bz_{t-1})^2
 $$
 
 Generate a function that does this calculation over these values and picks out the best value for $b$ that minimizes RSE.
+
 
 ```r
 rse <- function(zt, b) {
@@ -568,16 +473,22 @@ rse <- function(zt, b) {
 
 Run the function and get $\hat{\beta}$
 
+
 ```r
 b <- seq(-1, 1, 0.001)  #generates a sequence of possible values for b
 bhat <- rse(z.t, b)  #runs the function 
+bhat
+```
+
+```
+## [1] 0.586
 ```
 
 
 **So our estimate of $\hat{\beta}$ is 0.586**
 
  2a. See how good our estimate of $\hat{\beta}$ is by figuring out confidence intervals (Standard error) of $\beta$ by bootstrapping methods
-------------------------------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------
 
 We need to estimate $P = (\beta,F)$ from the data.
 
@@ -595,15 +506,16 @@ for (i in 1:length(z.t)) {
 
 A histrogram of the approximate disturbances. It is not a normal distribution.   The Mean = 0.0062
 
+
 ```r
 hist(eps)
 ```
 
-![plot of chunk unnamed-chunk-9](figure/unnamed-chunk-9.png) 
-
+![plot of chunk unnamed-chunk-21](figure/unnamed-chunk-21.png) 
 
 
 Resample $F$ Distribtuion of values of $\epsilon$ with replacement:
+
 
 ```r
 boot.eps <- matrix(nrow = 200, ncol = 47)
@@ -613,7 +525,9 @@ for (rep in 1:200) {
 ```
 
 
+
 Generate bootstrap values for time series $z_{t}*$: 
+
 
 ```r
 z.tmat <- matrix(nrow = 200, ncol = 48)
@@ -628,6 +542,7 @@ for (rep in 1:200) {
 
 Generate bootsrap replications of $\hat{\beta}$ 
 
+
 ```r
 b.test <- seq(0, 1, 0.001)
 bhatboot <- apply(z.tmat, 1, rse, b = b.test)  #Uses RSE function created above
@@ -636,11 +551,12 @@ bhatboot <- apply(z.tmat, 1, rse, b = b.test)  #Uses RSE function created above
 
 Histogram of the generated $\hat{\beta}$ values. The mean = 0.5793  
 
+
 ```r
 hist(bhatboot, freq = F)
 ```
 
-![plot of chunk unnamed-chunk-13](figure/unnamed-chunk-13.png) 
+![plot of chunk unnamed-chunk-25](figure/unnamed-chunk-25.png) 
 
 
 2b. Use a moving blocks bootstrap
@@ -661,6 +577,8 @@ head(hormone)
 ## 6      6   1.5
 ```
 
+
+
 ```r
 block <- matrix(nrow = 3, ncol = 46)
 for (i in 1:46) {
@@ -675,11 +593,11 @@ for (i in 1:500) {
     boot.block[i, ] <- as.vector(block[, bcol])
 }
 
-
 b.test <- seq(0, 1, 0.001)
 
 bhatboot2 <- apply(boot.block, 1, rse, b = b.test)
 ```
+
 
 Histogram of estimates generatated from the Moving Blocks BootStrap with mean of 0.3925
 
@@ -688,7 +606,8 @@ Histogram of estimates generatated from the Moving Blocks BootStrap with mean of
 hist(bhatboot2)
 ```
 
-![plot of chunk unnamed-chunk-15](figure/unnamed-chunk-15.png) 
+![plot of chunk unnamed-chunk-28](figure/unnamed-chunk-28.png) 
+
 
 -------------------------------------------------------------------
 Week 11 Summary
@@ -736,14 +655,6 @@ Import data from GitHub
 
 ```r
 require(RCurl)
-```
-
-```
-## Loading required package: RCurl
-## Loading required package: bitops
-```
-
-```r
 options(RCurlOptions = list(cainfo = system.file("CurlSSL", "cacert.pem", package = "RCurl")))
 
 raw <- getURL("https://raw.githubusercontent.com/PermuteSeminar/PermuteSeminar-2014/master/Week%2011/epipalassemblages.csv")
@@ -791,7 +702,7 @@ ggplot(molten.data, aes(x = Artefact, y = Count)) + geom_bar(stat = "identity") 
     facet_grid(Period ~ Region)
 ```
 
-![plot of chunk unnamed-chunk-23](figure/unnamed-chunk-231.png) 
+![plot of chunk unnamed-chunk-31](figure/unnamed-chunk-311.png) 
 
 ```r
 # same count data can be shown in a heat map form using ggplot here,
@@ -799,7 +710,7 @@ ggplot(molten.data, aes(x = Artefact, y = Count)) + geom_bar(stat = "identity") 
 ggplot(molten.data, aes(x = Artefact, y = Site, fill = Count)) + geom_tile()
 ```
 
-![plot of chunk unnamed-chunk-23](figure/unnamed-chunk-232.png) 
+![plot of chunk unnamed-chunk-31](figure/unnamed-chunk-312.png) 
 
 ```r
 # the heat map can be divided into different regions and periods in log
@@ -809,7 +720,7 @@ ggplot(subset(molten.data, Count > 0), aes(x = Artefact, y = Site, fill = log10(
     theme_bw()
 ```
 
-![plot of chunk unnamed-chunk-23](figure/unnamed-chunk-233.png) 
+![plot of chunk unnamed-chunk-31](figure/unnamed-chunk-313.png) 
 
 
 1) Ordination
@@ -889,13 +800,13 @@ pca.counts <- prcomp(counts, scale = T)
 biplot(pca.counts)
 ```
 
-![plot of chunk unnamed-chunk-24](figure/unnamed-chunk-241.png) 
+![plot of chunk unnamed-chunk-32](figure/unnamed-chunk-321.png) 
 
 ```r
 plot(pca.counts)
 ```
 
-![plot of chunk unnamed-chunk-24](figure/unnamed-chunk-242.png) 
+![plot of chunk unnamed-chunk-32](figure/unnamed-chunk-322.png) 
 
 ```r
 summary(pca.counts)
@@ -951,7 +862,7 @@ cca.counts
 plot(cca.counts)
 ```
 
-![plot of chunk unnamed-chunk-25](figure/unnamed-chunk-25.png) 
+![plot of chunk unnamed-chunk-33](figure/unnamed-chunk-33.png) 
 
 ```r
 summary(cca.counts)
@@ -1070,12 +981,22 @@ nmds.counts <- metaMDS(counts, distance = "bray", trymax = 20, trace = 1)
 ## Square root transformation
 ## Wisconsin double standardization
 ## Run 0 stress 0.1402 
-## Run 1 stress 0.1803 
-## Run 2 stress 0.1384 
+## Run 1 stress 0.141 
+## Run 2 stress 0.1439 
+## Run 3 stress 0.1399 
 ## ... New best solution
-## ... procrustes: rmse 0.03478  max resid 0.1055 
-## Run 3 stress 0.1384 
-## ... procrustes: rmse 4.096e-05  max resid 0.0001009 
+## ... procrustes: rmse 0.01551  max resid 0.04553 
+## Run 4 stress 0.1394 
+## ... New best solution
+## ... procrustes: rmse 0.03931  max resid 0.1416 
+## Run 5 stress 0.1395 
+## ... procrustes: rmse 0.02729  max resid 0.09502 
+## Run 6 stress 0.1439 
+## Run 7 stress 0.1402 
+## Run 8 stress 0.1803 
+## Run 9 stress 0.1394 
+## ... New best solution
+## ... procrustes: rmse 7.408e-05  max resid 0.0001942 
 ## *** Solution reached
 ```
 
@@ -1085,7 +1006,7 @@ plot(nmds.counts, type = "n")
 text(nmds.counts, display = "sites", cex = 0.7)
 ```
 
-![plot of chunk unnamed-chunk-26](figure/unnamed-chunk-261.png) 
+![plot of chunk unnamed-chunk-34](figure/unnamed-chunk-341.png) 
 
 ```r
 # plot artefact types
@@ -1093,7 +1014,7 @@ plot(nmds.counts, type = "n")
 text(nmds.counts, display = "species", cex = 0.7)
 ```
 
-![plot of chunk unnamed-chunk-26](figure/unnamed-chunk-262.png) 
+![plot of chunk unnamed-chunk-34](figure/unnamed-chunk-342.png) 
 
 ```r
 # overlay the two plots on top of one another
@@ -1102,7 +1023,7 @@ ordilabel(nmds.counts, display = "sites", font = 3, col = "black")
 ordilabel(nmds.counts, display = "species", font = 2, col = "red")
 ```
 
-![plot of chunk unnamed-chunk-26](figure/unnamed-chunk-263.png) 
+![plot of chunk unnamed-chunk-34](figure/unnamed-chunk-343.png) 
 
 
 
@@ -1186,16 +1107,16 @@ kmeans.counts3
 ```
 
 ```
-## K-means clustering with 3 clusters of sizes 5, 2, 10
+## K-means clustering with 3 clusters of sizes 2, 5, 10
 ## 
 ## Cluster means:
 ##      T1    T2   T3    T4    T5    T6   T7   T8   T9  T10  T11 T12  T13
-## 1  14.8 101.6  0.6  22.4  28.8  10.4 12.0 11.4  0.0  1.8  0.4 9.0  7.6
-## 2 555.5 260.5 12.0 114.0 108.5 145.5  3.0 40.0  0.0  2.5  3.0 0.0 21.0
+## 1 555.5 260.5 12.0 114.0 108.5 145.5  3.0 40.0  0.0  2.5  3.0 0.0 21.0
+## 2  14.8 101.6  0.6  22.4  28.8  10.4 12.0 11.4  0.0  1.8  0.4 9.0  7.6
 ## 3  48.1   5.3 47.5  16.6   6.1   1.0 12.7  4.0 11.1 11.6 10.8 4.6  0.3
 ##    T14 T15 T16 T17  T18 T19  T20 T21 T22 T23 T24 T25 T26 T27 T28 T29 T30
-## 1 10.0  11 2.6 0.0  4.0 8.2  3.6 3.0 0.2 1.2 0.0 0.6 1.8 0.0 0.0 0.2 0.0
-## 2  7.0   0 7.5 0.0 11.5 0.0 10.0 6.0 2.5 8.0 0.0 5.0 0.0 2.0 2.5 1.5 0.0
+## 1  7.0   0 7.5 0.0 11.5 0.0 10.0 6.0 2.5 8.0 0.0 5.0 0.0 2.0 2.5 1.5 0.0
+## 2 10.0  11 2.6 0.0  4.0 8.2  3.6 3.0 0.2 1.2 0.0 0.6 1.8 0.0 0.0 0.2 0.0
 ## 3  1.5   0 2.3 4.5  0.2 0.2  0.1 0.9 2.9 0.1 2.1 0.8 0.0 0.5 0.3 0.3 0.3
 ##   T31
 ## 1 0.0
@@ -1204,12 +1125,12 @@ kmeans.counts3
 ## 
 ## Clustering vector:
 ##  KDr8  HayC   EGI  EGII EGIII  EGIV  UR2a  Fa3B  Fa3A   Fa7  WH26 Jil6L 
-##     2     1     1     1     3     3     3     3     2     1     1     3 
+##     1     2     2     2     3     3     3     3     1     2     2     3 
 ## Jil6M Jil6U Uw14M Uw14U  Uw18 
 ##     3     3     3     3     3 
 ## 
 ## Within cluster sum of squares by cluster:
-## [1] 26166 91147 79997
+## [1] 91147 26166 79997
 ##  (between_SS / total_SS =  77.5 %)
 ## 
 ## Available components:
@@ -1254,34 +1175,34 @@ kmeans.counts4
 ```
 
 ```
-## K-means clustering with 4 clusters of sizes 2, 7, 6, 2
+## K-means clustering with 4 clusters of sizes 5, 3, 2, 7
 ## 
 ## Cluster means:
-##       T1      T2     T3      T4      T5      T6      T7     T8    T9  T10
-## 1 555.50 260.500 12.000 114.000 108.500 145.500  3.0000 40.000  0.00  2.5
-## 2  61.43   1.143 60.286   9.143   7.286   1.429  0.4286  5.714 14.57  0.0
-## 3  15.00  92.167  4.333  20.667  24.500   8.667 12.0000  9.500  0.00  1.5
-## 4  17.50   0.000 15.000  45.000   3.500   0.000 56.0000  0.000  4.50 58.0
-##       T11   T12     T13    T14   T15   T16   T17     T18    T19     T20
-## 1  3.0000 0.000 21.0000 7.0000 0.000 7.500 0.000 11.5000 0.0000 10.0000
-## 2  0.1429 5.286  0.4286 0.8571 0.000 3.286 1.714  0.1429 0.1429  0.1429
-## 3  0.3333 7.500  6.3333 9.1667 9.167 2.167 4.000  3.3333 6.8333  3.0000
-## 4 53.5000 4.500  0.0000 2.0000 0.000 0.000 4.500  0.5000 0.5000  0.0000
-##     T21     T22    T23   T24 T25 T26    T27    T28    T29    T30    T31
-## 1 6.000  2.5000 8.0000 0.000 5.0 0.0 2.0000 2.5000 1.5000 0.0000 0.0000
-## 2 0.000  0.0000 0.1429 1.857 1.0 0.0 0.2857 0.4286 0.2857 0.4286 0.2857
-## 3 2.833  0.1667 1.0000 0.000 0.5 1.5 0.0000 0.0000 0.1667 0.0000 0.0000
-## 4 3.500 14.5000 0.0000 4.000 0.5 0.0 1.5000 0.0000 0.5000 0.0000 0.0000
+##       T1      T2    T3      T4      T5      T6      T7     T8    T9  T10
+## 1  10.80  35.200 11.20  23.200   3.600   3.000 33.6000  0.000  1.80 23.2
+## 2  23.67 125.667  0.00  32.667  45.333  12.333  5.3333 19.000  0.00  3.0
+## 3 555.50 260.500 12.00 114.000 108.500 145.500  3.0000 40.000  0.00  2.5
+## 4  61.43   1.143 60.29   9.143   7.286   1.429  0.4286  5.714 14.57  0.0
+##       T11    T12     T13     T14   T15   T16   T17     T18     T19     T20
+## 1 21.6000  3.200  2.4000  2.0000  1.60 0.400 6.600  0.2000  0.4000  0.0000
+## 2  0.3333 12.667  8.6667 16.3333 15.67 3.667 0.000  6.6667 13.3333  6.0000
+## 3  3.0000  0.000 21.0000  7.0000  0.00 7.500 0.000 11.5000  0.0000 10.0000
+## 4  0.1429  5.286  0.4286  0.8571  0.00 3.286 1.714  0.1429  0.1429  0.1429
+##   T21    T22    T23   T24    T25 T26    T27    T28    T29    T30    T31
+## 1 2.4 5.8000 0.0000 1.600 0.4000   0 0.6000 0.0000 0.4000 0.0000 0.0000
+## 2 4.0 0.3333 2.0000 0.000 0.6667   3 0.0000 0.0000 0.0000 0.0000 0.0000
+## 3 6.0 2.5000 8.0000 0.000 5.0000   0 2.0000 2.5000 1.5000 0.0000 0.0000
+## 4 0.0 0.0000 0.1429 1.857 1.0000   0 0.2857 0.4286 0.2857 0.4286 0.2857
 ## 
 ## Clustering vector:
 ##  KDr8  HayC   EGI  EGII EGIII  EGIV  UR2a  Fa3B  Fa3A   Fa7  WH26 Jil6L 
-##     1     3     3     3     3     4     2     2     1     3     3     2 
+##     3     2     2     1     1     1     4     4     3     1     2     4 
 ## Jil6M Jil6U Uw14M Uw14U  Uw18 
-##     2     4     2     2     2 
+##     4     1     4     4     4 
 ## 
 ## Within cluster sum of squares by cluster:
-## [1] 91147 48347 30910  3852
-##  (between_SS / total_SS =  80.1 %)
+## [1] 22191 15033 91147 48347
+##  (between_SS / total_SS =  79.9 %)
 ## 
 ## Available components:
 ## 
@@ -1346,7 +1267,7 @@ anosim(counts, data.grp$Period, permutations = 999, distance = "bray")
 ## Dissimilarity: bray 
 ## 
 ## ANOSIM statistic R: 0.423 
-##       Significance: 0.001 
+##       Significance: 0.002 
 ## 
 ## Based on  999  permutations
 ```

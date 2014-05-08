@@ -58,7 +58,6 @@ for (i in 1:1000) {
 
 meansSAMPLE <- rowMeans(samples)
 ```
-
   
 Bootstrapping 
 
@@ -72,8 +71,7 @@ for (i in 1:1000) {
 meansBOOT <- rowMeans(boot)
 ```
 
-
-Plot the histograms
+Plot the histograms (blue=sample result, red=boostrapping result)
 
 ```{r}
 hist(meansBOOT, border = "red", main = NA, lwd = 3)
@@ -82,39 +80,20 @@ hist(meansSAMPLE, border = "blue", add = T, main = NA, lwd = 3)
 abline(v = mean(meansSAMPLE), col = "blue", lwd = 2)
 ```
 
-![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3.png) 
-
-
-
 From Ben Weinstein:
-
-
 
 ```{r}
 # Seminar 1 - Bootstrap test
 require(ggplot2)
-```
-
-```
-## Loading required package: ggplot2
-```
-
-```{r}
 # Repeat the experiment 1000 times
 global_means <- replicate(1000, mean(rnorm(100, mean = 1, sd = 3)))  #HJL: Changed mean to 1
 hist(global_means)
-```
-
-![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-41.png) 
-
-```{r}
 # make a dataframe
 draws <- data.frame(d = global_means)
 
 # 1000 bootstrap replicates of 1 experiment
 j <- rnorm(100, mean = 1, sd = 3)  #HJL: Changed mean to 1
 b <- replicate(1000, mean(sample(j, replace = TRUE)))
-
 boots <- data.frame(b = b)
 
 # compare histograms
@@ -122,21 +101,12 @@ ggplot() + geom_histogram(data = draws, aes(x = d), fill = "blue") + geom_histog
     aes(x = b), fill = "red", alpha = 0.4)
 ```
 
-```
-## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
-## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
-```
-
-![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-42.png) 
-
-
-
 If you run this several times, you'll notice that the two histograms are not always right on top of one another. As you make the sample sizes (not the number of bootstraps, but the size of the original dataset) bigger, there is closer (and more robust) correspondence between the two histograms. However, even when the bootstrap distribution is off (in the sense of shifted from the original), its variance is usually pretty close. This is good news, since we are often interested in using the standard deviation of the bootstrapped estimates to estimated an estimates standard error. This is a good illustration of the fact that bootstrap gets better as sample sizes get better (and special caution should be applied when bootstrapping small datasets).
 
 Case Study #2: When bootstrap fails because of the sample statistic
-----------------------------
+------------------------------------------------------------------------------------------------
 
-One of the times when bootstrap is known to fail is when you are interested in the extremes of a distribution. To demonstrate this we worked through a classic example is which the bootstrap fails:
+One of the times when bootstrap is known to fail is when you are interested in the extremes of a distribution. To demonstrate this, we worked through a classic example is which the bootstrap fails:
 
 $$
 X \sim Unif(0,5)
@@ -148,7 +118,6 @@ From Jon Borrelli:
 
 Exercise 2 - Uniform
 
-
 Drawing 1000 samples of 100 randomly drawn values from a uniform
 
 ```{r}
@@ -159,7 +128,6 @@ for (i in 1:1000) {
 
 maxSAMPLE <- apply(samples2, 1, max)
 ```
-
   
 Bootstrapping 
 
@@ -173,7 +141,6 @@ for (i in 1:1000) {
 maxBOOT <- apply(boot2, 1, max)
 ```
 
-
 Plot the histograms
 
 ```{r}
@@ -181,10 +148,7 @@ hist(maxSAMPLE, border = "blue", main = NA, lwd = 3)
 hist(maxBOOT, border = "red", add = T, lwd = 3)
 ```
 
-![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-7.png) 
-
-  
-Probability of getting the largest value in original in the bootstrapped sample
+Probability of getting the largest value in original in the bootstrapped sample is
 
 $$
 \LARGE{
@@ -192,59 +156,30 @@ $$
 }
 $$
   
-so bootstrap is not very good with __extreme__ values  
+Therefore, bootstrap is not very good with __extreme__ values.  
 
 From Ben Weinstein:
-
 
 ```{r}
 # Seminar 1 - Bootstrap test
 require(ggplot2)
-
 # Repeat the experiment 1000 times
 global_means <- replicate(1000, max(runif(1000, 0, 5)))
 hist(global_means)
-```
-
-![plot of chunk unnamed-chunk-8](figure/unnamed-chunk-81.png) 
-
-```{r}
-
 # make a dataframe
 draws <- data.frame(d = global_means)
 
 # 1000 bootstrap replicates of 1 experiment
 j <- runif(1000, 0, 5)
 b <- replicate(1000, max(sample(j, replace = TRUE)))
-
 boots <- data.frame(b = b)
 
 # compare histograms
-
 ggplot() + geom_histogram(data = draws, aes(x = d), fill = "blue") + geom_histogram(data = boots, 
     aes(x = b), fill = "red", alpha = 0.4)
-```
-
-```
-## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
-## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
-```
-
-```
-## Warning: position_stack requires constant width: output may be incorrect
-## Warning: position_stack requires constant width: output may be incorrect
-```
-
-![plot of chunk unnamed-chunk-8](figure/unnamed-chunk-82.png) 
-
-```{r}
-
 ggplot() + geom_density(data = draws, aes(x = d), fill = "blue") + geom_density(data = boots, 
     aes(x = b), fill = "red", alpha = 0.4)
 ```
-
-![plot of chunk unnamed-chunk-8](figure/unnamed-chunk-83.png) 
-
 
 Case Study #3: When bootstrap fails because the distribution has ill defined moments
 ----------------------------
@@ -266,10 +201,7 @@ From Jon Borrelli:
 hist(rcauchy(1000, 1, 2))
 ```
 
-![plot of chunk unnamed-chunk-9](figure/unnamed-chunk-9.png) 
-
-
-Drawing 1000 samples of 100 randomly drawn values from a cauchy
+Drawing 1000 samples of 100 randomly drawn values from a cauchy distribution
 
 ```{r}
 samples3 <- matrix(nrow = 1000, ncol = 1000)
@@ -280,7 +212,6 @@ for (i in 1:1000) {
 varSAMPLE <- apply(samples3, 1, var)
 ```
 
-  
 Bootstrapping 
 
 ```{r}
@@ -293,61 +224,12 @@ for (i in 1:1000) {
 varBOOT <- apply(boot3, 1, var)
 ```
 
-
 Plot the histograms
 
 ```{r}
 hist(varSAMPLE, border = "blue", main = NA, lwd = 3, freq = F)
 hist(varBOOT, border = "red", lwd = 3, add = T, freq = F)
 ```
-
-![plot of chunk unnamed-chunk-12](figure/unnamed-chunk-12.png) 
-
-
-From Ben Weinstein:
-
-
-```{r}
-# Probability that the max value is the final dataset If we have 1000
-# values, there is one max value
-
-require(ggplot2)
-
-# Repeat the experiment 1000 times
-global_means <- replicate(1000, var(rcauchy(1000, 1, 2)))
-hist(global_means)
-```
-
-![plot of chunk unnamed-chunk-13](figure/unnamed-chunk-131.png) 
-
-```{r}
-# make a dataframe
-draws <- data.frame(d = global_means)
-
-# 1000 bootstrap replicates of 1 experiment
-j <- cauchy(1000, 1, 2)
-```
-
-```
-## Error: could not find function "cauchy"
-```
-
-```{r}
-
-```
-## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
-## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
-```
-
-![plot of chunk unnamed-chunk-13](figure/unnamed-chunk-132.png) 
-
-```{r}
-ggplot() + geom_density(data = draws, aes(x = d), fill = "blue") + geom_density(data = boots, 
-    aes(x = b), fill = "red", alpha = 0.4)
-```
-
-![plot of chunk unnamed-chunk-13](figure/unnamed-chunk-133.png) 
-
 
 
 References:
@@ -364,29 +246,24 @@ Bickel, P.J., and D. A. Freedman. 1981. Some asymptotic theory for the bootstrap
 Week #4 Summary 
 ========================================================
 
-**Solution to reading files (such as .csv) on Rmarkdown documents:**
+**How to read files (such as .csv) from Github on Rmarkdown documents:**
 
 Install the RCurl package
-> Use getUrL() function:
+> Use getURL() function:
 
 
-```r
+```{r}
 require(RCurl)
 ```
 
-```
-## Loading required package: RCurl
-## Loading required package: bitops
-```
-
-
 I was experiencing a certificate error with getURL().  The following code seems to fix the problem in case you experience the same:
 
-```r
+```{r}
 options(RCurlOptions = list(cainfo = system.file("CurlSSL", "cacert.pem", package = "RCurl")))
 
-raw <- getURL("https://raw.github.com/PermuteSeminar/PermuteSeminar-2014/master/Week-2/ClutchSize.csv")
+raw <- getURL("https://raw.githubusercontent.com/PermuteSeminar/PermuteSeminar-2014/master/Week-2/ClutchSize.csv")
 clutch <- read.csv(text = raw)  #make sure to upload RAW data file
+head(clutch)
 ```
 
 
@@ -421,44 +298,36 @@ $$
 
 
 In class Excercises
-=====================
-
+--------------------
 **Use dataset from book:**
 
 **1. Estimate $\hat{\beta}$ **
 -------------------------------
 
-
-
 Solution: Adapted from Jon Borrelli
----------------------------------------
 
 Load Required Packages
 
-```r
+```{r}
 require(RCurl)
 require(ggplot2)
 ```
 
-```
-## Loading required package: ggplot2
-```
-
-
 Load Dataset:
 
-```r
-rawURL <- getURL("https://raw.github.com/PermuteSeminar/PermuteSeminar-2014/master/Week-4/hormone_data.csv")
-hormone <- read.csv(text = rawURL)
+```{r}
+options(RCurlOptions = list(cainfo = system.file("CurlSSL", "cacert.pem", package = "RCurl")))
+
+raw <- getURL("https://raw.githubusercontent.com/PermuteSeminar/PermuteSeminar-2014/master/Week-4/hormone_data.csv")
+hormone <- read.csv(text = raw)
+head(hormone)
 ```
-
-
 
 Calculate $z_t$ for each data point: $z_t = y_t-\mu$
 
-
-```r
+```{r}
 z.t <- hormone$level - mean(hormone$level)
+z.t
 ```
 
 Calculate residual squared errors for each value of $z_t$ and all possible values of $b$.
@@ -468,7 +337,7 @@ $$
 
 Generate a function that does this calculation over these values and picks out the best value for $b$ that minimizes RSE.
 
-```r
+```{r}
 rse <- function(zt, b) {
     est.b <- c()
     for (i in 1:length(b)) {
@@ -483,26 +352,24 @@ rse <- function(zt, b) {
 }
 ```
 
-
 Run the function and get $\hat{\beta}$
 
-```r
+```{r}
 b <- seq(-1, 1, 0.001)  #generates a sequence of possible values for b
 bhat <- rse(z.t, b)  #runs the function 
+bhat
 ```
-
 
 **So our estimate of $\hat{\beta}$ is 0.586**
 
  2a. See how good our estimate of $\hat{\beta}$ is by figuring out confidence intervals (Standard error) of $\beta$ by bootstrapping methods
-------------------------------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------
 
 We need to estimate $P = (\beta,F)$ from the data.
 
 Since we have $\hat{\beta}$ we can use it to estimate $F$ distribution of the distubances and calculate $\epsilon_{t} = z_{t} - \beta z_{t-1}$ for every $t$  
 
-
-```r
+```{r}
 eps <- c()  #collects all the calculate values of epsilon
 
 for (i in 1:length(z.t)) {
@@ -510,20 +377,15 @@ for (i in 1:length(z.t)) {
 }
 ```
 
-
 A histrogram of the approximate disturbances. It is not a normal distribution.   The Mean = 0.0062
 
-```r
+```{r}
 hist(eps)
 ```
 
-![plot of chunk unnamed-chunk-9](figure/unnamed-chunk-9.png) 
-
-
-
 Resample $F$ Distribtuion of values of $\epsilon$ with replacement:
 
-```r
+```{r}
 boot.eps <- matrix(nrow = 200, ncol = 47)
 for (rep in 1:200) {
     boot.eps[rep, ] <- sample(eps[2:48], 47, replace = T)
@@ -533,7 +395,7 @@ for (rep in 1:200) {
 
 Generate bootstrap values for time series $z_{t}*$: 
 
-```r
+```{r}
 z.tmat <- matrix(nrow = 200, ncol = 48)
 z.tmat[, 1] <- z.t[1]
 for (rep in 1:200) {
@@ -543,43 +405,27 @@ for (rep in 1:200) {
 }
 ```
 
-
 Generate bootsrap replications of $\hat{\beta}$ 
 
-```r
+```{r}
 b.test <- seq(0, 1, 0.001)
 bhatboot <- apply(z.tmat, 1, rse, b = b.test)  #Uses RSE function created above
 ```
 
-
 Histogram of the generated $\hat{\beta}$ values. The mean = 0.5793  
 
-```r
+```{r}
 hist(bhatboot, freq = F)
 ```
-
-![plot of chunk unnamed-chunk-13](figure/unnamed-chunk-13.png) 
-
 
 2b. Use a moving blocks bootstrap
 --------------------------------------
 
-
-```r
+```{r}
 head(hormone)
 ```
 
-```
-##   period level
-## 1      1   2.4
-## 2      2   2.4
-## 3      3   2.4
-## 4      4   2.2
-## 5      5   2.1
-## 6      6   1.5
-```
-
-```r
+```{r}
 block <- matrix(nrow = 3, ncol = 46)
 for (i in 1:46) {
     block[1, i] <- z.t[i]
@@ -593,7 +439,6 @@ for (i in 1:500) {
     boot.block[i, ] <- as.vector(block[, bcol])
 }
 
-
 b.test <- seq(0, 1, 0.001)
 
 bhatboot2 <- apply(boot.block, 1, rse, b = b.test)
@@ -601,15 +446,12 @@ bhatboot2 <- apply(boot.block, 1, rse, b = b.test)
 
 Histogram of estimates generatated from the Moving Blocks BootStrap with mean of 0.3925
 
-
-```r
+```{r}
 hist(bhatboot2)
 ```
 
-![plot of chunk unnamed-chunk-15](figure/unnamed-chunk-15.png) 
-
 -------------------------------------------------------------------
-Week 11 Summary
+Week #11 Summary
 ========================================================
 
 Manly 1996 and Stutz and Eastabrook 2004
