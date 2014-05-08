@@ -1,10 +1,9 @@
 library(picante)
 library(geiger)
 library(vegan)
-library(reshape)
 
 
-setwd("C://Users//Anusha//Documents//GitHub//PermuteSeminar-2014//Week 14/")
+setwd("Week 14/")
 
 Tree <- read.tree(file="hum294.tre")
 siteSp <- read.csv("SiteXspp.csv", row.names=1)
@@ -30,12 +29,21 @@ histCophen <- hist(coScore)
 ## Calculating mean pairwise distance
 phyDist <- mpd(newSp, coScore)
 
-phyFunc <- function(a) {
-  comm <- commsimulator(newSp,method="r00",thin="swap")
-  physcore <- mpd(comm, coScore)
-  return(data.frame(Site=rownames(comm),physcore))
+d<-function(x){
+  a<-commsimulator(newSp[1:10,],method="r00")
+  b<-mpd(a,coScore)
+  return(data.frame(Site=rownames(a),b))
+  
 }
 
-repCalc <- lapply(1:100, phyFunc)
-names(repCalc) <- 1:100
-m.rep <- melt(repCalc)
+out<-lapply(1:10,d)
+
+names(out)<-1:10
+m.out<-melt(out)
+
+mat<-cast(m.out,Site~L1,value.var="value")
+
+head(m.out)
+
+require(ggplot2)
+ggplot(m.out,aes(x=value,color=Site)) + geom_density() + facet_wrap(~Site)
