@@ -1,6 +1,7 @@
 library(picante)
 library(geiger)
 library(vegan)
+library(reshape)
 
 
 setwd("C://Users//Anusha//Documents//GitHub//PermuteSeminar-2014//Week 14/")
@@ -29,14 +30,12 @@ histCophen <- hist(coScore)
 ## Calculating mean pairwise distance
 phyDist <- mpd(newSp, coScore)
 
-for (i in 1:10) {
-  comm <- commsimulator(spp,method="r00",thin="swap")
-  
+phyFunc <- function(a) {
+  comm <- commsimulator(newSp,method="r00",thin="swap")
+  physcore <- mpd(comm, coScore)
+  return(data.frame(Site=rownames(comm),physcore))
 }
-phyRepl <- 0
-as.array(phyRepl)
-n <- 12
 
-for(i in 1:n) {
-phyRepl[i] <- mpd(repl[[i]], coScore)
-}
+repCalc <- lapply(1:100, phyFunc)
+names(repCalc) <- 1:100
+m.rep <- melt(repCalc)
