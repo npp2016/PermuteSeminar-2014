@@ -27,15 +27,14 @@ MPDtester <- function(sitematrix, originalmpd, tree)
 {
   randommatrix <- commsimulator(sitematrix, method = "r00")
   newmpd <- mpd(randommatrix, cophenetic(tree))
-  newsitempd <- data.frame(rownames(sites), newmpd)
-  names(newsitempd) <- c("Sites", "MPD1")
-  newsitempd
+  newmpd
 }
-MPDlist <- list(sitempd)
-for(j in 2:10)
+MPDtable <- data.frame(sitempd)
+for(i in 2:10)
 {
-  MPDlist[[j]] <- MPDtester(newsites, codists, newtree)
-  names(MPDlist[[j]]) <- c("Sites", paste("MPD", j, sep = ""))
+  randMPD <- MPDtester(newsites, codists, newtree)
+  MPDtable <- cbind(MPDtable, randMPD)
+  names(MPDtable) <- c(names(MPDtable[1:(length(names(MPDtable)) - 1)]), paste("randMPD", i, sep = ""))
 }
 ?melt
 library(reshape)
