@@ -1,13 +1,9 @@
-## Anusha's code. Works!!
-
 library(picante)
 library(geiger)
 library(vegan)
-library(reshape)
-library(ggplot2)
 
 
-setwd("C://Users//Anusha//Documents//GitHub//PermuteSeminar-2014//Week 14/")
+setwd("Week 14/")
 
 Tree <- read.tree(file="hum294.tre")
 siteSp <- read.csv("SiteXspp.csv", row.names=1)
@@ -33,16 +29,27 @@ histCophen <- hist(coScore)
 ## Calculating mean pairwise distance
 phyDist <- mpd(newSp, coScore)
 
-phyFunc <- function(a) {
-  comm <- commsimulator(newSp,method="r00",thin="swap")
-  physcore <- mpd(comm, coScore)
-  return(data.frame(Site=rownames(comm),physcore))
+d<-function(x){
+  a<-commsimulator(newSp[1:10,],method="r00")
+  b<-mpd(a,coScore)
+  
+  r0m<-commsimulator(newSp[1:10,],method="r0")
+  r0dat<-mpd(r0m,coScore)
+  
+  c0m<-commsimulator(newSp[1:10,],method="c0")
+  c0dat<-mpd(c0m,coScore)
+  
+  return(data.frame(Site=rownames(a),r00=b,r0=r0dat,c0=c0dat))
+  
 }
 
-repCalc <- lapply(1:100, phyFunc)
-names(repCalc) <- 1:100
-m.rep <- melt(repCalc)
+out<-lapply(1:100,d)
 
-cast.rep <- cast(m.rep, Site=L1, value.var="value")
+names(out)<-1:100
+m.out<-melt(out)
+head(m.out)
 
-ggplot(m.rep,aes(x=value,color=Site)) + geom_density() + facet_wrap(~Site)
+colnames(m.out)<-c("Site","NullModel","value","Iteration")
+
+require(ggplot2)
+ggplot(m.out,aes(x=value,color=NullModel)) + geom_density() + facet_wrap(~Site)

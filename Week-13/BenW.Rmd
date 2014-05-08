@@ -59,7 +59,27 @@ ggplot(reformat2,aes(y=value,x=factor(poolTo),col=factor(poolTo))) + geom_boxplo
 Aggregate and compute means among versus between
 
 ```{r}
-anosim(env,"")
 
+desmids.t <- cast(dat, ecosystem + site + pool ~ Taxon)
+desmids.dist <- dist(desmids.t[, 3:98])
+plot(hclust(desmids.dist))
+```
 
+By site
+```{r}
+bysite<-anosim(desmids.dist, desmids.t$site)
+bysite
+plot(bysite)
+```
 
+By pool
+```{r}
+bypool<-anosim(desmids.dist, desmids.t$pool)
+bypool
+plot(bypool)
+```
+
+By pool and site
+```{r}
+bypoolgroup<-anosim(desmids.dist, paste(desmids.t$pool,desmids.t$site))
+```
