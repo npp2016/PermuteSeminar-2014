@@ -33,7 +33,7 @@ sum(!newtree$tip.label %in% colnames(siteXspp))
 nsxs<-siteXspp[,colnames(siteXspp) %in%newtree$tip.label] ## setting as 0 1's
 
 codis <-cophenetic.phylo(newtree) ##making dis as the cophenetic distance...
-newT <- prune.sample(samp=siteXspp, phylo=newtree)
+newT <- prune.sample(samp=siteXspp, phylo=newtree) ## prune newtree data...
 
 mean.phylo.dist<- mpd(samp=nsxs, dis = codis, abundance.weight=F) ## Jon B. knows all the things. 
 hist(mean.phylo.dist) ##mean phylo distances between spp in siteXsp. Makes a test stat for every site
