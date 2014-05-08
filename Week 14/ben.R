@@ -32,18 +32,24 @@ phyDist <- mpd(newSp, coScore)
 d<-function(x){
   a<-commsimulator(newSp[1:10,],method="r00")
   b<-mpd(a,coScore)
-  return(data.frame(Site=rownames(a),b))
+  
+  r0m<-commsimulator(newSp[1:10,],method="r0")
+  r0dat<-mpd(r0m,coScore)
+  
+  c0m<-commsimulator(newSp[1:10,],method="c0")
+  c0dat<-mpd(c0m,coScore)
+  
+  return(data.frame(Site=rownames(a),r00=b,r0=r0dat,c0=c0dat))
   
 }
 
-out<-lapply(1:10,d)
+out<-lapply(1:100,d)
 
-names(out)<-1:10
+names(out)<-1:100
 m.out<-melt(out)
-
-mat<-cast(m.out,Site~L1,value.var="value")
-
 head(m.out)
 
+colnames(m.out)<-c("Site","NullModel","value","Iteration")
+
 require(ggplot2)
-ggplot(m.out,aes(x=value,color=Site)) + geom_density() + facet_wrap(~Site)
+ggplot(m.out,aes(x=value,color=NullModel)) + geom_density() + facet_wrap(~Site)
