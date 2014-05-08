@@ -30,10 +30,11 @@ sum(!newtree$tip.label %in% colnames(siteXspp))
 
 ## mean phylo diversity, fcn within picante package
 ?mpd ##mpd(samp, dis, abundance.weighted=FALSE)
+nsxs<-siteXspp[,colnames(siteXspp) %in%newtree$tip.label] ## setting as 0 1's
+
 codis <-cophenetic.phylo(newtree) ##making dis as the cophenetic distance...
-  ?prune.sample
 newT <- prune.sample(samp=siteXspp, phylo=newtree)
 
-mpd(samp=newT, dis = codis, abundance.weight=F)
+mpd(samp=nsxs, dis = codis, abundance.weight=F) ## Jon B. knows all the things. 
 
 
