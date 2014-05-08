@@ -1,0 +1,85 @@
+Chloe- week14
+========================================================
+install package 'picante'
+
+```{r}
+require(RCurl)
+options(RCurlOptions = list(cainfo = system.file("CurlSSL", "cacert.pem", package = "RCurl")))
+      
+raw <- getURL("https://raw.githubusercontent.com/PermuteSeminar/PermuteSeminar-2014/master/Week%2014/Sites.csv")
+sites <- read.csv(text = raw)
+raw1 <- getURL("https://raw.githubusercontent.com/PermuteSeminar/PermuteSeminar-2014/master/Week%2014/SiteXspp.csv")
+sitexspp <- read.csv(text = raw1)
+raw2 <- getURL("https://raw.githubusercontent.com/PermuteSeminar/PermuteSeminar-2014/master/Week%2014/hum294.tre")
+hum <- read.tree(text = raw2)
+
+```
+
+require(picante)
+hum<-read.tree("C:/Users/haeyeong86/Documents/PermuteSeminar-2014/Week 14/hum294.tre")
+
+str(hum)
+
+hum$edge
+hum$tip.label
+
+ # replace the tip names with just the two first words
+
+tipsplit <- strsplit(hum$tip.label, "\\.")
+newtips <- sapply(tipsplit, function(x){paste(x[1:2], collapse =".")})
+hum$tip.label <- newtips
+
+  # sum(!a %in% b)
+
+  # subsed the dataset in sitexspp for the species found in the phylogeny
+  # using function 'prune.sample'
+#pr.sitexspp<-prune.sample(hum$tip.label, sitexspp)
+#pr.sitexspp
+#ncol(pr.sitexspp)
+
+  # another way
+pr.sitexspp<-sitexspp[,colnames(sitexspp) %in% hum$tip.label]
+pr.sitexspp
+ncol(pr.sitexspp)
+
+  # make distance matrix
+dis<-cophenetic(hum)
+dis
+
+  # mean pairwise distance
+  # test statistic of mean pairwise distance between species within each site
+mpd<-mpd(pr.sitexspp, dis)
+
+  # the number of sites match with the length in mpd
+nrow(pr.sitexspp)
+length(mpd)
+
+  ###############################
+  # randomize the sitexspp matrix
+require(vegan)
+
+  # completely random but the same number of 0s and 1s
+?commsimulator
+
+rd.pr.sitexspp<-list()
+for (i in 1:1000){
+  rd.pr.sitexspp[[i]]<-commsimulator(pr.sitexspp,"r00")
+}
+rd.pr.sitexspp[[1000]]
+
+
+rd.dis<-cophenetic(hum)
+rd.dis
+
+rd.mpd<-list()
+for (i in 1:1000){
+  rd.mpd[[i]]<-mpd(rd.pr.sitexspp[[i]], rd.dis)
+}
+rd.mpd
+
+  # compare mean of rd.mpd with the observed mpd
+for
+cbind()
+apply(cbind(rd.mpd[[1]],rd.mpd[[2]],rd.mpd[[3]]),1,mean,na.rm = TRUE)
+
+mpd
