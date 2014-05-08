@@ -35,6 +35,19 @@ nsxs<-siteXspp[,colnames(siteXspp) %in%newtree$tip.label] ## setting as 0 1's
 codis <-cophenetic.phylo(newtree) ##making dis as the cophenetic distance...
 newT <- prune.sample(samp=siteXspp, phylo=newtree)
 
-mpd(samp=nsxs, dis = codis, abundance.weight=F) ## Jon B. knows all the things. 
+mean.phylo.dist<- mpd(samp=nsxs, dis = codis, abundance.weight=F) ## Jon B. knows all the things. 
+hist(mean.phylo.dist) ##mean phylo distances between spp in siteXsp. Makes a test stat for every site
+
+## Compare observed value (mpd) to randomized values...
+## Create distribution of observations for the sites and create randomizations.
+
+## matrix of site X species
+require(vegan)
+?commsimulator
+new.matrix<-matrix()
+
+##working on getting a working function...
+out<-commsimulator(nsxs, "R00", nsimul=10)
+
 
 
