@@ -28,5 +28,13 @@ newtree ## Jon B. fixed the original 'hum' tree so it has the same format as the
 sum(!newtree$tip.label %in% colnames(siteXspp))
   ## how many things have NOT (!) the same name between (%in%) the two sets?
 
+## mean phylo diversity, fcn within picante package
+?mpd ##mpd(samp, dis, abundance.weighted=FALSE)
+nsxs<-siteXspp[,colnames(siteXspp) %in%newtree$tip.label] ## setting as 0 1's
+
+codis <-cophenetic.phylo(newtree) ##making dis as the cophenetic distance...
+newT <- prune.sample(samp=siteXspp, phylo=newtree)
+
+mpd(samp=nsxs, dis = codis, abundance.weight=F) ## Jon B. knows all the things. 
 
 
