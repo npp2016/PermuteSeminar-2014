@@ -9,7 +9,7 @@ head(site)
 ano <- anosim(com, site$Type)
 ano$statistic
 
-perms <- permatfull(com)$perm
+perms <- permatfull(com, times = 1000)$perm
 
 newperm <- lapply(perms, function(x){
   rownames(x) <- rownames(com)
