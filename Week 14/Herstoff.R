@@ -17,7 +17,16 @@ sites <-read.csv('Sites.csv')
 siteXspp <- read.csv("SiteXspp.csv")
 
 colnames(siteXspp)
-  ## reformat the strings so hum and siteXspp are same thing.
+  ## need to reformat the strings so hum and siteXspp are same thing.
 strsplit(colnames(siteXspp),"//.")
 strsplit((hum$tip.label),"//.")
+
+newtree<-read.tree("newtree.tre")
+newtree ## Jon B. fixed the original 'hum' tree so it has the same format as the siteXspp
+  cophenetic.phylo(newtree)
+  newtree$tip.label ## same as before
+sum(!newtree$tip.label %in% colnames(siteXspp))
+  ## how many things have NOT (!) the same name between (%in%) the two sets?
+
+
 
