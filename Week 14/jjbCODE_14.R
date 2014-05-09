@@ -57,3 +57,16 @@ imp <- apply(new, 1, function(x){
 })
 
 data <- cbind(meantest, t(imp))
+
+hist(imp[,1])
+abline(v = meanphy[1], col = "blue")
+
+sdev <- apply(t(imp), 1, sd)
+means <- apply(t(imp), 1, mean)
+
+
+hist((meanphy - means)/sdev)
+
+sig <- which(((meanphy - means)/sdev) <= -1.96 | ((meanphy - means)/sdev) >= 1.96)
+rownames(sxs)[sig]
+

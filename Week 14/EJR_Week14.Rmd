@@ -1,0 +1,92 @@
+Week 14 Phylogenetic community analysis
+========================================================
+
+```{r}
+require(picante)
+tree<- read.tree("hum294.tre")
+plot(tree)
+```
+
+```{r}
+cophen<-cophenetic(tree2)
+hist(cophen)
+```
+
+```{r}
+sitesp<-read.csv("SiteXspp.csv")
+```
+
+We need to do a bunch of crap to reformat the species names and remove accession numbers and make them consistent between the phylogeny and the site by species matrix
+
+something something
+
+```{r}
+vec<-strsplit(tree$tip.label,"\\.")
+for(i in 1:nrows(tree){
+  paste(vec[1:2])
+  #etc etc
+}
+```
+
+But in the meantime, reading in the tree that John fixed faster than I did
+
+```{r}
+tree2<-read.tree("newtree.tre")
+plot(tree2)
+```
+
+```{r}
+cophen<-cophenetic(tree2)
+hist(cophen)
+```
+
+```{r}
+sitesp<-read.csv("SiteXspp.csv", row.names=1)
+```
+
+check that the site x sp matrix and the tree names match
+
+```{r}
+colnames(sitesp[,2:ncol(sitesp)]) %in% tree2$tip.label
+tree2$tip.label %in% colnames(sitesp[,2:ncol(sitesp)])
+
+#counting things in the first that aren't in the second
+sum(!colnames(sitesp[,2:ncol(sitesp)]) %in% tree2$tip.label)
+sum(!tree2$tip.label %in% colnames(sitesp[,2:ncol(sitesp)]))
+```
+
+There are 40 species in the species matrix that aren't in our tree.
+Get the matrix and the tree to match...
+
+This bit of code below subsamples the matrix (don't run this directly, we just need this to run the MPD code below)
+```{r}
+sitesp[,colnames(sitesp) %in% tree2$tip.label]
+```
+
+Calculating mean phylogenetic distance (a test statistic that describes each site)
+```{r}
+mpd<-mpd(sitesp[,colnames(sitesp) %in% tree2$tip.label], cophen)
+```
+
+Make a data frame that lists the site names and the mpd
+
+```{r}
+MPDtable<-as.data.frame(mpd)
+row.names(MPDtable)<-row.names(sitesp)
+```
+
+
+Randomize the site by species matrix and resample MPD 1000 times  (make a function that appends test statistics to the table you already have - site, obserbed mpd, mpdrand1, mpdrand2, etc...)  r00 is a totally random new community
+
+```{r}
+require(vegan)
+
+for (i in 1:100){
+randcom = commsimulator(sitesp, "r00")
+randmpd = mpd(randcom[,colnames(randcom) %in% tree2$tip.label], cophen)
+MPDtable = cbind(MPDtable, randmpd)
+}
+```
+
+
+Repeat the process for r0 (retains row sums) and c0 (retains row and column sums)

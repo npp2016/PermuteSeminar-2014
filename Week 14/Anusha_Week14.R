@@ -45,4 +45,4 @@ m.rep <- melt(repCalc)
 
 cast.rep <- cast(m.rep, Site=L1, value.var="value")
 
-ggplot(data=m.rep, aes(x="value", y="density"))
+ggplot(m.rep,aes(x=value,color=Site)) + geom_density() + facet_wrap(~Site)

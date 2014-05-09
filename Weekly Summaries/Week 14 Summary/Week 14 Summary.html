@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<!-- saved from url=(0014)about:internet -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=9" >
+
+<title>Week 14 Summary</title>
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 12px;
+   margin: 8px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 { 
+   font-size:2.2em; 
+}
+
+h2 { 
+   font-size:1.8em; 
+}
+
+h3 { 
+   font-size:1.4em; 
+}
+
+h4 { 
+   font-size:1.0em; 
+}
+
+h5 { 
+   font-size:0.9em; 
+}
+
+h6 { 
+   font-size:0.8em; 
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre {	
+   margin-top: 0;
+   max-width: 95%;
+   border: 1px solid #ccc;
+   white-space: pre-wrap;
+}
+
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code.r, code.cpp {
+   background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * { 
+      background: transparent !important; 
+      color: black !important; 
+      filter:none !important; 
+      -ms-filter: none !important; 
+   }
+
+   body { 
+      font-size:12pt; 
+      max-width:100%; 
+   }
+       
+   a, a:visited { 
+      text-decoration: underline; 
+   }
+
+   hr { 
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote { 
+      padding-right: 1em; 
+      page-break-inside: avoid; 
+   }
+
+   tr, img { 
+      page-break-inside: avoid; 
+   }
+
+   img { 
+      max-width: 100% !important; 
+   }
+
+   @page :left { 
+      margin: 15mm 20mm 15mm 10mm; 
+   }
+     
+   @page :right { 
+      margin: 15mm 10mm 15mm 20mm; 
+   }
+
+   p, h2, h3 { 
+      orphans: 3; widows: 3; 
+   }
+
+   h2, h3 { 
+      page-break-after: avoid; 
+   }
+}
+
+</style>
+
+<!-- Styles for R syntax highlighter -->
+<style type="text/css">
+   pre .operator,
+   pre .paren {
+     color: rgb(104, 118, 135)
+   }
+
+   pre .literal {
+     color: rgb(88, 72, 246)
+   }
+
+   pre .number {
+     color: rgb(0, 0, 205);
+   }
+
+   pre .comment {
+     color: rgb(76, 136, 107);
+   }
+
+   pre .keyword {
+     color: rgb(0, 0, 255);
+   }
+
+   pre .identifier {
+     color: rgb(0, 0, 0);
+   }
+
+   pre .string {
+     color: rgb(3, 106, 7);
+   }
+</style>
+
+<!-- R syntax highlighter -->
+<script type="text/javascript">
+var hljs=new function(){function m(p){return p.replace(/&/gm,"&amp;").replace(/</gm,"&lt;")}function f(r,q,p){return RegExp(q,"m"+(r.cI?"i":"")+(p?"g":""))}function b(r){for(var p=0;p<r.childNodes.length;p++){var q=r.childNodes[p];if(q.nodeName=="CODE"){return q}if(!(q.nodeType==3&&q.nodeValue.match(/\s+/))){break}}}function h(t,s){var p="";for(var r=0;r<t.childNodes.length;r++){if(t.childNodes[r].nodeType==3){var q=t.childNodes[r].nodeValue;if(s){q=q.replace(/\n/g,"")}p+=q}else{if(t.childNodes[r].nodeName=="BR"){p+="\n"}else{p+=h(t.childNodes[r])}}}if(/MSIE [678]/.test(navigator.userAgent)){p=p.replace(/\r/g,"\n")}return p}function a(s){var r=s.className.split(/\s+/);r=r.concat(s.parentNode.className.split(/\s+/));for(var q=0;q<r.length;q++){var p=r[q].replace(/^language-/,"");if(e[p]){return p}}}function c(q){var p=[];(function(s,t){for(var r=0;r<s.childNodes.length;r++){if(s.childNodes[r].nodeType==3){t+=s.childNodes[r].nodeValue.length}else{if(s.childNodes[r].nodeName=="BR"){t+=1}else{if(s.childNodes[r].nodeType==1){p.push({event:"start",offset:t,node:s.childNodes[r]});t=arguments.callee(s.childNodes[r],t);p.push({event:"stop",offset:t,node:s.childNodes[r]})}}}}return t})(q,0);return p}function k(y,w,x){var q=0;var z="";var s=[];function u(){if(y.length&&w.length){if(y[0].offset!=w[0].offset){return(y[0].offset<w[0].offset)?y:w}else{return w[0].event=="start"?y:w}}else{return y.length?y:w}}function t(D){var A="<"+D.nodeName.toLowerCase();for(var B=0;B<D.attributes.length;B++){var C=D.attributes[B];A+=" "+C.nodeName.toLowerCase();if(C.value!==undefined&&C.value!==false&&C.value!==null){A+='="'+m(C.value)+'"'}}return A+">"}while(y.length||w.length){var v=u().splice(0,1)[0];z+=m(x.substr(q,v.offset-q));q=v.offset;if(v.event=="start"){z+=t(v.node);s.push(v.node)}else{if(v.event=="stop"){var p,r=s.length;do{r--;p=s[r];z+=("</"+p.nodeName.toLowerCase()+">")}while(p!=v.node);s.splice(r,1);while(r<s.length){z+=t(s[r]);r++}}}}return z+m(x.substr(q))}function j(){function q(x,y,v){if(x.compiled){return}var u;var s=[];if(x.k){x.lR=f(y,x.l||hljs.IR,true);for(var w in x.k){if(!x.k.hasOwnProperty(w)){continue}if(x.k[w] instanceof Object){u=x.k[w]}else{u=x.k;w="keyword"}for(var r in u){if(!u.hasOwnProperty(r)){continue}x.k[r]=[w,u[r]];s.push(r)}}}if(!v){if(x.bWK){x.b="\\b("+s.join("|")+")\\s"}x.bR=f(y,x.b?x.b:"\\B|\\b");if(!x.e&&!x.eW){x.e="\\B|\\b"}if(x.e){x.eR=f(y,x.e)}}if(x.i){x.iR=f(y,x.i)}if(x.r===undefined){x.r=1}if(!x.c){x.c=[]}x.compiled=true;for(var t=0;t<x.c.length;t++){if(x.c[t]=="self"){x.c[t]=x}q(x.c[t],y,false)}if(x.starts){q(x.starts,y,false)}}for(var p in e){if(!e.hasOwnProperty(p)){continue}q(e[p].dM,e[p],true)}}function d(B,C){if(!j.called){j();j.called=true}function q(r,M){for(var L=0;L<M.c.length;L++){if((M.c[L].bR.exec(r)||[null])[0]==r){return M.c[L]}}}function v(L,r){if(D[L].e&&D[L].eR.test(r)){return 1}if(D[L].eW){var M=v(L-1,r);return M?M+1:0}return 0}function w(r,L){return L.i&&L.iR.test(r)}function K(N,O){var M=[];for(var L=0;L<N.c.length;L++){M.push(N.c[L].b)}var r=D.length-1;do{if(D[r].e){M.push(D[r].e)}r--}while(D[r+1].eW);if(N.i){M.push(N.i)}return f(O,M.join("|"),true)}function p(M,L){var N=D[D.length-1];if(!N.t){N.t=K(N,E)}N.t.lastIndex=L;var r=N.t.exec(M);return r?[M.substr(L,r.index-L),r[0],false]:[M.substr(L),"",true]}function z(N,r){var L=E.cI?r[0].toLowerCase():r[0];var M=N.k[L];if(M&&M instanceof Array){return M}return false}function F(L,P){L=m(L);if(!P.k){return L}var r="";var O=0;P.lR.lastIndex=0;var M=P.lR.exec(L);while(M){r+=L.substr(O,M.index-O);var N=z(P,M);if(N){x+=N[1];r+='<span class="'+N[0]+'">'+M[0]+"</span>"}else{r+=M[0]}O=P.lR.lastIndex;M=P.lR.exec(L)}return r+L.substr(O,L.length-O)}function J(L,M){if(M.sL&&e[M.sL]){var r=d(M.sL,L);x+=r.keyword_count;return r.value}else{return F(L,M)}}function I(M,r){var L=M.cN?'<span class="'+M.cN+'">':"";if(M.rB){y+=L;M.buffer=""}else{if(M.eB){y+=m(r)+L;M.buffer=""}else{y+=L;M.buffer=r}}D.push(M);A+=M.r}function G(N,M,Q){var R=D[D.length-1];if(Q){y+=J(R.buffer+N,R);return false}var P=q(M,R);if(P){y+=J(R.buffer+N,R);I(P,M);return P.rB}var L=v(D.length-1,M);if(L){var O=R.cN?"</span>":"";if(R.rE){y+=J(R.buffer+N,R)+O}else{if(R.eE){y+=J(R.buffer+N,R)+O+m(M)}else{y+=J(R.buffer+N+M,R)+O}}while(L>1){O=D[D.length-2].cN?"</span>":"";y+=O;L--;D.length--}var r=D[D.length-1];D.length--;D[D.length-1].buffer="";if(r.starts){I(r.starts,"")}return R.rE}if(w(M,R)){throw"Illegal"}}var E=e[B];var D=[E.dM];var A=0;var x=0;var y="";try{var s,u=0;E.dM.buffer="";do{s=p(C,u);var t=G(s[0],s[1],s[2]);u+=s[0].length;if(!t){u+=s[1].length}}while(!s[2]);if(D.length>1){throw"Illegal"}return{r:A,keyword_count:x,value:y}}catch(H){if(H=="Illegal"){return{r:0,keyword_count:0,value:m(C)}}else{throw H}}}function g(t){var p={keyword_count:0,r:0,value:m(t)};var r=p;for(var q in e){if(!e.hasOwnProperty(q)){continue}var s=d(q,t);s.language=q;if(s.keyword_count+s.r>r.keyword_count+r.r){r=s}if(s.keyword_count+s.r>p.keyword_count+p.r){r=p;p=s}}if(r.language){p.second_best=r}return p}function i(r,q,p){if(q){r=r.replace(/^((<[^>]+>|\t)+)/gm,function(t,w,v,u){return w.replace(/\t/g,q)})}if(p){r=r.replace(/\n/g,"<br>")}return r}function n(t,w,r){var x=h(t,r);var v=a(t);var y,s;if(v){y=d(v,x)}else{return}var q=c(t);if(q.length){s=document.createElement("pre");s.innerHTML=y.value;y.value=k(q,c(s),x)}y.value=i(y.value,w,r);var u=t.className;if(!u.match("(\\s|^)(language-)?"+v+"(\\s|$)")){u=u?(u+" "+v):v}if(/MSIE [678]/.test(navigator.userAgent)&&t.tagName=="CODE"&&t.parentNode.tagName=="PRE"){s=t.parentNode;var p=document.createElement("div");p.innerHTML="<pre><code>"+y.value+"</code></pre>";t=p.firstChild.firstChild;p.firstChild.cN=s.cN;s.parentNode.replaceChild(p.firstChild,s)}else{t.innerHTML=y.value}t.className=u;t.result={language:v,kw:y.keyword_count,re:y.r};if(y.second_best){t.second_best={language:y.second_best.language,kw:y.second_best.keyword_count,re:y.second_best.r}}}function o(){if(o.called){return}o.called=true;var r=document.getElementsByTagName("pre");for(var p=0;p<r.length;p++){var q=b(r[p]);if(q){n(q,hljs.tabReplace)}}}function l(){if(window.addEventListener){window.addEventListener("DOMContentLoaded",o,false);window.addEventListener("load",o,false)}else{if(window.attachEvent){window.attachEvent("onload",o)}else{window.onload=o}}}var e={};this.LANGUAGES=e;this.highlight=d;this.highlightAuto=g;this.fixMarkup=i;this.highlightBlock=n;this.initHighlighting=o;this.initHighlightingOnLoad=l;this.IR="[a-zA-Z][a-zA-Z0-9_]*";this.UIR="[a-zA-Z_][a-zA-Z0-9_]*";this.NR="\\b\\d+(\\.\\d+)?";this.CNR="\\b(0[xX][a-fA-F0-9]+|(\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)";this.BNR="\\b(0b[01]+)";this.RSR="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|\\.|-|-=|/|/=|:|;|<|<<|<<=|<=|=|==|===|>|>=|>>|>>=|>>>|>>>=|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~";this.ER="(?![\\s\\S])";this.BE={b:"\\\\.",r:0};this.ASM={cN:"string",b:"'",e:"'",i:"\\n",c:[this.BE],r:0};this.QSM={cN:"string",b:'"',e:'"',i:"\\n",c:[this.BE],r:0};this.CLCM={cN:"comment",b:"//",e:"$"};this.CBLCLM={cN:"comment",b:"/\\*",e:"\\*/"};this.HCM={cN:"comment",b:"#",e:"$"};this.NM={cN:"number",b:this.NR,r:0};this.CNM={cN:"number",b:this.CNR,r:0};this.BNM={cN:"number",b:this.BNR,r:0};this.inherit=function(r,s){var p={};for(var q in r){p[q]=r[q]}if(s){for(var q in s){p[q]=s[q]}}return p}}();hljs.LANGUAGES.cpp=function(){var a={keyword:{"false":1,"int":1,"float":1,"while":1,"private":1,"char":1,"catch":1,"export":1,virtual:1,operator:2,sizeof:2,dynamic_cast:2,typedef:2,const_cast:2,"const":1,struct:1,"for":1,static_cast:2,union:1,namespace:1,unsigned:1,"long":1,"throw":1,"volatile":2,"static":1,"protected":1,bool:1,template:1,mutable:1,"if":1,"public":1,friend:2,"do":1,"return":1,"goto":1,auto:1,"void":2,"enum":1,"else":1,"break":1,"new":1,extern:1,using:1,"true":1,"class":1,asm:1,"case":1,typeid:1,"short":1,reinterpret_cast:2,"default":1,"double":1,register:1,explicit:1,signed:1,typename:1,"try":1,"this":1,"switch":1,"continue":1,wchar_t:1,inline:1,"delete":1,alignof:1,char16_t:1,char32_t:1,constexpr:1,decltype:1,noexcept:1,nullptr:1,static_assert:1,thread_local:1,restrict:1,_Bool:1,complex:1},built_in:{std:1,string:1,cin:1,cout:1,cerr:1,clog:1,stringstream:1,istringstream:1,ostringstream:1,auto_ptr:1,deque:1,list:1,queue:1,stack:1,vector:1,map:1,set:1,bitset:1,multiset:1,multimap:1,unordered_set:1,unordered_map:1,unordered_multiset:1,unordered_multimap:1,array:1,shared_ptr:1}};return{dM:{k:a,i:"</",c:[hljs.CLCM,hljs.CBLCLM,hljs.QSM,{cN:"string",b:"'\\\\?.",e:"'",i:"."},{cN:"number",b:"\\b(\\d+(\\.\\d*)?|\\.\\d+)(u|U|l|L|ul|UL|f|F)"},hljs.CNM,{cN:"preprocessor",b:"#",e:"$"},{cN:"stl_container",b:"\\b(deque|list|queue|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array)\\s*<",e:">",k:a,r:10,c:["self"]}]}}}();hljs.LANGUAGES.r={dM:{c:[hljs.HCM,{cN:"number",b:"\\b0[xX][0-9a-fA-F]+[Li]?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+(?:[eE][+\\-]?\\d*)?L\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+\\.(?!\\d)(?:i\\b)?",e:hljs.IMMEDIATE_RE,r:1},{cN:"number",b:"\\b\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\.\\d+(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"keyword",b:"(?:tryCatch|library|setGeneric|setGroupGeneric)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\.",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\d+(?![\\w.])",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\b(?:function)",e:hljs.IMMEDIATE_RE,r:2},{cN:"keyword",b:"(?:if|in|break|next|repeat|else|for|return|switch|while|try|stop|warning|require|attach|detach|source|setMethod|setClass)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"literal",b:"(?:NA|NA_integer_|NA_real_|NA_character_|NA_complex_)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"literal",b:"(?:NULL|TRUE|FALSE|T|F|Inf|NaN)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"identifier",b:"[a-zA-Z.][a-zA-Z0-9._]*\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"<\\-(?!\\s*\\d)",e:hljs.IMMEDIATE_RE,r:2},{cN:"operator",b:"\\->|<\\-",e:hljs.IMMEDIATE_RE,r:1},{cN:"operator",b:"%%|~",e:hljs.IMMEDIATE_RE},{cN:"operator",b:">=|<=|==|!=|\\|\\||&&|=|\\+|\\-|\\*|/|\\^|>|<|!|&|\\||\\$|:",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"%",e:"%",i:"\\n",r:1},{cN:"identifier",b:"`",e:"`",r:0},{cN:"string",b:'"',e:'"',c:[hljs.BE],r:0},{cN:"string",b:"'",e:"'",c:[hljs.BE],r:0},{cN:"paren",b:"[[({\\])}]",e:hljs.IMMEDIATE_RE,r:0}]}};
+hljs.initHighlightingOnLoad();
+</script>
+
+
+
+
+</head>
+
+<body>
+<h1>Week 14 Summary</h1>
+
+<h2>Readings for Week 14</h2>
+
+<p>Webb, C.O. 2000.  Exploring the phylogenetic structure of ecological communities: An exampel for rain forest trees.  The American Naturalist 156: 145-155
+Gotelli, N.J. and G.L. Entsminger. 2001. Swap and fill algorithms in null model analysis: rethinking the knight&#39;s tour.  Oecologia 129:281-291
+Gotelli, N.J. and G.L. Entsminger. 2003. Swap algorithms in null model analysis. Ecology 84:532-535
+Miklós, I. and J. Podani.  Randomization of Presence-Absence Matrices: Comments and New Algorithms.  Ecology 85:86-92</p>
+
+<h2>Overview</h2>
+
+<p>Phylogenetic trees are a useful tool in the analysis of patterns in ecological communities.  Phylogenetic diversity is a potential metric that can be used to describe the structure of a community, in the same way as other measures of diversity (such as species richness, Shannon diversity, and so on). If we assume that traits are generally conserved in the evolution of a lineage, we should expect a positive relationship between the phylogenetic relatedness of a pair of species and the similarity of those species in ecological or life history traits.  Therefore, the phylogenetic structure of a community provides some understanding of the ecological processes that played a role in the organization of that community.  (For instance - if species are more related than one would expect due to chance, perhaps some environmental variable is limiting which species can be present in that community by requiring a certain suite of traits; if species are less related than expected due to chance, we might suspect that competition between similar species played a role in community assembly.)  To perform this analysis, we need to determine what sort of phylogenetic structure might be expected in a community due to chance alone</p>
+
+<h2>Exercise</h2>
+
+<p>We will be testing the phylogenetic structure of a series of hummingbird communities.  To do this, we will use the package &#39;picante&#39;, which provides a series of functions for phylogenetic community analysis, as well as &#39;vegan&#39;, which provides various tools for community ecology.  Our goal is to generate null models of phylogenetic community structure, and determine if each community is significantly overdispersed or clustered relative to that null.  (Overdispersed = species in the community are less related to one another than you would expect by chance; clustered = species in the community are more related to one another than you would expect by chance.)</p>
+
+<h2>Code</h2>
+
+<p>Load libraries</p>
+
+<pre><code class="r">require(picante)
+</code></pre>
+
+<pre><code>## Loading required package: picante
+</code></pre>
+
+<pre><code>## Warning: package &#39;picante&#39; was built under R version 3.0.3
+</code></pre>
+
+<pre><code>## Loading required package: ape
+## Loading required package: vegan
+## Loading required package: permute
+## Loading required package: lattice
+## This is vegan 2.0-9
+## Loading required package: nlme
+</code></pre>
+
+<pre><code class="r">require(vegan)
+require(ggplot2)
+</code></pre>
+
+<pre><code>## Loading required package: ggplot2
+</code></pre>
+
+<pre><code class="r">require(RCurl)
+</code></pre>
+
+<pre><code>## Loading required package: RCurl
+## Loading required package: bitops
+</code></pre>
+
+<pre><code class="r">require(reshape)
+</code></pre>
+
+<pre><code>## Loading required package: reshape
+## Loading required package: plyr
+## 
+## Attaching package: &#39;reshape&#39;
+## 
+## The following objects are masked from &#39;package:plyr&#39;:
+## 
+##     rename, round_any
+</code></pre>
+
+<p>Read in the data</p>
+
+<pre><code class="r">options(RCurlOptions = list(cainfo = system.file(&quot;CurlSSL&quot;, &quot;cacert.pem&quot;, package = &quot;RCurl&quot;)))
+
+# Site by species matrix of hummingbird communities; setting row.names=1
+# will make some things easier later
+raw1 &lt;- getURL(&quot;https://raw.githubusercontent.com/PermuteSeminar/PermuteSeminar-2014/master/Week%2014/SiteXspp.csv&quot;)
+sitesp &lt;- read.csv(text = raw1, row.names = 1)
+
+# Hummingbird phylogeny - Newick/parenthetic format (.tre)
+raw2 &lt;- getURL(&quot;https://raw.githubusercontent.com/PermuteSeminar/PermuteSeminar-2014/master/Week%2014/newtree.tre&quot;)
+tree &lt;- read.tree(text = raw2)
+</code></pre>
+
+<p>Calculate the cophenetic distance matrix of the tree (a matrix of pairwise distances between each pair of species in the tree, as defined by the branch lengths in the tree)</p>
+
+<pre><code class="r">cophen &lt;- cophenetic(tree)
+hist(cophen)
+</code></pre>
+
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAfgAAAH4CAMAAACR9g9NAAAAhFBMVEX9/v0AAAAAADkAAGUAOTkAOY8AZo8AZrU5AAA5ADk5AGU5OWU5OY85ZrU5j9plAABlADllAGVlOQBlZgBlZjlltf2POQCPOTmPOWWPZgCPjzmPtY+P29qP2/21ZgC1tWW124+1/rW1/v3ajzna/rXa/tra/v39tWX924/9/rX9/tr9/v3TfODKAAAALHRSTlP/////////////////////////////////////////////////////////AMfWCYwAAAAJcEhZcwAACxIAAAsSAdLdfvwAAA4HSURBVHic7Z17Y5vIFUcXe1O5qVfKtmtn28ba1tpar+///coAciJLCM0Dm3t/5/yRWMDMHTgamIt4/LQHSX766AbAx4B4URAvCuJFQbwoiBcF8aIgXhTEi4J4URAvCuJFQbwoiBcF8aIgXhTEi4J4URAvCuJFQbwoiBcF8aIgXhTEi2Jf/HZx+7zf7x5vn9u/DiwfMird3FU3TxeXCAEzAnw4nsQfTV5WOeKHSyP+o3nT4+u+Wt0+7x6rqprt96v6v/k+zK5u/7v49LJ7vPmt7svrenLdo9fVX+rpz/VCB83t8k3pTy/7tmDVGO5qquP80Uyp//jP3fdZDz/MMoE38dtFFaT9rxW/DB/q/xuTP98F8WHun+1CL+vqQKerW/67+OavMPeopjCz+2N2KDTff59iAQ/iD+6C+M1d21ObnfXmru7W28XN0+audrdqdc0OxW6f11UoUD2ERcK01+Vfd/VNwfrD65y6gnkI+dD8EaI1EcP3rpmy7vYUk8eb+OZT6L9B3bqxvKoemj+27a7+6VAoiJ81X4DD1NflX8WvmwPFD3PaQ/uqmjdlQpXdbiN8J7opH7IZYvEg/uQYX3V9tk98s8yr+O9fh3PiZ/ujOT+Ir/94I76b8kEbIg534gPLTt25XX1QvGr20qfie3b19eLndvWd5teDC+Lfl2Pxh84chlxnB3dB8bo63+Nfl38Vf2lwd9C8PJliAW/im914tzuvFRzSubqPHtK5oLh2Ne+OAEfiX5f/nscv2+qO07luONdpXlZvpxjAvvirKTLgtn7e5hUN8d3If55fE+JtsS51agXxYBvEi4J4URAvCuJFQbwoiBcF8aIgXhTEi4J4URAv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" alt="plot of chunk unnamed-chunk-3"/> </p>
+
+<p>We need to check that the species in our tree and the species in the site by species matrix match, because we&#39;ll need to remove any species in a community that aren&#39;t found in the tree from our analyses.</p>
+
+<pre><code class="r"># Counts how many species in the site by species matrix aren&#39;t in the tree
+sum(!colnames(sitesp[, 2:ncol(sitesp)]) %in% tree$tip.label)
+</code></pre>
+
+<pre><code>## [1] 40
+</code></pre>
+
+<pre><code class="r"># Counts how many species in the tree aren&#39;t in the matrix (we don&#39;t need to
+# know this, but let&#39;s look at it anyway)
+sum(!tree$tip.label %in% colnames(sitesp[, 2:ncol(sitesp)]))
+</code></pre>
+
+<pre><code>## [1] 202
+</code></pre>
+
+<p>There are 40 species in the species matrix that aren&#39;t in our tree.  We can subsample the site by species matrix to use only those species that are included in our phylogeny.</p>
+
+<p>Calculate the mean phylogenetic distance (a test statistic) for each site, and make a data frame that lists that MPD for each site</p>
+
+<pre><code class="r">mpd &lt;- mpd(sitesp[, colnames(sitesp) %in% tree$tip.label], cophen)
+MPDtable &lt;- as.data.frame(mpd)
+row.names(MPDtable) &lt;- row.names(sitesp)
+</code></pre>
+
+<p>We want to test the observed MPD for each site against a null expectation of community MPD given our species pool. We will do this by randomizing the site by species matrix and resampling MPD 100 times.  The package &#39;vegan&#39; provides a number of methods for randomization within the function &#39;commsimulator&#39;.  We will use three:</p>
+
+<p>r00 = Maintains the number of presences, but refills them in the matrix completely randomly (not maintaining row or column sums)
+r0 = Maintains row sums, but not column sums
+c0 = Maintains column sums, but not row sums</p>
+
+<p>This will generate the null models against which we can test the observed MPD statistic for each site.</p>
+
+<pre><code class="r"># Making tables to store randomization output
+MPD_r00 &lt;- MPDtable
+MPD_r0 &lt;- MPDtable
+MPD_c0 &lt;- MPDtable
+
+# r00
+for (i in 1:100) {
+    randcom = commsimulator(sitesp, &quot;r00&quot;)
+    randmpd = mpd(randcom[, colnames(randcom) %in% tree$tip.label], cophen)
+    MPD_r00 = cbind(MPD_r00, randmpd)
+}
+
+# r0
+for (i in 1:100) {
+    randcom = commsimulator(sitesp, &quot;r0&quot;)
+    randmpd = mpd(randcom[, colnames(randcom) %in% tree$tip.label], cophen)
+    MPD_r0 = cbind(MPD_r0, randmpd)
+}
+
+# c0
+for (i in 1:100) {
+    randcom = commsimulator(sitesp, &quot;c0&quot;)
+    randmpd = mpd(randcom[, colnames(randcom) %in% tree$tip.label], cophen)
+    MPD_c0 = cbind(MPD_c0, randmpd)
+}
+</code></pre>
+
+<p>Let&#39;s just look at the plot for the site &#39;Acacias&#39;, since there are too many sites to be worth looking at individually for our purposes.</p>
+
+<pre><code class="r"># This is the most circuitous plotting code ever and I sincerely apologize,
+# but it works!
+Acacias_r00 &lt;- melt(MPD_r00[5])
+</code></pre>
+
+<pre><code>## Using  as id variables
+</code></pre>
+
+<pre><code class="r">Acacias_r0 &lt;- melt(MPD_r0[5])
+</code></pre>
+
+<pre><code>## Using  as id variables
+</code></pre>
+
+<pre><code class="r">Acacias_c0 &lt;- melt(MPD_c0[5])
+</code></pre>
+
+<pre><code>## Using  as id variables
+</code></pre>
+
+<pre><code class="r">
+Acacias &lt;- cbind(Acacias_r00, Acacias_r0$value, Acacias_c0$value)
+colnames(Acacias) &lt;- c(&quot;MPD&quot;, &quot;r00&quot;, &quot;r0&quot;, &quot;c0&quot;)
+
+Acacias2 &lt;- melt(Acacias[2:4])
+</code></pre>
+
+<pre><code>## Using  as id variables
+</code></pre>
+
+<pre><code class="r">
+ggplot(Acacias2, aes(x = value, color = variable)) + geom_density() + geom_vline(xintercept = MPDtable[5, 
+    1], color = &quot;purple&quot;, size = 1.2)
+</code></pre>
+
+<pre><code>## Warning: Removed 2 rows containing non-finite values (stat_density).
+## Warning: Removed 2 rows containing non-finite values (stat_density).
+## Warning: Removed 1 rows containing non-finite values (stat_density).
+</code></pre>
+
+<p><img src="data:image/png;base64,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" alt="plot of chunk unnamed-chunk-7"/> </p>
+
+<p>This shows the three null distributions (r00, r0 and c0) of the test statistic MPD for the Acacias site - note that our choices about whether or not to fix row or column sums when we randomize changes the shape of the null model!  The vertical bar (purple) plots the observed MPD for the Acacias site.</p>
+
+</body>
+
+</html>
+
