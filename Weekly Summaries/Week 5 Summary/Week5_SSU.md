@@ -42,10 +42,10 @@ summary(mod)
 ## (Intercept)  108.600      0.974  111.49   <2e-16 ***
 ## sexMale        4.800      1.378    3.48   0.0026 ** 
 ## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
 ## 
 ## Residual standard error: 3.08 on 18 degrees of freedom
-## Multiple R-squared:  0.403,	Adjusted R-squared:  0.37 
+## Multiple R-squared: 0.403,	Adjusted R-squared: 0.37 
 ## F-statistic: 12.1 on 1 and 18 DF,  p-value: 0.00265
 ```
 

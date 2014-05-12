@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<!-- saved from url=(0014)about:internet -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=9" >
+
+<title>Week 5: Randomization</title>
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 12px;
+   margin: 8px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 { 
+   font-size:2.2em; 
+}
+
+h2 { 
+   font-size:1.8em; 
+}
+
+h3 { 
+   font-size:1.4em; 
+}
+
+h4 { 
+   font-size:1.0em; 
+}
+
+h5 { 
+   font-size:0.9em; 
+}
+
+h6 { 
+   font-size:0.8em; 
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre {	
+   margin-top: 0;
+   max-width: 95%;
+   border: 1px solid #ccc;
+   white-space: pre-wrap;
+}
+
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code.r, code.cpp {
+   background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * { 
+      background: transparent !important; 
+      color: black !important; 
+      filter:none !important; 
+      -ms-filter: none !important; 
+   }
+
+   body { 
+      font-size:12pt; 
+      max-width:100%; 
+   }
+       
+   a, a:visited { 
+      text-decoration: underline; 
+   }
+
+   hr { 
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote { 
+      padding-right: 1em; 
+      page-break-inside: avoid; 
+   }
+
+   tr, img { 
+      page-break-inside: avoid; 
+   }
+
+   img { 
+      max-width: 100% !important; 
+   }
+
+   @page :left { 
+      margin: 15mm 20mm 15mm 10mm; 
+   }
+     
+   @page :right { 
+      margin: 15mm 10mm 15mm 20mm; 
+   }
+
+   p, h2, h3 { 
+      orphans: 3; widows: 3; 
+   }
+
+   h2, h3 { 
+      page-break-after: avoid; 
+   }
+}
+
+</style>
+
+<!-- Styles for R syntax highlighter -->
+<style type="text/css">
+   pre .operator,
+   pre .paren {
+     color: rgb(104, 118, 135)
+   }
+
+   pre .literal {
+     color: rgb(88, 72, 246)
+   }
+
+   pre .number {
+     color: rgb(0, 0, 205);
+   }
+
+   pre .comment {
+     color: rgb(76, 136, 107);
+   }
+
+   pre .keyword {
+     color: rgb(0, 0, 255);
+   }
+
+   pre .identifier {
+     color: rgb(0, 0, 0);
+   }
+
+   pre .string {
+     color: rgb(3, 106, 7);
+   }
+</style>
+
+<!-- R syntax highlighter -->
+<script type="text/javascript">
+var hljs=new function(){function m(p){return p.replace(/&/gm,"&amp;").replace(/</gm,"&lt;")}function f(r,q,p){return RegExp(q,"m"+(r.cI?"i":"")+(p?"g":""))}function b(r){for(var p=0;p<r.childNodes.length;p++){var q=r.childNodes[p];if(q.nodeName=="CODE"){return q}if(!(q.nodeType==3&&q.nodeValue.match(/\s+/))){break}}}function h(t,s){var p="";for(var r=0;r<t.childNodes.length;r++){if(t.childNodes[r].nodeType==3){var q=t.childNodes[r].nodeValue;if(s){q=q.replace(/\n/g,"")}p+=q}else{if(t.childNodes[r].nodeName=="BR"){p+="\n"}else{p+=h(t.childNodes[r])}}}if(/MSIE [678]/.test(navigator.userAgent)){p=p.replace(/\r/g,"\n")}return p}function a(s){var r=s.className.split(/\s+/);r=r.concat(s.parentNode.className.split(/\s+/));for(var q=0;q<r.length;q++){var p=r[q].replace(/^language-/,"");if(e[p]){return p}}}function c(q){var p=[];(function(s,t){for(var r=0;r<s.childNodes.length;r++){if(s.childNodes[r].nodeType==3){t+=s.childNodes[r].nodeValue.length}else{if(s.childNodes[r].nodeName=="BR"){t+=1}else{if(s.childNodes[r].nodeType==1){p.push({event:"start",offset:t,node:s.childNodes[r]});t=arguments.callee(s.childNodes[r],t);p.push({event:"stop",offset:t,node:s.childNodes[r]})}}}}return t})(q,0);return p}function k(y,w,x){var q=0;var z="";var s=[];function u(){if(y.length&&w.length){if(y[0].offset!=w[0].offset){return(y[0].offset<w[0].offset)?y:w}else{return w[0].event=="start"?y:w}}else{return y.length?y:w}}function t(D){var A="<"+D.nodeName.toLowerCase();for(var B=0;B<D.attributes.length;B++){var C=D.attributes[B];A+=" "+C.nodeName.toLowerCase();if(C.value!==undefined&&C.value!==false&&C.value!==null){A+='="'+m(C.value)+'"'}}return A+">"}while(y.length||w.length){var v=u().splice(0,1)[0];z+=m(x.substr(q,v.offset-q));q=v.offset;if(v.event=="start"){z+=t(v.node);s.push(v.node)}else{if(v.event=="stop"){var p,r=s.length;do{r--;p=s[r];z+=("</"+p.nodeName.toLowerCase()+">")}while(p!=v.node);s.splice(r,1);while(r<s.length){z+=t(s[r]);r++}}}}return z+m(x.substr(q))}function j(){function q(x,y,v){if(x.compiled){return}var u;var s=[];if(x.k){x.lR=f(y,x.l||hljs.IR,true);for(var w in x.k){if(!x.k.hasOwnProperty(w)){continue}if(x.k[w] instanceof Object){u=x.k[w]}else{u=x.k;w="keyword"}for(var r in u){if(!u.hasOwnProperty(r)){continue}x.k[r]=[w,u[r]];s.push(r)}}}if(!v){if(x.bWK){x.b="\\b("+s.join("|")+")\\s"}x.bR=f(y,x.b?x.b:"\\B|\\b");if(!x.e&&!x.eW){x.e="\\B|\\b"}if(x.e){x.eR=f(y,x.e)}}if(x.i){x.iR=f(y,x.i)}if(x.r===undefined){x.r=1}if(!x.c){x.c=[]}x.compiled=true;for(var t=0;t<x.c.length;t++){if(x.c[t]=="self"){x.c[t]=x}q(x.c[t],y,false)}if(x.starts){q(x.starts,y,false)}}for(var p in e){if(!e.hasOwnProperty(p)){continue}q(e[p].dM,e[p],true)}}function d(B,C){if(!j.called){j();j.called=true}function q(r,M){for(var L=0;L<M.c.length;L++){if((M.c[L].bR.exec(r)||[null])[0]==r){return M.c[L]}}}function v(L,r){if(D[L].e&&D[L].eR.test(r)){return 1}if(D[L].eW){var M=v(L-1,r);return M?M+1:0}return 0}function w(r,L){return L.i&&L.iR.test(r)}function K(N,O){var M=[];for(var L=0;L<N.c.length;L++){M.push(N.c[L].b)}var r=D.length-1;do{if(D[r].e){M.push(D[r].e)}r--}while(D[r+1].eW);if(N.i){M.push(N.i)}return f(O,M.join("|"),true)}function p(M,L){var N=D[D.length-1];if(!N.t){N.t=K(N,E)}N.t.lastIndex=L;var r=N.t.exec(M);return r?[M.substr(L,r.index-L),r[0],false]:[M.substr(L),"",true]}function z(N,r){var L=E.cI?r[0].toLowerCase():r[0];var M=N.k[L];if(M&&M instanceof Array){return M}return false}function F(L,P){L=m(L);if(!P.k){return L}var r="";var O=0;P.lR.lastIndex=0;var M=P.lR.exec(L);while(M){r+=L.substr(O,M.index-O);var N=z(P,M);if(N){x+=N[1];r+='<span class="'+N[0]+'">'+M[0]+"</span>"}else{r+=M[0]}O=P.lR.lastIndex;M=P.lR.exec(L)}return r+L.substr(O,L.length-O)}function J(L,M){if(M.sL&&e[M.sL]){var r=d(M.sL,L);x+=r.keyword_count;return r.value}else{return F(L,M)}}function I(M,r){var L=M.cN?'<span class="'+M.cN+'">':"";if(M.rB){y+=L;M.buffer=""}else{if(M.eB){y+=m(r)+L;M.buffer=""}else{y+=L;M.buffer=r}}D.push(M);A+=M.r}function G(N,M,Q){var R=D[D.length-1];if(Q){y+=J(R.buffer+N,R);return false}var P=q(M,R);if(P){y+=J(R.buffer+N,R);I(P,M);return P.rB}var L=v(D.length-1,M);if(L){var O=R.cN?"</span>":"";if(R.rE){y+=J(R.buffer+N,R)+O}else{if(R.eE){y+=J(R.buffer+N,R)+O+m(M)}else{y+=J(R.buffer+N+M,R)+O}}while(L>1){O=D[D.length-2].cN?"</span>":"";y+=O;L--;D.length--}var r=D[D.length-1];D.length--;D[D.length-1].buffer="";if(r.starts){I(r.starts,"")}return R.rE}if(w(M,R)){throw"Illegal"}}var E=e[B];var D=[E.dM];var A=0;var x=0;var y="";try{var s,u=0;E.dM.buffer="";do{s=p(C,u);var t=G(s[0],s[1],s[2]);u+=s[0].length;if(!t){u+=s[1].length}}while(!s[2]);if(D.length>1){throw"Illegal"}return{r:A,keyword_count:x,value:y}}catch(H){if(H=="Illegal"){return{r:0,keyword_count:0,value:m(C)}}else{throw H}}}function g(t){var p={keyword_count:0,r:0,value:m(t)};var r=p;for(var q in e){if(!e.hasOwnProperty(q)){continue}var s=d(q,t);s.language=q;if(s.keyword_count+s.r>r.keyword_count+r.r){r=s}if(s.keyword_count+s.r>p.keyword_count+p.r){r=p;p=s}}if(r.language){p.second_best=r}return p}function i(r,q,p){if(q){r=r.replace(/^((<[^>]+>|\t)+)/gm,function(t,w,v,u){return w.replace(/\t/g,q)})}if(p){r=r.replace(/\n/g,"<br>")}return r}function n(t,w,r){var x=h(t,r);var v=a(t);var y,s;if(v){y=d(v,x)}else{return}var q=c(t);if(q.length){s=document.createElement("pre");s.innerHTML=y.value;y.value=k(q,c(s),x)}y.value=i(y.value,w,r);var u=t.className;if(!u.match("(\\s|^)(language-)?"+v+"(\\s|$)")){u=u?(u+" "+v):v}if(/MSIE [678]/.test(navigator.userAgent)&&t.tagName=="CODE"&&t.parentNode.tagName=="PRE"){s=t.parentNode;var p=document.createElement("div");p.innerHTML="<pre><code>"+y.value+"</code></pre>";t=p.firstChild.firstChild;p.firstChild.cN=s.cN;s.parentNode.replaceChild(p.firstChild,s)}else{t.innerHTML=y.value}t.className=u;t.result={language:v,kw:y.keyword_count,re:y.r};if(y.second_best){t.second_best={language:y.second_best.language,kw:y.second_best.keyword_count,re:y.second_best.r}}}function o(){if(o.called){return}o.called=true;var r=document.getElementsByTagName("pre");for(var p=0;p<r.length;p++){var q=b(r[p]);if(q){n(q,hljs.tabReplace)}}}function l(){if(window.addEventListener){window.addEventListener("DOMContentLoaded",o,false);window.addEventListener("load",o,false)}else{if(window.attachEvent){window.attachEvent("onload",o)}else{window.onload=o}}}var e={};this.LANGUAGES=e;this.highlight=d;this.highlightAuto=g;this.fixMarkup=i;this.highlightBlock=n;this.initHighlighting=o;this.initHighlightingOnLoad=l;this.IR="[a-zA-Z][a-zA-Z0-9_]*";this.UIR="[a-zA-Z_][a-zA-Z0-9_]*";this.NR="\\b\\d+(\\.\\d+)?";this.CNR="\\b(0[xX][a-fA-F0-9]+|(\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)";this.BNR="\\b(0b[01]+)";this.RSR="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|\\.|-|-=|/|/=|:|;|<|<<|<<=|<=|=|==|===|>|>=|>>|>>=|>>>|>>>=|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~";this.ER="(?![\\s\\S])";this.BE={b:"\\\\.",r:0};this.ASM={cN:"string",b:"'",e:"'",i:"\\n",c:[this.BE],r:0};this.QSM={cN:"string",b:'"',e:'"',i:"\\n",c:[this.BE],r:0};this.CLCM={cN:"comment",b:"//",e:"$"};this.CBLCLM={cN:"comment",b:"/\\*",e:"\\*/"};this.HCM={cN:"comment",b:"#",e:"$"};this.NM={cN:"number",b:this.NR,r:0};this.CNM={cN:"number",b:this.CNR,r:0};this.BNM={cN:"number",b:this.BNR,r:0};this.inherit=function(r,s){var p={};for(var q in r){p[q]=r[q]}if(s){for(var q in s){p[q]=s[q]}}return p}}();hljs.LANGUAGES.cpp=function(){var a={keyword:{"false":1,"int":1,"float":1,"while":1,"private":1,"char":1,"catch":1,"export":1,virtual:1,operator:2,sizeof:2,dynamic_cast:2,typedef:2,const_cast:2,"const":1,struct:1,"for":1,static_cast:2,union:1,namespace:1,unsigned:1,"long":1,"throw":1,"volatile":2,"static":1,"protected":1,bool:1,template:1,mutable:1,"if":1,"public":1,friend:2,"do":1,"return":1,"goto":1,auto:1,"void":2,"enum":1,"else":1,"break":1,"new":1,extern:1,using:1,"true":1,"class":1,asm:1,"case":1,typeid:1,"short":1,reinterpret_cast:2,"default":1,"double":1,register:1,explicit:1,signed:1,typename:1,"try":1,"this":1,"switch":1,"continue":1,wchar_t:1,inline:1,"delete":1,alignof:1,char16_t:1,char32_t:1,constexpr:1,decltype:1,noexcept:1,nullptr:1,static_assert:1,thread_local:1,restrict:1,_Bool:1,complex:1},built_in:{std:1,string:1,cin:1,cout:1,cerr:1,clog:1,stringstream:1,istringstream:1,ostringstream:1,auto_ptr:1,deque:1,list:1,queue:1,stack:1,vector:1,map:1,set:1,bitset:1,multiset:1,multimap:1,unordered_set:1,unordered_map:1,unordered_multiset:1,unordered_multimap:1,array:1,shared_ptr:1}};return{dM:{k:a,i:"</",c:[hljs.CLCM,hljs.CBLCLM,hljs.QSM,{cN:"string",b:"'\\\\?.",e:"'",i:"."},{cN:"number",b:"\\b(\\d+(\\.\\d*)?|\\.\\d+)(u|U|l|L|ul|UL|f|F)"},hljs.CNM,{cN:"preprocessor",b:"#",e:"$"},{cN:"stl_container",b:"\\b(deque|list|queue|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array)\\s*<",e:">",k:a,r:10,c:["self"]}]}}}();hljs.LANGUAGES.r={dM:{c:[hljs.HCM,{cN:"number",b:"\\b0[xX][0-9a-fA-F]+[Li]?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+(?:[eE][+\\-]?\\d*)?L\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+\\.(?!\\d)(?:i\\b)?",e:hljs.IMMEDIATE_RE,r:1},{cN:"number",b:"\\b\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\.\\d+(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"keyword",b:"(?:tryCatch|library|setGeneric|setGroupGeneric)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\.",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\d+(?![\\w.])",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\b(?:function)",e:hljs.IMMEDIATE_RE,r:2},{cN:"keyword",b:"(?:if|in|break|next|repeat|else|for|return|switch|while|try|stop|warning|require|attach|detach|source|setMethod|setClass)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"literal",b:"(?:NA|NA_integer_|NA_real_|NA_character_|NA_complex_)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"literal",b:"(?:NULL|TRUE|FALSE|T|F|Inf|NaN)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"identifier",b:"[a-zA-Z.][a-zA-Z0-9._]*\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"<\\-(?!\\s*\\d)",e:hljs.IMMEDIATE_RE,r:2},{cN:"operator",b:"\\->|<\\-",e:hljs.IMMEDIATE_RE,r:1},{cN:"operator",b:"%%|~",e:hljs.IMMEDIATE_RE},{cN:"operator",b:">=|<=|==|!=|\\|\\||&&|=|\\+|\\-|\\*|/|\\^|>|<|!|&|\\||\\$|:",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"%",e:"%",i:"\\n",r:1},{cN:"identifier",b:"`",e:"`",r:0},{cN:"string",b:'"',e:'"',c:[hljs.BE],r:0},{cN:"string",b:"'",e:"'",c:[hljs.BE],r:0},{cN:"paren",b:"[[({\\])}]",e:hljs.IMMEDIATE_RE,r:0}]}};
+hljs.initHighlightingOnLoad();
+</script>
+
+
+<!-- MathJax scripts -->
+<script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+</head>
+
+<body>
+<h1>Week 5: Randomization</h1>
+
+<p>Randomization is a method for formulating and testing a null hypothesis of &ldquo;randomness&rdquo; given a particular set of data.  In this conception, our alternative hypothesis (i.e., that there <em>is</em> some effect, difference, correlation, etc.) corresponds to a certain level of organization or structure in our data.  If this is the case, then shuffling the order of our measurements (randomizing) will destroy that structure and change the value of our test statistic.  If, on the other hand, the null hypothesis is true, and ther is <em>not</em> any structure, then reshuffling the data won&#39;t produce much change in the chosen test statistic.</p>
+
+<p>A randomization test simply reshuffles the data and calculates the test statistic many times, counting what proportion of test statistics are at least as extreme as the one calculated from the original data.  The shuffling may be a simple reordering, or it may attempt to preserve certain features of the original data or the process that generated it.  One example mentioned in class was phylogenetic trees: if you just shuffle the order of species, OF COURSE you&#39;re going to get a significant result, since the process that created the species (evolution) is branching and autocorrelated.  To get meaningful significance levels, you would need to come up with a randomization scheme that preserves some of these characteristics.</p>
+
+<p>Design of a randomization scheme for taxonomic relationships under the assumption of Intelligent Design is left as an exercise for the reader.</p>
+
+<h2>Jackal jaws</h2>
+
+<p>To show the idea of randomization in action, the following is a re-created example of the jackal jaws from the reading.</p>
+
+<pre><code class="r">jackals &lt;- data.frame(mandible = c(120, 107, 110, 116, 114, 111, 113, 117, 114, 
+    112, 110, 111, 107, 108, 110, 105, 107, 106, 111, 111), sex = rep(c(&quot;Male&quot;, 
+    &quot;Female&quot;), each = 10))
+boxplot(mandible ~ sex, jackals, xlab = &quot;Sex&quot;, ylab = &quot;Mandible length (mm)&quot;)
+</code></pre>
+
+<p><img src="data:image/png;base64,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" alt="plot of chunk unnamed-chunk-1"/> </p>
+
+<p>So it definitely appears like males have larger mandibles.  But how sure are we?  For a standard statistical test of the difference in means, we can just use R&#39;s <code>lm()</code> function (this is equivalent to doing a two-sample T-test, and gives us the same p-value).</p>
+
+<pre><code class="r">mod &lt;- lm(mandible ~ sex, jackals)
+summary(mod)
+</code></pre>
+
+<pre><code>## 
+## Call:
+## lm(formula = mandible ~ sex, data = jackals)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+##   -6.4   -1.8    0.1    2.4    6.6 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  108.600      0.974  111.49   &lt;2e-16 ***
+## sexMale        4.800      1.378    3.48   0.0026 ** 
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1 
+## 
+## Residual standard error: 3.08 on 18 degrees of freedom
+## Multiple R-squared: 0.403,   Adjusted R-squared: 0.37 
+## F-statistic: 12.1 on 1 and 18 DF,  p-value: 0.00265
+</code></pre>
+
+<pre><code class="r">difference.observed &lt;- mod$coefficients[[&quot;sexMale&quot;]]
+print(difference.observed)
+</code></pre>
+
+<pre><code>## [1] 4.8
+</code></pre>
+
+<p>Looking at the results from this model, we can see that the male mandibles are
+an average of 4.8 mm longer than the females,&#39; and that we can be pretty confident this difference is real, given the small p-value (0.0026).</p>
+
+<p>Now, we need to compare the observed mean effect statistic to a the distribution of mean effects from randomized samples. 
+<br/></p>
+
+<blockquote>
+<blockquote>
+<p>First, we define a function to do the randomization: it takes a vector of data values from two groups (<code>x</code>) and an integer <code>k</code>, which says how many of the items in <code>x</code> belong to each factor/category (in our case, this will always be 10, the number of males).  The fuction shuffles the vector and assigns the first <code>k</code> values to group 1, then returns the difference beween the mean of the randomized &ldquo;group 1&rdquo; and &ldquo;group 2.&rdquo;</p>
+</blockquote>
+</blockquote>
+
+<pre><code class="r">randomized.difference &lt;- function(x, k) {
+    n &lt;- length(x)
+    x.random &lt;- sample(x, n, replace = FALSE)
+    return(mean(x.random[1:k]) - mean(x.random[(k + 1):n]))
+}
+</code></pre>
+
+<p>We repeat this randomizing and recalcuate the test statistic (in this case the mean effect between gender) each iteration. There are 4029 shuffles because we wanted to land on a weird number (the sum of all the divisor is greater than the number, and no subset of divisors equal the number).</p>
+
+<pre><code class="r">set.seed(70)
+n.shuffles &lt;- 4029
+n.males &lt;- sum(jackals$sex == &quot;Male&quot;)
+differences &lt;- rep(0, n.shuffles)
+for (i in 1:n.shuffles) {
+    differences[i] &lt;- randomized.difference(jackals$mandible, n.males)
+}
+differences  #the randomized mean effect values
+</code></pre>
+
+<pre><code>##    [1] -1.2 -0.4 -0.8 -1.8  2.4  1.0 -1.8 -2.4  0.0 -1.0  0.8 -0.6  1.4
+##   [14]  0.0  1.8  0.6  4.0 -0.4  0.4  2.2 -0.4  1.4  0.0 -1.8  0.0  1.4
+##   [27] -1.4  3.2 -4.2  0.2 -0.6 -3.4  0.4 -1.0  0.8 -0.4 -0.6  0.6 -2.0
+##   [40]  0.6  2.6 -0.2  1.2  0.8  0.6  0.6  0.6 -1.6 -0.8 -0.4  0.8  1.2
+##   [53]  0.8 -0.4 -2.2 -1.6 -1.0 -0.4  1.0  0.8 -0.6  0.4 -1.4 -0.4  3.0
+##   [66] -0.4 -2.2 -1.4 -1.4  3.4  1.6  2.0 -1.0 -0.4 -0.8 -3.2  0.2 -1.6
+##   [79]  0.8 -3.2  2.0 -0.8  1.0 -3.2  2.0 -4.0 -0.6 -1.0 -2.8 -0.8 -2.8
+##   [92]  4.2  0.0  0.4  0.2  3.2 -0.6  1.0 -1.2  1.0 -1.0 -0.4 -1.8 -0.4
+##  [105] -1.0  1.6  0.4 -0.4 -1.8  1.4  2.8 -0.4  0.2  0.8 -0.2  3.0  3.2
+##  [118] -0.2 -0.8  0.6  2.6  2.4 -2.2 -2.0  3.2  2.4 -0.2  1.6 -1.2  0.6
+##  [131] -1.2  0.2 -0.4 -1.4  1.0  1.2  1.2  1.2  2.0  0.6  1.0  1.4  0.8
+##  [144] -2.4 -1.2 -0.4 -1.2  2.8  1.4 -1.0 -0.6 -1.6  1.4 -0.6 -0.2  0.0
+##  [157]  1.4  0.6 -0.2 -1.4 -0.4  3.4  1.8  0.6  0.8  2.0 -0.2 -0.4 -0.4
+##  [170] -2.8 -3.0 -3.0  1.4 -1.2  1.4  2.4 -1.4 -0.2  0.4  0.0 -3.2 -2.0
+##  [183]  1.0 -2.2  2.4 -2.4  2.8 -2.0  0.4 -0.6  1.2  0.2  0.2  1.6 -1.2
+##  [196]  0.6  1.0  3.8  0.4  1.2  0.0 -3.4  1.4  1.0  0.2  0.4 -4.4  2.0
+##  [209] -3.2  0.4  0.8  0.4 -4.0  0.0 -0.4 -0.8  2.6  1.4 -2.2  0.2  1.0
+##  [222] -2.2  2.0 -0.8  0.0 -0.4  0.0 -1.4 -3.4  2.6  2.0  1.2 -0.2  2.6
+##  [235]  0.6  1.4  1.8  1.4  2.6 -2.0  4.4  0.8  0.2  0.0  1.6 -1.2  2.8
+##  [248] -3.0 -2.8 -1.0  0.8  0.0 -2.2  2.4  0.0  0.0  1.6 -1.6 -1.6 -4.4
+##  [261] -0.6 -3.0  0.0  0.8  1.4  0.8 -0.8  0.0 -0.8  3.0 -0.4 -1.2  0.4
+##  [274]  0.6  0.4  0.8 -0.4  1.0  1.8  0.2 -0.8  3.2  1.6 -0.2 -1.8 -1.2
+##  [287]  1.2 -0.6  0.8 -0.8  0.8  0.0  1.2 -1.0  4.0  2.4  0.2  0.2  2.8
+##  [300]  2.2  0.4 -0.2 -2.0 -0.4  1.4  0.4 -0.4 -1.0  0.2 -1.0  0.8  0.2
+##  [313] -0.6 -1.6 -0.8  1.0 -1.4  1.2 -0.4  0.6  0.6 -1.4 -0.6  0.6 -0.4
+##  [326]  0.0 -0.2 -2.4  0.6 -1.4 -1.6 -2.8  0.6 -1.0  2.6 -4.4  1.6 -1.2
+##  [339]  2.2 -0.4  1.6  0.6 -0.4  1.0 -1.0 -3.4  0.8  2.0  1.4  0.0 -3.0
+##  [352]  2.8  2.0 -0.4 -0.6  1.2  0.0  2.6  1.8  1.2  2.8 -1.0  2.8 -0.6
+##  [365] -1.6 -2.4 -0.6 -0.2 -2.0  1.6  0.4 -0.4 -0.4 -1.6  0.8  1.0  3.6
+##  [378]  0.4 -2.0 -1.6 -0.8 -1.8  1.2  0.4 -1.6  1.2  1.8 -1.2 -1.8  0.2
+##  [391] -2.2 -1.4 -0.2  0.0  3.6 -0.6 -0.2 -1.2 -0.2  0.2 -1.2  0.2  2.8
+##  [404] -3.8  0.0  3.0  0.4 -0.4 -1.2  0.6 -0.6  0.4 -1.8  1.2  3.0 -1.8
+##  [417]  1.0 -3.0  1.2  4.4 -0.4 -1.0 -1.4 -3.0  1.4 -1.6 -1.2 -1.0 -1.2
+##  [430] -1.8  1.8 -1.6 -0.8 -0.2  2.0  0.8 -1.4  1.6  2.2  1.2  4.4  1.8
+##  [443]  1.2  0.2 -1.0 -2.6 -0.6  1.6  2.0  1.4  2.6 -0.6  0.0 -1.2  1.2
+##  [456]  2.2  0.2 -0.4 -1.0  0.0  2.2  0.6  0.0 -1.8  1.2  3.0 -3.4  3.0
+##  [469]  0.6 -2.0  1.0 -0.4  0.0  2.2  1.0 -1.4  2.8 -2.8 -0.2  1.6  0.4
+##  [482] -0.4 -0.4  2.2  1.0  2.0 -2.8  0.2  1.4 -0.6  0.4  1.4 -2.8  0.4
+##  [495]  0.2  2.4 -1.4  1.4  1.2  0.0  2.0  0.0  0.6 -1.8  0.8  0.8 -1.2
+##  [508]  1.2  0.2  0.4 -1.6 -3.6  2.8 -1.4 -1.6 -2.0 -2.4  1.4 -2.8  0.6
+##  [521]  2.0  0.8 -0.8 -1.2 -1.0  1.4  0.6 -0.2  2.8  0.4  0.4 -1.2 -3.4
+##  [534] -2.2  0.2 -0.8  1.0 -0.8  2.0  4.0 -1.8 -1.4  1.4 -1.4 -1.4  0.8
+##  [547] -1.6  1.2 -0.2  4.2  2.8 -1.0  3.6 -1.0 -3.6 -1.2 -3.0  1.0  1.2
+##  [560] -0.2 -1.4  2.2 -0.6  0.2  1.6 -1.2  1.4  0.6 -0.6 -1.0  3.4  1.6
+##  [573] -2.6  1.6  2.2  2.2  0.4 -1.4 -0.6  0.0  0.0 -1.8 -1.6  0.4  1.0
+##  [586]  1.8 -0.2  1.8  0.4 -1.6  0.8  0.6  0.0  2.2  1.8 -2.0 -1.2  1.2
+##  [599]  1.0  0.4  4.0  1.6 -0.2 -0.4 -1.8 -4.2 -1.4 -1.4 -1.0  0.6  0.8
+##  [612]  0.8 -1.6 -1.2 -1.2  0.6 -0.6  3.8  1.2  1.6  1.2 -1.0 -1.0  2.8
+##  [625]  0.0 -1.6  1.0  1.8 -2.2 -1.4 -4.2 -0.2  1.8 -2.2 -3.0  1.6  2.8
+##  [638]  3.4  2.0  3.6  2.4  2.0  2.4  0.8  1.8 -0.6  1.2  3.6  0.2  1.8
+##  [651]  1.2  1.8 -0.4  1.4  1.6 -1.6  2.6  1.4 -1.8 -1.0  1.4 -2.2  0.6
+##  [664] -1.4  0.0 -1.8  2.2  0.4 -3.6 -0.8 -0.6  2.4 -2.0  0.0 -1.0  0.0
+##  [677] -1.6  0.2 -4.6  0.4 -0.8 -2.4  0.0  0.8 -0.2  1.6 -2.4  1.0 -0.8
+##  [690]  1.2 -0.6  0.8  2.4  2.2 -1.8 -1.6  0.2  0.8 -0.6  1.6  0.0 -2.2
+##  [703]  0.8 -0.8 -0.2 -1.8  0.6  0.2 -1.2 -1.2 -4.0 -1.2 -1.4 -0.2 -1.8
+##  [716]  1.2  0.4 -0.4  3.0 -1.8 -0.6 -0.4 -0.8  0.2  1.0 -1.0  1.4  1.2
+##  [729]  1.2 -1.0 -0.4  3.0  2.4  2.0  1.0 -3.0  3.2 -0.4 -1.0  0.6  0.2
+##  [742] -2.6 -3.8  2.0  3.8  0.6 -0.8 -0.2 -2.0 -1.8  2.0 -1.6  2.0  2.6
+##  [755]  2.0 -0.4  1.0  1.8  0.8 -1.6 -1.0  0.6 -0.2 -0.2 -1.2  1.4 -0.6
+##  [768]  2.0  3.2  0.0 -0.6 -0.2 -1.0  2.0  1.4 -1.8 -1.4 -2.6 -1.2  2.8
+##  [781]  2.2 -1.4 -0.6  1.4  0.0 -3.8  0.0 -2.4 -0.4  0.2 -0.2 -1.6 -1.4
+##  [794]  0.8 -2.4 -1.0  0.6 -1.2 -0.2 -3.4 -3.8  0.2 -0.6  0.4  3.8  0.0
+##  [807]  2.0  2.2  0.2 -0.6 -0.2  0.6  0.0  2.2  2.4  0.6 -3.6  0.4  0.2
+##  [820]  0.0 -0.2  0.8 -0.8  3.0  2.6  2.2  2.2 -2.8  1.0 -0.4  1.6  1.8
+##  [833] -0.6  1.0  1.8 -1.6  1.4 -3.6 -1.8  0.8  4.0  1.4  0.4  0.0  2.6
+##  [846] -0.8  2.2  0.6 -1.8 -2.8  1.0  0.6 -0.4 -2.6  1.8 -2.2 -0.4  2.0
+##  [859] -0.8  3.2 -1.4 -3.6  0.0  0.6  2.0 -2.4 -1.2 -1.4  0.0 -0.4  0.0
+##  [872] -1.4  1.6 -0.4  1.0  4.6  2.2 -0.6  1.4 -0.8 -1.2  0.2  0.0  0.4
+##  [885] -1.2 -0.8  1.8 -4.0 -1.6 -1.0  1.4 -1.4  0.4  0.2  0.6  1.4  4.0
+##  [898]  0.4 -1.6 -1.0  0.0 -2.2  2.2 -1.0  0.0 -1.6  0.2  0.6 -1.8  0.6
+##  [911]  3.4 -2.2  0.6  0.2  2.0 -3.6 -2.2 -0.4  1.2  2.2  0.6 -0.6 -1.0
+##  [924] -0.2  0.8  3.8  0.4  1.0 -0.2  0.8  0.2  4.8  0.8  0.6  2.4  0.4
+##  [937]  2.4  0.0 -0.6 -1.4  0.2 -0.2  1.0  0.8  0.0 -1.0 -2.8 -3.8  1.2
+##  [950] -3.0 -1.0 -1.6  1.4  2.2  3.6 -2.8 -0.6  0.0  1.8 -0.2  2.6  0.6
+##  [963]  2.2  1.4 -1.2  1.8 -1.0  1.8 -1.0  2.2 -3.0  3.0 -1.2  0.4 -2.8
+##  [976] -2.0  1.2 -2.8  1.4 -0.8  3.8  0.2 -0.4  1.0  2.2 -3.8  3.4  2.8
+##  [989] -1.8 -0.2 -0.2 -1.8  0.0  1.2 -0.8 -1.2  1.2  0.6  2.0 -0.6  2.4
+## [1002]  1.8  0.6 -2.2 -1.0 -3.4 -1.6  0.2 -0.2  0.4  0.8  0.8  3.2 -1.6
+## [1015]  0.6  2.6 -1.4 -1.0  1.2 -0.6  1.8  3.2  0.4  2.0 -3.4  1.0 -1.8
+## [1028]  0.2  0.2  1.0  2.0  1.4  2.0  0.4  3.8  0.0  1.6  0.8 -2.0  2.2
+## [1041] -3.0  1.0  3.6 -3.0  1.0 -0.6  0.0  1.6  2.8  2.0  2.6 -4.0 -0.2
+## [1054] -2.2 -1.4  0.8  2.2  4.4 -1.4 -3.0 -1.6  0.0 -1.8  3.2  0.6  2.8
+## [1067] -1.8  2.0 -1.8 -0.2  0.8  0.2 -2.4  0.6  4.0 -0.8 -0.6 -0.4  0.0
+## [1080] -0.4 -1.0 -0.4  0.2  2.4 -1.4 -0.8  0.8 -2.6 -1.0 -1.2  2.8 -0.6
+## [1093] -2.8 -0.6  0.4  4.4  2.0 -1.2 -2.2  1.4  0.4 -0.2  2.8  0.2  1.6
+## [1106] -3.6  4.4  0.0  0.0  1.4 -1.6 -0.8 -2.6 -0.2  1.0  2.2  2.2  1.0
+## [1119] -0.6 -1.2 -5.0  2.0 -0.6  3.4  0.8 -0.8 -1.6 -0.8  0.6 -1.8  0.2
+## [1132]  1.2 -3.0 -4.4  2.8 -1.0  1.8  2.0  0.0 -1.4  0.0  1.8 -0.6  0.0
+## [1145]  0.6  0.2 -1.2  0.2  0.4  0.2  0.4  1.8 -1.4 -3.4 -1.0 -0.8 -0.6
+## [1158] -0.8  1.6 -0.4  1.6  1.2  2.2  0.4  0.0  1.8  0.4 -0.6 -1.4 -2.0
+## [1171]  1.6 -0.2 -0.4 -1.4 -0.2 -2.2 -0.6  0.2 -2.2  3.8 -1.0  0.8  1.4
+## [1184]  1.0  1.0  0.6  0.0 -1.4  0.4  0.0 -0.8 -2.6 -0.4 -2.0 -1.8  0.6
+## [1197]  0.0 -0.4  1.8  2.6  0.2  1.0  2.2  0.6 -0.6  0.8  0.8  0.4 -2.4
+## [1210] -2.8 -0.6  2.2  2.6 -0.6  0.8  0.8  1.2 -0.2  1.8 -2.4 -1.4 -3.2
+## [1223] -1.0  0.2  0.4 -1.0 -0.6  0.6  2.2  2.8  2.6 -2.0  0.0 -2.4 -2.6
+## [1236]  2.2 -4.2 -0.2 -1.2  0.4 -0.6  1.0  0.2  0.4 -3.6 -1.4 -2.0 -2.6
+## [1249]  2.8  0.2  0.0  1.0  1.8 -0.8  0.8 -3.4  2.6  0.2  1.8  2.6  1.8
+## [1262] -3.0 -0.8 -1.2 -0.2 -1.0  1.6 -3.2 -1.8 -0.2  0.2  1.4  2.4 -3.8
+## [1275]  0.2  0.0 -1.4  1.8  1.2 -2.6  0.4 -3.6 -0.4  0.8  0.4  3.2 -2.4
+## [1288] -2.8 -1.0  0.8  0.8 -1.0 -3.4 -2.0 -0.8 -0.8  1.4  0.6 -0.6  1.0
+## [1301]  1.0  1.2 -4.6 -1.2 -2.6  1.2  2.4 -2.2  2.2 -0.6  0.2 -2.4  1.0
+## [1314] -1.2  1.4  2.8  2.0 -1.0  3.4 -1.8 -1.4 -3.6  2.0 -1.0  1.4  1.2
+## [1327]  1.4 -0.2 -1.6  0.2 -0.6  0.0  2.2  1.6  0.6  1.2  1.0  0.2  3.6
+## [1340]  0.0  1.8  0.8  1.6 -1.6 -1.6  2.0  2.0  1.8  0.0 -1.8  1.2  0.6
+## [1353] -2.0 -3.0  2.8  2.6 -0.4  2.0  4.8  2.4 -1.6 -1.4 -0.2 -0.2  1.6
+## [1366]  0.2 -1.2 -1.0 -1.6  1.8 -0.6  0.0  0.4  3.0 -2.8 -0.4 -0.6  1.6
+## [1379] -1.6  1.6 -3.0 -1.6 -1.6 -0.4 -2.2  0.2  0.2 -0.6  0.0  1.0 -0.8
+## [1392] -4.0 -0.6 -1.8 -1.6 -1.0 -2.4  1.4 -0.6 -1.4 -1.0 -2.0 -1.4  0.0
+## [1405] -0.6 -2.2  0.4 -1.8 -0.8 -1.6 -1.2 -4.4 -0.2 -1.6  1.6  1.6 -1.2
+## [1418]  1.0 -2.0 -1.4  1.0  0.0 -1.0  1.6 -0.2 -1.6  2.4 -2.4  2.8  1.2
+## [1431] -1.0 -0.8 -1.2 -3.6 -0.6  1.0 -0.2 -0.8  1.0 -0.2  1.8 -1.6  0.6
+## [1444]  0.0  1.6 -3.8  0.4  0.6  1.2  0.6 -0.6  2.4  0.8 -1.4  1.2 -1.4
+## [1457] -2.2 -1.6 -0.6 -1.0  2.8 -1.2  0.2  1.6 -4.4 -0.6 -1.8 -1.2  1.2
+## [1470]  0.2  0.4  0.4  1.0 -0.2  0.4  2.8  0.6 -2.2  1.0  1.0  1.4 -1.4
+## [1483]  2.4 -2.4 -2.2  1.0  2.4  1.0  1.2 -2.6 -0.8  1.0 -2.6  1.4 -2.0
+## [1496]  2.4  0.0  0.2  0.4  0.8 -3.0  0.0  1.4 -0.6 -0.6 -1.0  0.2 -1.0
+## [1509] -0.6  0.2 -1.2 -2.8 -1.8  2.2 -1.0 -0.6 -0.2 -1.4  1.2 -1.0 -2.6
+## [1522]  0.8  2.6 -1.8 -1.0 -1.6  0.0  0.6 -0.8 -0.6  1.2  0.0  2.4  1.0
+## [1535] -0.2  2.6 -2.4  0.8  3.4 -1.4  2.0  0.4 -2.6 -2.8 -3.0 -1.2  1.6
+## [1548] -1.8  0.4 -0.6  0.8  0.4  0.8 -0.4  2.4  0.8  1.8 -2.6  1.6 -0.4
+## [1561] -2.0 -0.4  3.0  1.8  0.8  0.6 -1.0  2.6 -2.6 -2.4 -1.4  2.8  2.4
+## [1574] -0.6  3.0  0.4  3.4  0.4 -0.4 -2.4  0.4  0.2  1.4  0.8 -1.0  0.2
+## [1587]  0.8  3.8  1.4  0.2 -0.8 -2.6  0.6  2.4 -1.0 -2.6  3.8 -0.6 -2.6
+## [1600] -1.4 -1.4  0.6  3.4 -1.8 -2.2  0.8 -0.8 -0.2 -1.2 -3.6 -0.6  0.2
+## [1613] -1.6  1.0  0.0 -2.4 -0.6  2.6  0.6 -0.4  2.0  2.4 -1.6  0.0 -1.8
+## [1626] -1.8  0.8 -0.4 -1.0  2.6 -1.0  0.6 -0.4  0.8 -3.0  1.2 -1.6  2.8
+## [1639]  0.8  1.6  2.6 -0.2 -1.4  3.2 -1.4  0.0  0.6  1.4  4.4  2.8  1.6
+## [1652] -2.2  3.4  1.4  0.8 -3.8 -1.8  2.6 -1.0  3.0 -0.2  1.2  2.4 -2.2
+## [1665] -0.4  0.8 -1.8  0.8 -0.6 -1.6  0.2 -1.8 -0.2  0.0  0.2 -2.4 -0.4
+## [1678] -0.8 -1.2 -0.4  2.2  2.0 -0.2 -1.0 -2.8  1.2 -1.4  3.2 -3.2  1.8
+## [1691] -1.4 -3.6  2.6  2.6 -0.8  0.6 -0.6  2.2  0.0 -0.2 -0.6  0.0  0.8
+## [1704] -0.2 -1.2  0.8 -2.8 -0.2 -0.8  0.8 -1.2  0.6  1.4 -0.8 -3.6  1.0
+## [1717]  0.2  0.6 -2.8 -1.0  3.2  1.6 -2.2  1.6  1.8 -0.2 -2.4  0.8  1.8
+## [1730] -1.4  3.8  0.4 -1.6  2.8 -0.6 -2.0 -1.8  1.6 -0.4  0.0  0.2 -0.2
+## [1743] -1.2  0.2 -1.8  2.8 -1.2  0.4 -0.4  3.4  0.8  0.8  3.8  1.6  0.6
+## [1756] -2.0 -1.0  0.8 -1.8 -4.0  1.4 -3.6  0.2  3.0 -1.2  1.4 -0.2 -2.2
+## [1769] -0.4  1.8  4.2  3.0  0.8  0.2 -0.4  1.0  2.4 -2.2  1.0 -1.0  2.4
+## [1782] -0.6 -0.8  0.2  0.0 -0.2 -1.2  2.6  1.8 -2.0  2.6 -1.6  2.2  3.2
+## [1795]  0.2  2.2 -2.2  1.8  0.2  1.4  0.2  0.8 -0.2 -0.4  1.6 -2.0 -2.0
+## [1808]  1.8 -0.2 -1.4  0.6 -1.4 -2.0 -2.0 -1.8  0.2  0.0  0.4  1.2 -2.0
+## [1821]  0.0 -2.0  0.6 -1.0 -1.4 -0.8  2.0 -2.4  0.2 -1.0  4.4 -0.2 -1.4
+## [1834] -0.4  0.2  1.8 -1.2  2.2  0.6 -1.8  2.4 -3.4  2.2  0.4 -2.2 -0.2
+## [1847] -1.0  1.0 -1.4  2.4  2.4  0.2 -2.4 -0.4  0.4  1.2 -1.0 -0.2  0.0
+## [1860]  0.2 -2.2  1.0 -1.8  1.4 -0.6 -0.4 -2.6  3.2  0.4  1.6 -0.2  3.4
+## [1873]  0.4 -0.2  1.0 -1.0 -0.4  1.8 -1.8  3.0  0.0 -0.8  0.4 -1.4  0.2
+## [1886]  2.8 -1.8 -1.2 -2.4  2.0  2.4  1.0  0.4 -0.2  0.2 -0.4 -0.6  1.2
+## [1899] -0.4  1.0 -0.6 -2.2 -3.2 -0.6  2.8 -1.0  4.4  1.6 -0.2  2.8  1.0
+## [1912]  1.2 -0.2  1.2  1.0 -2.4  0.0  0.8 -0.4 -0.6  0.6 -0.2 -1.4  0.8
+## [1925] -4.2  1.2 -0.8  0.0 -3.0 -0.4  2.4  1.8 -1.6  1.6 -1.0  0.2  2.4
+## [1938]  1.4  3.8  0.0  2.6 -3.0  0.0  1.0  1.8  1.6  1.0  1.2 -3.4 -0.4
+## [1951]  0.0  1.8  0.2 -2.4  3.0  1.0 -0.6  0.2 -0.8 -2.2 -0.4  1.0 -0.6
+## [1964]  0.0  2.4 -0.4  2.4 -3.0 -1.6  1.8 -0.6  2.2 -2.4 -2.6 -1.2 -0.2
+## [1977]  0.0  0.0 -2.2 -1.0 -1.0  0.6  1.6  1.0  3.4  1.2 -1.8  0.8  3.2
+## [1990]  1.4  1.0 -2.8 -1.0  0.8 -3.0  1.2 -0.8 -1.0 -2.2 -2.4 -2.4  0.0
+## [2003] -0.8 -1.0  0.2  1.8  2.2  2.6 -0.8 -0.2  0.2 -0.6 -0.8  2.6  0.6
+## [2016]  2.0  0.0  1.0 -3.2  1.6  1.6  2.2 -1.0 -1.8  1.8  1.4  2.4 -3.4
+## [2029] -1.8  0.8 -0.6  0.8  0.2  0.0  1.0 -1.2  0.4 -2.6 -0.6 -0.2  1.8
+## [2042] -1.0 -0.2 -3.0  0.2 -3.0 -2.4  0.4 -0.6  1.4 -0.4  1.0 -4.2  0.6
+## [2055] -1.4 -0.8 -0.2 -0.2 -1.6 -0.4  0.4  1.2 -0.8 -1.4  2.0 -1.8 -0.2
+## [2068] -0.4 -0.2 -2.6  0.2  2.0 -2.2 -2.6 -0.6  1.6 -0.6  0.8  1.0  0.4
+## [2081] -1.0  1.0 -0.8 -3.2  1.6 -1.2  0.0 -2.0 -1.4 -0.4  0.8 -0.6 -0.4
+## [2094] -0.8  0.8 -0.2 -0.4  2.0  0.4  4.0  2.6  1.6 -0.4  1.0  0.6 -1.2
+## [2107] -0.2 -1.8 -1.8  1.2  0.0 -0.8  0.0  0.8  1.8 -1.4  1.2  3.6 -0.2
+## [2120] -1.6  3.0 -0.8 -1.2  2.8 -0.6  0.8  1.4 -0.4  1.2  1.4  1.2 -1.2
+## [2133] -2.4  1.2  4.2  1.2 -0.2 -2.8 -1.0 -1.2  1.4 -0.8  0.8  1.6  1.2
+## [2146]  0.2  0.0 -2.0 -1.8  2.6  2.4  3.2 -2.4 -3.8 -2.8 -0.2 -0.2 -1.4
+## [2159]  3.2 -2.4 -1.2  0.4  0.0 -1.0 -1.6  0.2 -1.2 -0.6  1.6  1.0 -0.6
+## [2172] -2.8  1.4  1.6  1.4  0.2  0.4 -2.6 -1.2 -1.0  0.8 -0.2  1.0 -1.2
+## [2185]  0.2 -2.2  0.0  0.8 -1.0  0.6 -1.4  0.4  1.4  0.8  1.8  1.8  1.8
+## [2198] -0.8  2.6  2.6 -4.2 -0.6  1.2  3.0 -1.0  2.0 -2.0  0.6  0.2  0.6
+## [2211]  1.2 -0.8  0.0  4.0  0.4  0.2  3.0  1.2 -0.2 -0.2 -1.0  2.6 -2.2
+## [2224] -0.4  0.2  1.2  0.0  0.6 -0.6 -2.4 -0.2 -2.0  2.4  0.2  2.0 -0.6
+## [2237] -1.2  0.0 -0.6 -4.6 -1.0 -3.6 -1.6 -2.4  1.4  1.0  1.8 -1.4 -0.2
+## [2250]  0.2  1.4  3.6 -1.0 -0.6 -2.2 -2.6 -1.6 -1.6  0.0 -0.6  1.4  3.2
+## [2263] -0.4 -3.0  1.6  1.2 -1.0  1.0  0.0 -3.0  2.6  0.0 -1.4  1.4 -0.8
+## [2276]  0.2  0.2  1.6 -2.2  3.0 -0.4 -1.4 -3.2 -2.4 -3.0  2.8  0.0  2.4
+## [2289]  1.8 -2.6 -2.2 -1.4 -1.4 -2.6 -0.8 -2.4 -2.6  1.8  1.6 -0.4 -1.2
+## [2302] -2.8  0.6  0.6 -1.6 -1.8  1.6 -3.0 -0.2 -2.4  1.4 -0.4  2.0  2.0
+## [2315] -0.4 -1.0  1.2 -1.6 -1.0  0.6  0.4 -1.0 -2.4  2.0  0.2  1.6 -0.6
+## [2328]  3.0 -0.6  1.0 -1.4  0.4 -1.2 -1.2  1.4  0.2 -1.2 -1.6  3.0 -0.2
+## [2341]  1.4 -1.2 -0.4 -3.4  0.4  2.2 -1.6 -3.2  1.4  0.0  5.0  2.0  0.4
+## [2354] -1.2  1.6 -1.2  0.4 -1.2 -0.2 -2.8  1.0  4.4  2.8 -2.8  0.2  1.6
+## [2367]  0.6  2.2 -1.4  2.0 -0.6  1.6  2.4  1.2 -1.6 -0.2  1.8  0.2  0.2
+## [2380] -3.4  0.6 -2.2  1.4 -2.0 -0.4 -0.2  0.2  1.2  1.4  1.6  1.2 -1.8
+## [2393] -2.2  2.0 -2.2  3.2 -1.8 -2.4  0.4  0.4 -0.6 -0.4  1.4  0.4  0.2
+## [2406] -2.0  2.4 -3.4  1.8 -0.8  0.6  1.0 -0.2 -0.4 -0.8  0.0  0.0  2.4
+## [2419] -1.0  0.0 -2.8 -4.0 -4.8  1.0  1.8 -0.2 -2.2  0.6 -2.2  2.0  3.4
+## [2432]  1.6  0.8 -0.4  0.0  0.8 -3.4 -1.4 -1.0 -0.6  0.0 -3.2  2.6 -1.0
+## [2445]  0.0  1.6  1.8  0.6  0.8 -1.2  1.2  1.0  1.0  1.6  0.8 -1.0 -0.2
+## [2458] -3.0 -0.4  0.4  1.8 -1.6  0.4  2.2  2.6 -0.6 -1.2 -1.4  0.4 -1.0
+## [2471] -1.0 -0.8  1.4 -1.4 -0.4 -2.0 -2.6 -0.4 -1.8 -1.6 -1.6  2.0 -3.2
+## [2484]  2.6 -3.0  1.2  0.2  0.8  1.8  0.2  3.0 -0.4 -2.8  0.6  1.6  1.2
+## [2497]  1.2 -1.2  1.4  0.2 -4.8  1.2  0.0 -1.4 -1.6  0.0 -0.8  2.0 -1.8
+## [2510]  1.6 -1.0  1.6 -0.6 -1.4 -1.0  1.6 -1.0  0.2  0.0 -2.2  1.4 -0.6
+## [2523]  3.0 -0.8  1.6  0.6  3.0 -3.2  0.2 -2.8  1.4  0.8  1.0  2.0 -4.0
+## [2536]  0.6  0.2  0.8  0.0 -1.0  1.2  0.6 -2.4 -3.8 -2.6 -0.8 -1.4  1.0
+## [2549]  3.0 -1.2  2.4 -1.2 -2.8  1.8  1.0 -0.4  2.0  0.0 -0.8  1.4  2.2
+## [2562]  0.0  3.0 -0.2 -0.2 -1.8 -2.2 -0.6 -0.6  3.4  1.4  0.0 -1.0  1.8
+## [2575] -1.2 -1.4  0.8 -2.4 -1.2  1.4 -1.2  0.2 -3.2 -5.0  0.4 -1.4  2.2
+## [2588] -3.2 -1.2 -2.6 -3.0  2.0 -1.8  0.6  0.6  2.0 -4.4 -0.8  1.4  2.6
+## [2601]  2.6  2.0  1.8  3.2  2.0  0.6  0.0 -1.2  1.8  0.0 -3.2 -1.4 -1.2
+## [2614]  2.6  0.4  0.0  0.2  1.0 -2.6 -2.6  1.8  2.0  1.6 -3.4 -1.6 -0.8
+## [2627] -2.4 -2.0  1.8  0.4  2.8 -2.6  0.6  0.2 -1.2 -1.8 -0.2 -1.6 -1.4
+## [2640]  0.2  0.8 -3.4  0.8 -0.8  2.2 -0.2 -1.0 -0.2  3.6 -0.4  1.6 -2.2
+## [2653] -5.8 -1.2 -2.6  2.8  2.2  1.0  0.8 -1.2  0.2  2.6  1.8 -0.8 -1.8
+## [2666]  1.6  0.6 -1.2  0.2  3.8  2.4 -2.2  0.6  0.0 -0.6  0.2 -0.8 -3.4
+## [2679]  1.4 -0.4 -1.6 -0.6  0.4  1.0  0.2 -0.4 -0.6  2.8  0.2  1.2 -1.2
+## [2692] -0.8  2.8  1.2  1.6  1.6  3.0 -2.2  1.2  0.0 -1.2  0.4  3.6  0.4
+## [2705]  0.8  0.0  1.6 -0.6 -0.2  0.0 -1.0 -1.2 -4.2  1.4  0.4 -1.6  1.0
+## [2718] -1.0  0.8  2.0 -0.8 -3.4  0.8 -2.8  0.6 -2.0  1.0  1.4 -1.6  2.0
+## [2731]  2.8  1.0 -0.6 -0.8  3.2 -0.4  1.6  2.0 -0.2  1.6 -0.2 -2.4 -1.0
+## [2744]  2.4  3.8  2.0  0.2  1.6 -0.8 -2.8 -2.0 -1.0 -0.6 -2.2  1.6  1.0
+## [2757]  1.0  1.8  1.6 -1.2 -1.2 -1.0 -0.4  1.0 -1.6  0.2  1.0  4.0 -1.0
+## [2770] -1.8  0.8 -0.4  2.2 -0.2  1.6  0.8  0.6 -0.4  2.2 -1.8  1.8  2.4
+## [2783] -0.4  0.0 -1.8  0.0  2.0  1.6 -3.0  2.2 -1.4  2.4  1.0 -0.4  2.2
+## [2796]  1.2  1.2 -1.4  1.2 -3.2  0.0  2.0  0.8  1.2  3.2 -0.2 -1.8 -1.0
+## [2809] -2.0 -1.6 -2.0 -4.0  0.2 -0.2  2.2  0.0  0.2  0.2 -0.6 -0.8 -1.2
+## [2822] -3.6  0.0  1.6 -1.4 -0.2 -0.4  0.6 -0.4  2.2  2.2  2.0 -1.8 -1.4
+## [2835] -2.6  0.0 -0.6  3.6  3.4  2.0 -2.4  0.0  0.6  2.2 -0.2 -0.8 -1.2
+## [2848] -0.8 -0.6  3.4  0.0  0.6 -1.6 -0.2 -1.0 -0.4 -0.4  0.2 -2.8  2.0
+## [2861]  2.2  2.2  2.2  0.8  1.0  1.4 -2.2 -1.2  0.8 -0.8  0.0  0.6 -3.0
+## [2874]  1.8 -0.2  0.6  2.8  0.2 -0.2  0.0 -0.2  1.0 -3.6  0.6  0.2  2.2
+## [2887]  1.0  1.0 -0.2  0.2  1.6 -2.0  1.0  1.6  2.2  2.8 -1.6 -3.8  3.4
+## [2900]  0.8  1.2  0.2  2.6 -1.2 -0.2  0.6 -0.6 -0.8 -2.2 -0.8  0.4  0.4
+## [2913]  0.0 -0.4 -0.8  2.2  1.0  1.2 -0.6 -1.0 -3.0 -0.4  1.2  0.4 -2.6
+## [2926] -0.2  0.8 -2.8  0.2 -2.6  0.8 -1.6 -0.4  1.6 -0.2  0.6 -0.2  0.2
+## [2939]  2.0 -3.2 -3.0 -2.4 -1.6  1.6  0.2 -1.4  0.8 -1.2  3.2  1.6 -1.8
+## [2952]  3.4  2.2  1.0 -1.8 -2.4 -0.8  2.4  1.4  2.6 -1.6  0.8 -1.0  0.4
+## [2965]  1.4 -1.4  1.6  1.4 -3.4 -2.4  0.8 -2.2 -0.8 -2.2  4.8 -1.0  0.2
+## [2978]  0.2 -0.8 -1.8  0.6 -0.6 -0.6  1.8  1.0  2.0  1.4 -0.4 -3.6 -0.2
+## [2991]  2.4 -2.2 -0.6  2.0 -2.0  0.8 -1.8 -0.4  4.0  0.0  0.4  1.0  0.2
+## [3004]  0.8 -0.4 -2.6  0.0  2.4  0.4  0.4  1.6  1.8  0.6  2.0 -0.4 -1.8
+## [3017]  1.6  1.8 -1.2 -1.2  3.6  1.4  2.4  0.0  3.8  0.4  0.4 -0.8  1.4
+## [3030] -0.2 -2.4  0.2 -1.0  0.6 -1.2 -1.4  3.4 -0.2 -0.8  0.4  0.0 -1.8
+## [3043]  2.0  1.8  1.0 -1.0  2.6 -2.6  3.8 -1.0  0.0 -1.8  0.8 -1.2 -0.6
+## [3056] -3.0  2.0 -1.4  0.4 -0.4 -0.4  2.2  0.6 -1.4  1.4  1.6  2.0 -2.2
+## [3069]  0.6  0.8 -2.4  2.8  3.0 -1.6 -1.6 -2.8 -2.0  1.6  0.8  0.6  1.0
+## [3082] -1.4  0.6  3.6  2.2  2.0 -2.2 -1.6 -0.6 -3.0  1.6 -2.0  0.2 -1.4
+## [3095]  0.0  1.4  1.2  0.6  0.6  0.4 -1.8 -0.8  1.6  0.0  1.0  1.6 -3.4
+## [3108] -2.8 -0.8 -1.8 -0.8  0.2  1.2  0.8 -1.4 -2.4 -2.8  0.0 -0.4 -2.0
+## [3121] -0.8 -1.8 -1.2 -1.4 -0.6  2.4  1.6 -1.2  0.4  2.4 -0.8 -0.6 -1.2
+## [3134]  3.0 -1.0  2.6  0.2 -1.0 -0.4  1.0  2.8  1.6  1.8  2.0  0.0 -2.0
+## [3147]  1.0  1.6 -1.4 -0.8  2.2  1.2 -1.2 -2.0 -1.2 -2.4 -0.2 -0.4 -3.0
+## [3160] -0.6 -0.8  2.4 -4.4 -0.6  1.4  1.2 -1.6 -0.4 -0.8  1.6 -0.6 -3.4
+## [3173]  2.4  0.6  0.0  0.4 -1.2  1.6  0.4  2.2  1.4  0.8 -1.6  0.2 -3.8
+## [3186] -2.2  0.8  2.4 -0.6 -1.4 -1.0  0.4 -1.4 -1.2  0.2  2.8  2.8 -1.4
+## [3199] -3.2 -1.8  1.2 -1.2 -0.2  3.2  1.2 -0.4  3.2  2.4 -2.0  2.4  1.2
+## [3212]  0.4  4.2  1.0  0.2  2.0  0.4 -2.6 -1.6 -0.6  1.2 -0.8 -0.8 -1.6
+## [3225]  0.8 -0.2 -1.8 -0.6 -1.6  0.0  2.4  0.0  0.8 -0.4 -0.8  2.8  1.6
+## [3238] -1.8 -1.4 -3.4  0.8  1.4  2.4  0.6  2.4  0.2 -4.0 -1.6  2.8 -0.4
+## [3251]  0.6 -1.0  0.4 -1.4  2.0  2.2  1.8 -1.6 -1.2 -1.0 -2.2  0.4 -1.8
+## [3264] -2.0  1.6 -0.8 -1.0 -0.6 -0.8  1.4 -1.0  1.2 -1.8 -3.0 -0.2 -0.4
+## [3277]  1.6 -0.8  0.4  2.4  1.4 -2.4  1.4  1.8 -1.0  0.0  1.6 -2.2  3.0
+## [3290] -2.6 -2.0 -1.2 -1.4  1.8 -0.6 -2.0 -3.6  0.0 -1.4  0.8 -3.2  2.6
+## [3303] -1.4 -2.4 -2.0  0.6  0.0 -2.0  1.0  3.0  0.0 -0.8 -0.4 -2.8 -1.8
+## [3316]  0.0  2.0  2.2 -1.4 -1.6  0.0 -0.8  1.2 -0.6  0.6 -0.4 -1.4  0.2
+## [3329] -0.4 -0.2 -0.8 -1.4 -0.6  1.0 -2.2  2.4 -1.4  0.8  3.4 -2.0 -3.2
+## [3342]  1.2 -2.4  0.8  2.0 -2.2 -1.8 -1.8 -0.6  0.0  0.0 -0.8  0.0  1.6
+## [3355] -1.0  3.6  0.4  0.2  3.4 -0.6 -1.0 -1.0 -1.4  0.4  0.2 -2.0 -2.4
+## [3368]  1.2 -1.8 -0.6 -1.2 -2.2  0.8 -0.4  1.6 -0.2 -2.8  0.2 -1.0 -3.0
+## [3381]  2.2 -0.4 -0.8  1.0 -0.6 -2.4  1.6  0.0  2.0 -0.8 -1.8 -1.8  3.6
+## [3394] -1.0  0.6 -1.8  1.6 -1.2 -1.0  0.8  0.2 -1.6  0.6  1.8  0.2 -1.2
+## [3407] -1.4 -1.8  0.4  0.2 -1.0 -2.0  2.0 -0.8 -0.2 -1.2 -0.2  0.6  2.4
+## [3420]  0.8 -0.2  2.2 -2.2  2.6 -2.8  0.6  0.8  1.8  2.4  0.6 -2.6 -1.2
+## [3433] -1.8  0.4  1.6  2.4 -2.4  0.8 -2.0  1.2  0.2 -1.4 -0.4 -0.6 -2.4
+## [3446]  0.6  1.0 -1.6  2.6 -2.8 -0.2  0.0  1.2  0.0 -1.4  1.6 -2.0  2.8
+## [3459] -1.8 -1.6 -2.2  0.2  0.6  3.0 -1.0 -0.6  0.0  2.0  3.2  2.0  0.2
+## [3472] -0.6 -2.0 -3.2 -0.8  1.6 -1.6 -3.0  0.0 -3.4  0.0 -3.6  0.4 -1.2
+## [3485]  0.0 -0.2 -0.8  3.2 -0.6  0.8 -1.2 -0.8  0.0 -1.0 -0.4  0.4  2.0
+## [3498] -0.4  0.6  1.6  1.4  2.4  2.0  0.0 -3.0 -2.2  0.0 -0.8  3.4 -2.0
+## [3511]  2.8  1.0  1.4  0.8  2.4 -1.2  0.6  2.8 -0.4  2.2  0.8  0.4 -1.8
+## [3524] -0.2  0.8  2.6 -0.8  1.6 -0.6 -0.2  2.0  2.4  1.6  0.4  1.4 -0.2
+## [3537]  2.4  2.4  0.8  0.8  2.2 -2.4  2.8 -1.2 -1.0 -2.4 -3.4  1.4 -2.6
+## [3550]  0.0  3.8 -0.2  1.8 -1.8  0.8 -0.2  3.6 -1.2  0.6 -0.6  0.0  0.0
+## [3563] -0.8 -3.4 -0.2  0.2  0.6  3.6  0.4  0.2 -1.2  2.0 -0.2 -0.8  0.2
+## [3576] -2.0  1.0 -1.6 -1.4 -2.0  0.2 -1.0 -1.8 -2.4 -0.6 -1.2 -0.6 -1.0
+## [3589] -1.2 -0.8  0.0  0.2  2.4  2.0  1.6 -0.2  1.0 -2.8 -0.8  3.0  1.2
+## [3602]  0.8 -0.4 -0.8 -1.4 -0.2  0.6  1.6  2.8  0.4 -3.8  0.4 -2.2 -0.4
+## [3615] -0.6 -0.4 -2.4  3.0 -2.8 -2.6 -0.2  1.8 -2.8  0.2  0.2 -0.8  0.4
+## [3628]  0.4  0.4  0.0  2.0 -2.6  2.4  3.2  1.0  0.0 -2.2  0.2 -0.2  0.0
+## [3641]  0.2 -0.2 -0.4 -1.0 -1.2  1.2  0.2 -0.4  0.6 -1.8 -3.2 -0.8  1.2
+## [3654]  0.2  3.2  1.4  1.4 -3.2  2.0 -2.6  2.0 -1.6  1.2  2.8  0.0 -1.2
+## [3667] -1.8 -1.2 -2.2  0.4 -0.2  1.8  0.0 -2.0  2.4 -2.0  0.8  3.8 -0.4
+## [3680]  0.0  0.0  0.8  3.0 -4.4  1.0 -1.2 -0.2  0.6 -2.2  4.2 -1.4  1.0
+## [3693]  1.2  1.2 -0.4 -0.2 -0.2  1.6  2.6 -2.6  1.2 -0.8 -1.0  2.8 -0.4
+## [3706]  0.8  1.0 -0.2  1.4  0.6  1.0  0.6 -2.2  0.6  0.0 -0.6  0.4  0.0
+## [3719]  0.8 -2.8  2.0 -2.6 -3.8  0.4 -0.2 -1.8  0.8  2.8  0.8 -1.2  2.4
+## [3732]  0.4 -2.2 -2.4  2.6  1.0  1.4 -0.6  0.4  2.6  1.8 -0.8 -0.8 -3.4
+## [3745]  3.2 -0.6  0.8  0.8 -1.4  0.8  1.2  1.6 -1.4  2.2  1.8  0.8 -0.8
+## [3758]  1.8  1.6 -0.6  1.4 -3.6  0.6  1.0 -1.4 -0.8  1.6  0.6  2.6 -1.4
+## [3771] -1.2  1.6  1.8  0.4  1.6  2.8  1.4 -1.0  0.6  1.2 -1.0 -0.2  0.2
+## [3784]  0.4  0.0 -1.0  0.6 -2.2  1.8 -3.2  2.6 -0.4 -2.0  0.6  0.0 -1.2
+## [3797] -0.8 -1.6  2.2  0.6  0.2 -0.6  0.0  1.6  0.8 -1.2 -2.6  0.4  3.2
+## [3810] -0.2 -1.8  1.6  0.2  1.2 -0.4 -0.2  1.0  2.4 -1.4 -2.0 -1.4  1.0
+## [3823] -0.6  5.0  0.4 -3.0 -1.0 -0.2  1.2  1.2  1.2  0.8 -0.4 -1.2  3.6
+## [3836] -1.0  0.4 -1.8  0.6 -0.8 -2.4  2.2 -0.6 -0.8 -2.6  1.8  0.6 -3.6
+## [3849]  1.2 -0.8 -1.0 -1.0  1.6  2.8  0.8 -1.8  2.2  0.4  3.0 -1.4  0.8
+## [3862]  0.4 -4.8  0.8 -0.6  3.8 -0.8 -1.8 -1.0 -0.2 -1.2 -1.0  2.6  2.8
+## [3875] -1.2 -1.2  1.4 -1.4  2.0  0.2 -1.8 -4.4 -0.4  0.6 -1.6  2.6  0.2
+## [3888]  1.6 -0.4 -3.2  0.2  2.2 -3.2  1.4 -0.4 -1.2  2.8 -1.2 -1.0 -1.0
+## [3901]  1.6 -2.8 -1.8 -0.2 -2.4 -1.4  2.2 -0.2 -1.8 -1.4 -1.8  3.2  3.0
+## [3914]  0.4 -0.8 -1.4  3.8  1.0 -2.0 -1.0 -2.4  1.2  1.2 -1.8  0.4 -0.8
+## [3927]  0.0 -1.6 -0.2  2.8  4.6  0.6 -0.6  3.8  1.0 -0.6  5.0  0.8  0.0
+## [3940]  0.2 -0.4  1.6 -1.8  1.0  0.2 -2.0  1.4 -1.6  2.0 -2.8  3.2  0.8
+## [3953] -2.0  1.0  1.2 -1.8 -1.2  1.0  3.0 -0.8 -0.6 -1.2  0.0  4.8 -2.2
+## [3966]  0.2  1.8 -1.4 -0.4 -2.4  0.0  0.8  1.6  0.6 -0.4 -0.6  0.8 -2.2
+## [3979]  1.0 -0.4  0.6  0.4  1.2  1.8  0.2  2.6  0.2 -0.6  1.0 -1.0  1.8
+## [3992]  2.4 -1.6 -0.2  0.8  0.6 -0.4  0.2 -0.6  1.0  2.4  1.8 -2.8  0.2
+## [4005]  1.6  2.8  2.0  3.0  1.4 -3.4 -2.0  0.8 -1.0 -3.2  0.2 -0.4  3.0
+## [4018] -0.2  2.4  0.0 -0.6 -0.4  3.0 -1.2  2.8 -2.6 -1.2  2.8 -0.4
+</code></pre>
+
+<pre><code class="r">p.rand &lt;- (sum(differences &gt;= difference.observed) + 1)/(n.shuffles + 1)
+p.rand
+</code></pre>
+
+<pre><code>## [1] 0.001985
+</code></pre>
+
+<p>The p-value given by the randomization procedure (0.002) is, as we would hope, pretty close to the one from our linear model (0.0026).  As such, we can conclude that the males are significantly different from females.
+<br/></p>
+
+<h2>Dolphin Association Data</h2>
+
+<p>A more complicated randomization problem comes up when we try to test whether the a given dolphin individual in Porpoise Bay is more likely to associate with another dolphin individual in non-random groups (aka form non-random social groups).  Bejder et al. (1998) record their dolphin observations in a presence/absence table, where each row represents an &ldquo;encounter&rdquo; with a group of dolphins and each column represents a dolphin individual.  Ones or zeros indicate whether a presence and absence of a dolphin individual in a group.</p>
+
+<pre><code class="r">require(RCurl)
+</code></pre>
+
+<pre><code>## Loading required package: RCurl
+</code></pre>
+
+<pre><code>## Warning: package &#39;RCurl&#39; was built under R version 2.15.2
+</code></pre>
+
+<pre><code>## Loading required package: bitops
+</code></pre>
+
+<pre><code class="r">options(RCurlOptions = list(cainfo = system.file(&quot;CurlSSL&quot;, &quot;cacert.pem&quot;, package = &quot;RCurl&quot;)))
+url &lt;- getURL(&quot;https://raw.githubusercontent.com/PermuteSeminar/PermuteSeminar-2014/master/Week-5/Dolphin+data.csv&quot;)
+dolphins &lt;- read.csv(text = url, row.names = 1, header = F)
+dolphins &lt;- as.matrix(dolphins[, 2:ncol(dolphins)])
+dolphins
+</code></pre>
+
+<pre><code>##    V3 V4 V5 V6 V7 V8 V9 V10 V11 V12 V13 V14 V15 V16 V17 V18 V19
+## 1   1  0  0  1  0  1  1   0   0   0   1   1   0   0   0   0   0
+## 2   1  1  1  1  0  1  0   0   1   0   1   0   0   1   1   0   0
+## 3   1  1  1  1  0  0  0   0   1   0   1   1   0   0   0   0   0
+## 4   0  0  0  1  0  0  0   0   0   0   0   0   0   0   0   0   0
+## 5   0  0  0  1  0  0  0   0   1   0   1   0   0   0   0   0   0
+## 6   1  0  0  0  1  0  0   0   0   0   0   0   0   0   0   0   0
+## 7   1  0  1  1  0  0  0   0   1   0   1   0   0   0   0   0   0
+## 8   1  0  0  0  1  1  1   0   0   0   0   1   0   0   0   0   0
+## 9   0  0  0  0  0  0  0   0   0   0   0   1   0   0   0   0   0
+## 10  0  1  1  0  0  0  0   0   0   0   0   0   0   0   0   0   0
+## 11  1  0  0  1  0  0  0   0   0   1   0   1   0   1   1   0   0
+## 12  1  0  0  1  0  0  0   0   0   0   0   0   0   0   0   0   0
+## 13  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0
+## 14  1  0  0  1  0  0  1   0   0   0   1   1   0   0   0   0   0
+## 15  1  0  0  0  0  0  0   0   1   0   0   0   0   0   1   0   0
+## 16  1  0  0  0  0  0  0   0   0   0   0   1   0   0   0   0   0
+## 17  0  0  1  0  0  0  1   1   0   0   1   0   0   0   0   0   0
+## 18  1  0  1  0  0  0  0   0   0   0   0   1   0   0   0   1   0
+## 19  0  0  0  1  0  0  0   0   1   0   1   1   0   0   1   1   0
+## 20  1  0  0  0  0  0  0   0   1   0   0   1   0   0   0   0   1
+## 21  1  0  1  1  1  1  0   0   1   1   0   1   0   0   1   0   0
+## 22  1  1  0  1  1  1  0   0   0   1   0   1   0   0   1   1   0
+## 23  1  0  1  1  1  1  0   0   0   0   1   1   1   0   1   0   0
+## 24  0  0  0  1  0  0  0   0   1   0   0   0   0   0   0   0   0
+## 25  0  0  1  1  1  1  0   1   0   0   1   1   0   0   1   0   0
+## 26  0  0  0  0  0  1  1   0   0   0   1   1   0   0   0   1   0
+## 27  1  0  1  1  0  1  0   0   0   0   1   1   0   0   0   0   0
+## 28  0  0  0  0  1  0  0   0   0   0   0   0   0   0   0   0   0
+## 29  1  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0
+## 30  0  0  0  0  0  0  0   0   0   0   0   1   0   0   0   0   0
+## 31  0  0  0  0  1  0  0   0   0   0   1   0   0   0   1   0   0
+## 32  1  1  0  0  0  0  0   0   0   0   0   1   0   0   0   0   0
+## 33  0  0  0  1  0  0  0   0   0   0   0   0   0   0   0   0   0
+## 34  1  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0
+## 35  0  1  0  1  0  0  0   0   0   0   1   1   0   0   0   0   0
+## 36  0  1  0  0  0  0  0   0   0   0   1   1   0   0   0   0   0
+## 37  1  0  0  0  0  0  0   0   0   0   0   1   0   0   1   0   0
+## 38  1  0  1  0  0  0  0   0   0   0   0   1   1   0   0   0   0
+## 39  1  0  0  0  0  0  0   0   0   0   0   1   0   0   1   0   0
+## 40  1  0  1  0  0  0  0   0   0   0   0   1   0   0   0   0   1
+</code></pre>
+
+<h3>Measuring pairwise association</h3>
+
+<p>We want to know whether some dolphins are found together more freqently than we would expect based on random chance.  The first step is to come up with some statistic that tells us how often a given pair of dolphins are found together.  Bejder et al. (1998) use Cairns and Schwager&#39;s (1987) &ldquo;half-weight index,&rdquo; or HWI:</p>
+
+<p>\[ 
+HWI = \frac{x}{x + y_{ab} + 0.5 (y_a + y_b)}
+ \]
+where \( x \) is the number of encounters including both dolphins a and b, \( y_a \) and \( y_b \) are the number of encounters with <em>only</em> dolphin a or b.   \( y_{ab} \) is considering the number of groups that have both dolphin a and b at the same time.  But since this is not physically possible, it is 0.</p>
+
+<p>I coded the HWI as a function:</p>
+
+<pre><code class="r">hwi &lt;- function(a, b, m) {
+  # m : co-occurrence matrix (individuals in columns, groups in rows)
+  # a, b : column numbers for a pair of individuals
+  both.present &lt;- rowSums(m[ , c(a, b)]) == 2
+  y.a  &lt;- sum(m[! both.present , a]) # encounters with only a
+  y.b  &lt;- sum(m[! both.present , b]) # encounters with only b
+  x &lt;- sum(both.present)             # number of encounters with both a and b
+  r
+  eturn(x / (x + 0.5 * (y.a + y.b)))
+}
+</code></pre>
+
+<p>The line-by line explanation is as follows:</p>
+
+<pre><code class="r">both.present &lt;- rowSums(m[, c(a, b)]) == 2
+</code></pre>
+
+<p>Going from the innermost parentheses outwards, this line selects two columns from the co-occurrence matrix corresponding to the two dolphins (<code>m[ , c(a, b)]</code>), and sums them by row (<code>rowSums</code>).  This returns a vector with 0, 1, or 2 in each cell.  The cells with &ldquo;2&rdquo; in them correspond to encounters with both dolphins a and b, so I use the logical operator <code>==</code> to make a boolean vector that can be used to subset the encounters in the next three lines.</p>
+
+<pre><code class="r">y.a &lt;- sum(m[!both.present, a])
+y.b &lt;- sum(m[!both.present, b])
+</code></pre>
+
+<p>The indexing vector <code>! both.present</code> selects the rows in column <code>a</code> or <code>b</code> where <em>only</em> that dolphin is present, then adding up the number of ones in that subset to get \( y_a \) and \( y_b \).</p>
+
+<pre><code class="r">x &lt;- sum(both.present)
+</code></pre>
+
+<p>This line just adds up the <code>TRUE</code>&#39;s in <code>both.present</code> to get the number of shared encounters.</p>
+
+<pre><code class="r">return(x/(x + 0.5 * (y.a + y.b)))
+</code></pre>
+
+<p>This line calculates the HWI and returns it, ignoring \( y_{ab} \) (which is =0).</p>
+
+<h3>Measuring overall association</h3>
+
+<p>With HWI in hand, we can calculate an association number for each pair of dolphins.  But we also want some overall, &ldquo;population&rdquo; measure of association. Belder et al. (1998) suggests using Manly&#39;s (1995) \( S \) statistic:
+\[ 
+S = \sum_{i=1}^D \sum_{j=1}^D \frac{(o_{ij} - e_{ij})^2}{D^2}
+ \]
+where \( o_{ij} \) is the HWI value for dolphins \( i \) and \( j \), and \( e_{ij} \) is the expected value of \( o_{ij} \) if associations are random.</p>
+
+<p>We want to compare the observed value of \( S \) to a bunch of random values in order to see how likely our data is under the null hypothesis of randomness.  To do this, we need to generate a lot of randomized data matrices. But there are a few problems:</p>
+
+<ol>
+<li><p>We need to generate all the random matrices and \( o_{ij} \)&#39;s <em>before</em> we can calculate the \( e_{ij} \)&#39;s.</p></li>
+<li><p>We don&#39;t want our random matrices to be <em>too</em> random, as we want to preserve the within and between group structure (i.e. we want to preseve the number of dolphins in a group and total number of times a given dolphin was observed).  To do this, they randomly selected two rows and two columns of the matrix, and if the four cells at their intersections have either of the following 2x2 matrix values, then the positions of the 1s are switched for the 0s in each row to produce the other matrix option:</p>
+
+<blockquote>
+<blockquote>
+<p>if the matrix is:</p>
+
+<pre><code>0 1    
+1 0
+</code></pre>
+
+<p>then after the swap, it becomes:</p>
+
+<pre><code>1 0
+0 1
+</code></pre>
+
+<p>and vice versa</p>
+</blockquote>
+</blockquote></li>
+</ol>
+
+<p><br/>
+This preserves the row and column sums, <em>BUT</em>&hellip;</p>
+
+<ol>
+<li>Each swap only changes one 2x2 group inside the matrix, meaning that most of the HWIs will remain the same from one iteration to the next.  This method of using the randomized matrix to generate the next randomized matrix is called Markov Chain Monte Carlo. As a result of using this technique, the series of random \( S \)-values will be highly autocorrelated, and we will need to deal with that fact to make sure we have enough truly random samples.  For instance, you will need to make sure you have done enough iterations to end-up with a matrix that different than the original matrix.</li>
+</ol>
+
+<p><br/></p>
+
+<h2>Readings:</h2>
+
+<p>Bejder, L., D. Fletcher, and S. BrÄger. 1998. A method for testing association patterns of social animals. Animal behaviour 56:719–725.
+<br/>
+Manly, B. F. 1995. A note on the analysis of species co-occurrences. Ecology:1109–1115.</p>
+
+</body>
+
+</html>
+

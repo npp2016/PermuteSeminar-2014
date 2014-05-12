@@ -18,9 +18,9 @@ What we did:
 A few R Markdown Basics  
 ----------------
 + To write code that will run as embedded within R Markdown:  
->>Type: ```{r} 
+Type: ```{r} 
 summary(cars)
-```  
+``` 
 The output would actually look like this:
 
 ```r
@@ -164,10 +164,33 @@ First, we read in the data on Clutch Size.
 
 ```r
 library(ggplot2)
-library(MASS)
+```
 
-clutch = read.csv("/Users/emilypetchler/Documents/GitHub/Emily's R stuff for seminar/ClutchSize.csv")
-## Change this to be where you store your documents for GitHub...
+```
+## Warning: package 'ggplot2' was built under R version 2.15.2
+```
+
+```r
+library(MASS)
+require(RCurl)
+```
+
+```
+## Loading required package: RCurl
+```
+
+```
+## Warning: package 'RCurl' was built under R version 2.15.2
+```
+
+```
+## Loading required package: bitops
+```
+
+```r
+options(RCurlOptions = list(cainfo = system.file("CurlSSL", "cacert.pem", package = "RCurl")))
+url <- getURL("https://raw.githubusercontent.com/PermuteSeminar/PermuteSeminar-2014/master/ClutchSize.csv")
+clutch <- read.csv(text = url, header = T)
 
 print(nrow(clutch))
 ```
@@ -265,7 +288,7 @@ mean(est2)
 ```
 
 ```
-## [1] 3.466
+## [1] 3.467
 ```
 
 
@@ -323,7 +346,7 @@ ggplot(bootdata, aes(est, fill = "species")) + geom_histogram(alpha = 0.5) +
 <br/>
 
 The population mean is 3.448.
-The data bootstrapped by species is 3.4476, by family is 3.4663, and by family hierarchically is 3.461.
+The data bootstrapped by species is 3.4481, by family is 3.4669, and by family hierarchically is 3.461.
 
 <br/>
 <br/>

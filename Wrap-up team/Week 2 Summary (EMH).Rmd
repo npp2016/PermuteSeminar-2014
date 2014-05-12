@@ -253,6 +253,8 @@ The data bootstrapped by species is `r mean(est)`, by family is `r mean(est2)`, 
 <br/>
 <br/>
 <br/>
-
+Readings:
+----------
+Downes, M. Short Math Guide for LATEX. version 1.09. http://www.ams.org/tex/short-math-guide.html, 2002
 
 

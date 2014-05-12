@@ -22,9 +22,21 @@ Type: ```{r}
 summary(cars)
 ``` 
 The output would actually look like this:
-```{r}
+
+```r
 summary(cars)
 ```
+
+```
+##      speed           dist    
+##  Min.   : 4.0   Min.   :  2  
+##  1st Qu.:12.0   1st Qu.: 26  
+##  Median :15.0   Median : 36  
+##  Mean   :15.4   Mean   : 43  
+##  3rd Qu.:19.0   3rd Qu.: 56  
+##  Max.   :25.0   Max.   :120
+```
+
 <br/>
 If you wanted to have the code show, but not run, leave off the '{r}'.
 ```
@@ -33,9 +45,13 @@ summary(cars)
 <br/>
 + You can also embed plots, for example:
 
-```{r fig.width=7, fig.height=6}
+
+```r
 plot(cars)
 ```
+
+![plot of chunk unnamed-chunk-2](figure/unnamed-chunk-2.png) 
+
 
 (Here I have borrowed some of the default text that comes with a new R Markdown project)  
 
@@ -145,114 +161,206 @@ We were given data on bird clutch size for a variety of species.
 ### Here is the code, as run by Sarah Supp and Emily Rollinson.  
 
 First, we read in the data on Clutch Size.
-```{r}
+
+```r
 library(ggplot2)
+```
+
+```
+## Warning: package 'ggplot2' was built under R version 2.15.2
+```
+
+```r
 library(MASS)
 require(RCurl)
+```
+
+```
+## Loading required package: RCurl
+```
+
+```
+## Warning: package 'RCurl' was built under R version 2.15.2
+```
+
+```
+## Loading required package: bitops
+```
+
+```r
 options(RCurlOptions = list(cainfo = system.file("CurlSSL", "cacert.pem", package = "RCurl")))
 url <- getURL("https://raw.githubusercontent.com/PermuteSeminar/PermuteSeminar-2014/master/ClutchSize.csv")
 clutch <- read.csv(text = url, header = T)
 
-print (nrow(clutch))
+print(nrow(clutch))
 ```
+
+```
+## [1] 2392
+```
+
 
 <br/>
 
 **1. What is the best distribution for the clutch size data?**
 
 The data are continuous, long right tail
-```{r}
-ggplot(clutch, aes(Clutch_size)) + geom_histogram(col="white") +
-  theme_classic() + theme(text = element_text(size=20))
 
-fitdistr(clutch$Clutch_size, densfun="lognormal")
+```r
+ggplot(clutch, aes(Clutch_size)) + geom_histogram(col = "white") + theme_classic() + 
+    theme(text = element_text(size = 20))
+```
 
-avg= mean(clutch$Clutch_size)
+```
+## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
+```
+
+![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4.png) 
+
+```r
+
+fitdistr(clutch$Clutch_size, densfun = "lognormal")
+```
+
+```
+##    meanlog     sdlog  
+##   1.111122   0.502051 
+##  (0.010265) (0.007259)
+```
+
+```r
+
+avg = mean(clutch$Clutch_size)
 med = median(clutch$Clutch_size)
 stdev = sd(clutch$Clutch_size)
 ```
+
 
 <br/>
 
 **2. What is the statistic mean? Sample with replacement from:**  
 **a) species**
 
-```{r}
-print (avg)
+
+```r
+print(avg)
+```
+
+```
+## [1] 3.448
+```
+
+```r
 n = nrow(clutch)
 
 est = NULL
-for (i in 1:1000){
-  boot = sample(clutch$Clutch_size, n, replace=TRUE)
-  mean = mean(boot)
-  est = append(est, mean)
+for (i in 1:1000) {
+    boot = sample(clutch$Clutch_size, n, replace = TRUE)
+    mean = mean(boot)
+    est = append(est, mean)
 }
 
 mean(est)
 ```
 
+```
+## [1] 3.448
+```
+
+
 <br/>
 
 **b) family**  
-```{r}
+
+```r
 f = length(unique(clutch$Family))
 
 est2 = NULL
-for (i in 1:1000){
-  fam = sample(clutch$Family, f, replace=TRUE)
-  subdat = clutch[which(clutch$Family %in% fam),]
-  boot = sample(subdat$Clutch_size, n, replace=TRUE)
-  mean = mean(boot)
-  est2 = append(est2, mean)
+for (i in 1:1000) {
+    fam = sample(clutch$Family, f, replace = TRUE)
+    subdat = clutch[which(clutch$Family %in% fam), ]
+    boot = sample(subdat$Clutch_size, n, replace = TRUE)
+    mean = mean(boot)
+    est2 = append(est2, mean)
 }
 
 mean(est2)
 ```
 
+```
+## [1] 3.471
+```
+
+
 <br/>
 
 **c) bootstrap at all levels - sample with replacement for families, we used the total number of unique families. Within those families, count the number of unique genera, and sample from the genera. Within those genera, sample from the species, such that n = the length of the original dataset**
-```{r}
+
+```r
 f = length(unique(clutch$Family))
 
 est3 = NULL
-for (i in 1:1000){
-  fam = sample(clutch$Family, f, replace=TRUE)
-  subdat = clutch[which(clutch$Family %in% fam),]
-  g = length(unique(subdat$Genus_name)) #this is not exactly what Heather was saying
-  gen = sample(subdat$Genus_name, g, replace=TRUE)
-  subdat2 = subdat[which(subdat$Genus_name %in% gen),]
-  boot = sample(subdat2$Clutch_size, n, replace=TRUE)
-  mean = mean(boot)
-  est3 = append(est3, mean)
+for (i in 1:1000) {
+    fam = sample(clutch$Family, f, replace = TRUE)
+    subdat = clutch[which(clutch$Family %in% fam), ]
+    g = length(unique(subdat$Genus_name))  #this is not exactly what Heather was saying
+    gen = sample(subdat$Genus_name, g, replace = TRUE)
+    subdat2 = subdat[which(subdat$Genus_name %in% gen), ]
+    boot = sample(subdat2$Clutch_size, n, replace = TRUE)
+    mean = mean(boot)
+    est3 = append(est3, mean)
 }
 
 mean(est3)
 ```
 
+```
+## [1] 3.461
+```
+
+
 <br/>
 
 **Plot the data as histograms. The first method matches the mean of the original data and has lower variance. The second two methods are similar (in the way that we implemented them) but have wider variance.**
 
-```{r}
+
+```r
 bootdata = data.frame(est, est2, est3)
 
-ggplot(bootdata, aes(est, fill = "species")) + geom_histogram(alpha = 0.5) + theme_classic() + theme(text = element_text(size=20)) +
-  geom_histogram(aes(est2, fill = "family"), alpha=0.5) +
-  geom_histogram(aes(est3, fill = "hierarchical"), alpha = 0.5) +
-  geom_vline(data=clutch, aes(xintercept=mean(Clutch_size)), linetype="longdash")
+ggplot(bootdata, aes(est, fill = "species")) + geom_histogram(alpha = 0.5) + 
+    theme_classic() + theme(text = element_text(size = 20)) + geom_histogram(aes(est2, 
+    fill = "family"), alpha = 0.5) + geom_histogram(aes(est3, fill = "hierarchical"), 
+    alpha = 0.5) + geom_vline(data = clutch, aes(xintercept = mean(Clutch_size)), 
+    linetype = "longdash")
 ```
 
+```
+## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
+## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
+## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
+```
+
+```
+## Warning: position_stack requires constant width: output may be incorrect
+## Warning: position_stack requires constant width: output may be incorrect
+## Warning: position_stack requires constant width: output may be incorrect
+```
+
+![plot of chunk unnamed-chunk-8](figure/unnamed-chunk-8.png) 
+
+
 <br/>
 
-The population mean is `r avg`.
-The data bootstrapped by species is `r mean(est)`, by family is `r mean(est2)`, and by family hierarchically is `r mean(est3)`.
+The population mean is 3.448.
+The data bootstrapped by species is 3.4479, by family is 3.4712, and by family hierarchically is 3.4614.
 
 <br/>
 <br/>
 <br/>
 <br/>
 <br/>
-
+Readings:
+----------
+Downes, M. Short Math Guide for LATEX. version 1.09. http://www.ams.org/tex/short-math-guide.html, 2002
 
 
