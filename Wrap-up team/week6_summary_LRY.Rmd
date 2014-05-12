@@ -2,7 +2,7 @@ Week 6: Markov Chain Monte Carlo, chain convergence, & more
 ===========================================================
 Part 1: reviewing the dolphin permutation problem with swapping
 ---------------------------------------------------------------
-We first reviewed our code that we were to have preprared for class that involved a functioning permutation script using with the dolphin data from Manly (1995). (See Sam's notes, week 5 for details on the problem). It seemed that everyone was on the same page in terms of having a working code in terms fo being able to swap the matrices.
+We first reviewed our code that we were to have preprared for class that involved a functioning permutation script using with the dolphin data from Manly (1995). (See the end of week 5 for details on the problem). It seemed that everyone was on the same page in terms of having a working code in terms fo being able to swap the matrices.
 
 Having a functioning swap and permute algorithm was critical to extend for MCMC chain convergence. For this week's summary, I will show what we did using Jon Borelli's code.
 
