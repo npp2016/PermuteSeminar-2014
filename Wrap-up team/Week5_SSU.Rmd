@@ -49,7 +49,6 @@ differences <- rep(0, n.shuffles)
 for (i in 1:n.shuffles) {
   differences[i] <- randomized.difference(jackals$mandible, n.males)
 }
-differences #the randomized mean effect values
 p.rand <- (sum(differences >= difference.observed) + 1) / (n.shuffles + 1)
 p.rand
 ```
@@ -65,7 +64,6 @@ options(RCurlOptions = list(cainfo = system.file("CurlSSL", "cacert.pem", packag
 url <- getURL("https://raw.githubusercontent.com/PermuteSeminar/PermuteSeminar-2014/master/Week-5/Dolphin+data.csv")
 dolphins <- read.csv(text = url, row.names = 1, header = F)
 dolphins <- as.matrix(dolphins[ , 2:ncol(dolphins)])
-dolphins
 ```
 
 ### Measuring pairwise association
@@ -87,8 +85,7 @@ hwi <- function(a, b, m) {
   y.a  <- sum(m[! both.present , a]) # encounters with only a
   y.b  <- sum(m[! both.present , b]) # encounters with only b
   x <- sum(both.present)             # number of encounters with both a and b
-  r
-  eturn(x / (x + 0.5 * (y.a + y.b)))
+  return(x / (x + 0.5 * (y.a + y.b)))
 }
 ```
 The line-by line explanation is as follows:
@@ -143,7 +140,114 @@ We want to compare the observed value of $S$ to a bunch of random values in orde
 This preserves the row and column sums, *BUT*...
 
 3. Each swap only changes one 2x2 group inside the matrix, meaning that most of the HWIs will remain the same from one iteration to the next.  This method of using the randomized matrix to generate the next randomized matrix is called Markov Chain Monte Carlo. As a result of using this technique, the series of random $S$-values will be highly autocorrelated, and we will need to deal with that fact to make sure we have enough truly random samples.  For instance, you will need to make sure you have done enough iterations to end-up with a matrix that different than the original matrix.
+<br/>
+*Working Code for matrix swap*
+<br/>
+First develop a function to detect for the locations where a swap could occur
+```{r}
+swap <- function(m) {
+  # Searches an encounter-individual matrix randomly for a set of four cells on
+  # the corners of a rectangular sub-matrix that form a diagonal 2x2 matrix on
+  # their own, and swaps the diagonals.
+  #
+  # Arguments:
+  #   m : co-occurrence matrix (individuals in columns, groups in rows)
+  # Value:
+  #   The same matrix as supplied, but with the four cells swapped
+  while (TRUE) {
+    i <- sample.int(nrow(m), 2)
+    j <- sample.int(ncol(m), 2)
+    
+    if (all(m[i, j] == c(1, 0, 0, 1)) | all(m[i, j] == c(0, 1, 1, 0))) {
+      m[i, j] <- m[i, j][2:1, ]
+      return(m)
+    } 
+  }
+}
 
+association.matrix <- function(m) {
+  # Calculates the HWI for each pair of individuals across all encounters.
+  #
+  # Arguments:
+  #   m : co-occurrence matrix (individuals in columns, groups in rows)
+  # Value:
+  #   A square association matrix, with the upper triangle filled with HWIs
+  #   between each pair of individuals.  The lower triangle is all zeros.
+  D <- ncol(m)
+  result <- matrix(0, D, D)
+  for (i in 1:D) {
+    for (j in i:D) {
+      result[i, j] <- hwi(i, j, m)
+    }
+  }
+  return(result)
+}
+
+S <- function(assoc.mat, e.mat) {
+  # Calculate the S-statistic from an association matrix and its expected value.
+  #
+  # Arguments:
+  #   assoc.mat : the association matrix
+  #   e.mat : the matrix of expexted HWIs
+  # Value:
+  #   The association matrix's S-statistic
+  D <- nrow(assoc.mat)
+  # don't have to worry about the upper triangle, since the
+  # lower one is all zeros
+  sum((assoc.mat - e.mat)^2) / D^2
+}
+
+randomized.S <- function(m, n.swaps) {
+  # This function doesn't run any faster than the loop below, but uses a lot 
+  # less memory because it dosn't store all the intermediate association
+  # matrices.  Because it calculates the mean HWI matrix (e.matrix) on the fly,
+  # there needs to be a burn-in period for e.matrix to converge to its mean
+  D <- ncol(m)
+  e.matrix <- matrix(0, D, D)
+  S.trace <- rep(0, n.swaps)
+  
+  for (i in 1:n.swaps) {
+    o.matrix <-  association.matrix(m)
+    e.matrix  <- e.matrix + o.matrix
+    S.trace[i] <- S(o.matrix, e.matrix / i)
+    m <- swap(m)
+  }
+  return(S.trace)  
+}
+
+```
+Use the functions to perform the permutation of the S statistic
+```{r}
+library(gdata)
+library(plyr)
+image(dolphins)
+
+image(dolphins == swap(dolphins)) #shows the code works
+
+m <- dolphins
+D <- ncol(m)
+n.swaps <- 1000
+stack <- array(0, c(D, D, n.swaps))
+
+for (i in 1:n.swaps) {
+  stack[ , , i] <- association.matrix(m)
+  m <- swap(m)
+}
+
+e.matrix <- aaply(stack, c(1, 2), mean)
+S.trace <- aaply(stack, 3, S, e.mat=e.matrix)
+plot(S.trace, ty="l")
+
+acf(S.trace, 100)
+acf(diff(S.trace), 40)
+
+o.matrix.observed <- association.matrix(dolphins)
+S.observed  <- S(o.matrix.observed, e.matrix)
+
+S.observed
+burn.in <- 500
+sum(S.trace[burn.in:n.swaps] >= S.observed) / (n.swaps - burn.in)
+```
 <br/>
 Readings:
 ---------
