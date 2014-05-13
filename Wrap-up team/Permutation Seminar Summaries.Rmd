@@ -1656,8 +1656,18 @@ The graphical representation of Jon's output can be found at "Jon_plot_Hummingbi
 For both datasets, the real data falls between the  97.5 and 2.5 quantiles in either cases. However, there is an intriguing trend that the data seems to "hug" the quantiles for both organisms. A way to test if there is any significance to this would be to preform a "bootstrap of the bootstrap", to test how probable this trend actually is
 
 <br/>
+Assigned Reading:
+------------------
+Colwell, R. K. and D. C. Lees. 2000. The mid-domain effect: geometric
+constraints on the geography of species richness. Trend in Ecology and Evolution 15(2): 70-76.
+
+Jetz, W., C. Rahbek and R. K. Colwell. 2004. The coincidence of rarity and richness and the potential signature of history in centres of endemism. Ecology Letters 7: 1180-1191.
+
+<br/>
 
 -------------------------------------------------------------------------------------
+<br/>
+
 Summary Week 10
 ========================================================
 Most studies correlating the native to exotic species richness have found negative and positive correlations at small and large scales, respectively.  Researchers have proposed that at smaller scales native species competitively exclude exotic species.  Conversely, at larger scales researchers have proposed that environmental effects mask the negative effects of native species richness on exotics, leading to a positive correlation.  
@@ -2270,6 +2280,19 @@ table(vec)
 The code was Jon's solution, The 'vec' table returns the number of times each model was the best supported out of 500 boostraps, allowing to select the best model.
 
 <br/>
+Assigned Reading:
+-----------------
+<br/>
+
+Anderson, D. R., K. P. Burnham and W. L. Thompson. 2000. Null hypothesis testing: problems, prevalence and an alternative. Jour. Wildlife Management 64(4): 912-923.
+<br/>
+
+Driscoll, M. J. L., T. Donovan, R. Mickey, A. Howard and K. K. Fleming. 2005. Determinants of wood thrush nest success: a multi-scale, model selection approach. Jour. Wildlife Management 69(2): 699-709.
+<br/>
+
+Shmueli, G. 2010. To explain or to predict ? Stat. Sci. 25(3): 289-310.
+
+<br/>
 
 -------------------------------------------------------------------------------------  
 Week #13 Summary
@@ -2476,10 +2499,14 @@ This shows the three null distributions (r00, r0 and c0) of the test statistic M
 Assigned Readings:
 -------------------
 <br/>
-Webb, C.O. 2000.  Exploring the phylogenetic structure of ecological communities: An exampel for rain forest trees.  The American Naturalist 156: 145-155
+
+Webb, C.O. 2000.  Exploring the phylogenetic structure of ecological communities: An example for rain forest trees.  The American Naturalist 156: 145-155
 <br/>
+
 Gotelli, N.J. and G.L. Entsminger. 2001. Swap and fill algorithms in null model analysis: rethinking the knight's tour.  Oecologia 129:281-291
 <br/>
+
 Gotelli, N.J. and G.L. Entsminger. 2003. Swap algorithms in null model analysis. Ecology 84:532-535
 <br/>
+
 Miklós, I. and J. Podani.  Randomization of Presence-Absence Matrices: Comments and New Algorithms.  Ecology 85:86-92
