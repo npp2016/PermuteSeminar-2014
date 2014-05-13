@@ -221,3 +221,22 @@ p2=ggplot(nearest.distances, aes(x=first, y=third, color=Island)) + geom_density
 p3=ggplot(nearest.distances, aes(x=second, y=third, color=Island)) + geom_density2d() + labs(y="Second NN Distance", x="Third NN Distance")
 grid.arrange(p1, p2,p3, ncol = 3)
 ```
+</br>
+Assigned Readings:
+-----------------
+<br/>
+Loosmore, N. B., and E. D. Ford. 2006. Statistical inference using the G or K point pattern spatial statistics. Ecology 87:1925–1931.
+<br/>
+
+Additional References:
+---------------------
+<br/>
+Reference deals with spatial analysis of other groups of organisms using various techniques.
+<br/>
+Cole, R. G., and C. Syms. 1999. Using spatial pattern analysis to distinguish causes of mortality: an example from kelp in north‐eastern New Zealand. Journal of Ecology 87:963–972.
+<br/>
+Svoboda, P., J. Kulichová, and J. Št’astný. 2013. Spatial and temporal community structure of desmids on a small spatial scale. Hydrobiologia 722:291–303.
+</br/>
+Fahrig, L., and J. Paloheimo. 1988. Effect of spatial arrangement of habitat patches on local population size. Ecology 69:468–475.
+<br/>
+

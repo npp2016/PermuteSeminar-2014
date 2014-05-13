@@ -3,7 +3,6 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-<meta http-equiv="x-ua-compatible" content="IE=9" >
 
 <title>Week 12 Summary</title>
 
@@ -236,11 +235,19 @@ The weights add up to 1, and represent the probability that each model would be 
 <pre><code>## Loading required package: AICcmodavg
 </code></pre>
 
+<pre><code>## Warning: package &#39;AICcmodavg&#39; was built under R version 2.15.3
+</code></pre>
+
 <pre><code class="r">require(RCurl)
 </code></pre>
 
 <pre><code>## Loading required package: RCurl
-## Loading required package: bitops
+</code></pre>
+
+<pre><code>## Warning: package &#39;RCurl&#39; was built under R version 2.15.2
+</code></pre>
+
+<pre><code>## Loading required package: bitops
 </code></pre>
 
 <p>We will be using some data from a simulated survey of an imaginary mountain valley. </p>
@@ -273,7 +280,7 @@ table(vec)
 
 <pre><code>## vec
 ## Elevation      Farm  Position 
-##         8       370       122
+##         6       360       134
 </code></pre>
 
 <p>The code was Jon&#39;s solution, The &#39;vec&#39; table returns the number of times each model was the best supported out of 500 boostraps, allowing to select the best model.</p>

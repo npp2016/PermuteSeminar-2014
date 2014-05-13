@@ -56,12 +56,23 @@ require(AICcmodavg)
 ## Loading required package: AICcmodavg
 ```
 
+```
+## Warning: package 'AICcmodavg' was built under R version 2.15.3
+```
+
 ```r
 require(RCurl)
 ```
 
 ```
 ## Loading required package: RCurl
+```
+
+```
+## Warning: package 'RCurl' was built under R version 2.15.2
+```
+
+```
 ## Loading required package: bitops
 ```
 
@@ -102,7 +113,7 @@ table(vec)
 ```
 ## vec
 ## Elevation      Farm  Position 
-##         8       370       122
+##         6       360       134
 ```
 
 The code was Jon's solution, The 'vec' table returns the number of times each model was the best supported out of 500 boostraps, allowing to select the best model.

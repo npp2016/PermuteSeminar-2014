@@ -1,6 +1,8 @@
 Week #2 Summary
 ========================================================
 
+opts_chunk$set(catch=T)
+
 What we did:
 -------------
 1. We discussed uses for **R Markdown**. This is a general-purpose package which will generate .Rmd, .md and .html files. R Markdown is useful because it can write files which may variously contain and run .r script within the document, and will generate any associated figures, etc.    
@@ -24,6 +26,7 @@ summary(cars)
 The output would actually look like this:
 
 ```r
+opts_chunk$set(cache = TRUE)
 summary(cars)
 ```
 
@@ -288,7 +291,7 @@ mean(est2)
 ```
 
 ```
-## [1] 3.471
+## [1] 3.469
 ```
 
 
@@ -315,7 +318,7 @@ mean(est3)
 ```
 
 ```
-## [1] 3.461
+## [1] 3.46
 ```
 
 
@@ -352,15 +355,18 @@ ggplot(bootdata, aes(est, fill = "species")) + geom_histogram(alpha = 0.5) +
 <br/>
 
 The population mean is 3.448.
-The data bootstrapped by species is 3.4479, by family is 3.4712, and by family hierarchically is 3.4614.
+The data bootstrapped by species is 3.4479, by family is 3.4691, and by family hierarchically is 3.4596.
 
 <br/>
 <br/>
 <br/>
 <br/>
 <br/>
-Readings:
+Assigned Readings:
 ----------
 Downes, M. Short Math Guide for LATEX. version 1.09. http://www.ams.org/tex/short-math-guide.html, 2002
-
-
+<br/>
+Additional Reading:
+--------------------
+*use bootstrapping technique for developing additional metrics*
+Efron, B., and R. Tibshirani. 1986. Bootstrap methods for standard errors, confidence intervals, and other measures of statistical accuracy. Statistical science:54–75.

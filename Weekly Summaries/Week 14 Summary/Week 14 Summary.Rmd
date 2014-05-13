@@ -1,18 +1,10 @@
-Week 14 Summary
+Week #14 Summary
 ========================================================
-
-Readings for Week 14
----------------------
-
-Webb, C.O. 2000.  Exploring the phylogenetic structure of ecological communities: An exampel for rain forest trees.  The American Naturalist 156: 145-155
-Gotelli, N.J. and G.L. Entsminger. 2001. Swap and fill algorithms in null model analysis: rethinking the knight's tour.  Oecologia 129:281-291
-Gotelli, N.J. and G.L. Entsminger. 2003. Swap algorithms in null model analysis. Ecology 84:532-535
-Miklós, I. and J. Podani.  Randomization of Presence-Absence Matrices: Comments and New Algorithms.  Ecology 85:86-92
 
 Overview
 ---------
 
-Phylogenetic trees are a useful tool in the analysis of patterns in ecological communities.  Phylogenetic diversity is a potential metric that can be used to describe the structure of a community, in the same way as other measures of diversity (such as species richness, Shannon diversity, and so on). If we assume that traits are generally conserved in the evolution of a lineage, we should expect a positive relationship between the phylogenetic relatedness of a pair of species and the similarity of those species in ecological or life history traits.  Therefore, the phylogenetic structure of a community provides some understanding of the ecological processes that played a role in the organization of that community.  (For instance - if species are more related than one would expect due to chance, perhaps some environmental variable is limiting which species can be present in that community by requiring a certain suite of traits; if species are less related than expected due to chance, we might suspect that competition between similar species played a role in community assembly.)  To perform this analysis, we need to determine what sort of phylogenetic structure might be expected in a community due to chance alone
+Phylogenetic trees are a useful tool in the analysis of patterns in ecological communities.  Phylogenetic diversity is a potential metric that can be used to describe the structure of a community, in the same way as other measures of diversity (such as species richness, Shannon diversity, and so on). If we assume that traits are generally conserved in the evolution of a lineage, we should expect a positive relationship between the phylogenetic relatedness of a pair of species and the similarity of those species in ecological or life history traits.  Therefore, the phylogenetic structure of a community provides some understanding of the ecological processes that played a role in the organization of that community.  For instance, 1) if species are more related than one would expect due to chance, perhaps some environmental variable is limiting which species can be present in that community by requiring a certain suite of traits; 2) if species are less related than expected due to chance, we might suspect that competition between similar species played a role in community assembly.  To perform this analysis, we need to determine what sort of phylogenetic structure might be expected in a community due to chance alone by creating a null distribution of phylogentic relatedness.
 
 Exercise
 ----------
@@ -61,7 +53,7 @@ sum(!tree$tip.label %in% colnames(sitesp[,2:ncol(sitesp)]))
 
 There are 40 species in the species matrix that aren't in our tree.  We can subsample the site by species matrix to use only those species that are included in our phylogeny.
 
-Calculate the mean phylogenetic distance (a test statistic) for each site, and make a data frame that lists that MPD for each site
+Calculate the mean phylogenetic distance (MPD; our test statistic) for each site, and make a data frame that lists that MPD for each site
 ```{r}
 mpd<-mpd(sitesp[,colnames(sitesp) %in% tree$tip.label], cophen)
 MPDtable<-as.data.frame(mpd)
@@ -121,3 +113,14 @@ ggplot(Acacias2, aes(x=value, color=variable)) + geom_density() + geom_vline(xin
 ```
 
 This shows the three null distributions (r00, r0 and c0) of the test statistic MPD for the Acacias site - note that our choices about whether or not to fix row or column sums when we randomize changes the shape of the null model!  The vertical bar (purple) plots the observed MPD for the Acacias site.
+
+Assigned Readings:
+-------------------
+<br/>
+Webb, C.O. 2000.  Exploring the phylogenetic structure of ecological communities: An exampel for rain forest trees.  The American Naturalist 156: 145-155
+<br/>
+Gotelli, N.J. and G.L. Entsminger. 2001. Swap and fill algorithms in null model analysis: rethinking the knight's tour.  Oecologia 129:281-291
+<br/>
+Gotelli, N.J. and G.L. Entsminger. 2003. Swap algorithms in null model analysis. Ecology 84:532-535
+<br/>
+Miklós, I. and J. Podani.  Randomization of Presence-Absence Matrices: Comments and New Algorithms.  Ecology 85:86-92

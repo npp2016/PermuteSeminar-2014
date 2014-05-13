@@ -1,6 +1,8 @@
 Week #2 Summary
 ========================================================
 
+opts_chunk$set(catch=T)
+
 What we did:
 -------------
 1. We discussed uses for **R Markdown**. This is a general-purpose package which will generate .Rmd, .md and .html files. R Markdown is useful because it can write files which may variously contain and run .r script within the document, and will generate any associated figures, etc.    
@@ -253,8 +255,10 @@ The data bootstrapped by species is `r mean(est)`, by family is `r mean(est2)`, 
 <br/>
 <br/>
 <br/>
-Readings:
+Assigned Readings:
 ----------
 Downes, M. Short Math Guide for LATEX. version 1.09. http://www.ams.org/tex/short-math-guide.html, 2002
-
-
+<br/>
+Additional Reading:
+--------------------
+Efron, B., and R. Tibshirani. 1986. Bootstrap methods for standard errors, confidence intervals, and other measures of statistical accuracy. Statistical science:54–75.
